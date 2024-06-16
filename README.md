@@ -25,64 +25,61 @@
 | HTML / CSS    | ![6](https://progress-bar.dev/70) |
 | C, C++        | ![7](https://progress-bar.dev/80) |
 
-
 ### Tecnologias e Ferramentas
 
 #### Mainframe
-- z/OS, zCX
-- JCL, TSO/ISPF
-- CICS, IMS, GRBE
+- 🖥️ z/OS, zCX
+- 📝 JCL, TSO/ISPF
+- 🏢 CICS, IMS, GRBE
 
 #### Banco de Dados
-- DB2, SQL, MongoDB
-- PostgreSQL, MySQL
-- Microsoft SQL Server, Redis, Cassandra
+- 🗄️ DB2, SQL, MongoDB
+- 🗃️ PostgreSQL, MySQL
+- 🗂️ Microsoft SQL Server, Redis, Cassandra
 
 ### Frameworks de Desenvolvimento
-- Angular, React, Vue.js
-- FastAPI, Flask, Django
-- Express.js
+- 🌐 Angular, React, Vue.js
+- 🐍 FastAPI, Flask, Django
+- 🚀 Express.js
 
 ### DevOps
-- Docker, Kubernetes, OpenShift
-- Jenkins, Jmeter
-- Git, GitLab, GitHub Actions
-- Ansible, Terraform
+- 🐳 Docker, Kubernetes, OpenShift
+- 🔧 Jenkins, Jmeter
+- 🛠️ Git, GitLab, GitHub Actions
+- ⚙️ Ansible, Terraform
 
 ### Segurança
-- Autenticação com Azure AD, STS Provider
-- OAuth2, OpenID Connect
+- 🔒 Autenticação com Azure AD, STS Provider
+- 🔑 OAuth2, OpenID Connect
 
 ### Machine Learning
-- Análise de dados de performance, desenvolvimento de modelos preditivos
-- TensorFlow, PyTorch, Scikit-learn
-- Jupyter, Pandas, NumPy
+- 📊 Análise de dados de performance, desenvolvimento de modelos preditivos
+- 🤖 TensorFlow, PyTorch, Scikit-learn
+- 📓 Jupyter, Pandas, NumPy
 
 ### Desenvolvimento Web
-- Criação de APIs REST, desenvolvimento frontend com Angular, React e TypeScript
-- GraphQL, WebSockets
-- HTML5, CSS3, Sass, LESS
+- 🌐 Criação de APIs REST, desenvolvimento frontend com Angular, React e TypeScript
+- 🔗 GraphQL, WebSockets
+- 🎨 HTML5, CSS3, Sass, LESS
 
 ### Ferramentas de Teste
-- PyTest, JUnit, Jest, Nock
-- Selenium, Cypress
-- Postman
+- 🧪 PyTest, JUnit, Jest, Nock
+- 🕵️ Selenium, Cypress
+- 📬 Postman
 
 ### Ferramentas de Esteira
-- Jenkins, GitLab CI/CD, Travis CI
-- SonarQube, Artifactory
-- Prometheus, Grafana, ELK Stack (Elasticsearch, Logstash, Kibana)
+- 🏗️ Jenkins, GitLab CI/CD, Travis CI
+- 🛠️ SonarQube, Artifactory
+- 📈 Prometheus, Grafana, ELK Stack (Elasticsearch, Logstash, Kibana)
 
 ### Ferramentas de Monitoramento e Log
-- Prometheus, Grafana
-- Splunk
-
+- 📊 Prometheus, Grafana
+- 🔍 Splunk
 
 ### Metodologias e Práticas
-- Agile (Scrum, Kanban), DevOps
-- Continuous Integration/Continuous Deployment (CI/CD)
-- Infrastructure as Code (IaC), Configuration Management
-
+- 🌀 Agile (Scrum, Kanban), DevOps
+- 🔄 Continuous Integration/Continuous Deployment (CI/CD)
+- 🏗️ Infrastructure as Code (IaC), Configuration Management
 
 ## 🏅 Certificações
 
@@ -96,28 +93,18 @@
 
 ### Amazon Web Services (AWS)
 - **AWS Certified Cloud Practitioner** (Expires Nov 2025)
-
 - **AWS Certified Cloud Practitioner (CLF)** (Nov 2022)
   - Credential ID: 1K12HG3151Q1QPSB
 
-
 ### Interskill Learning
 - **Mainframe Specialist - IBM Mainframe Environment - Fundamentals 2.4** (May 2022)
-
 - **Mainframe Performance - Fundamentals** (Feb 2022)
-
 - **Mainframe Specialist - File Transfers - Foundations** (Feb 2022)
-
 - **Blockchain Technologies** (Jan 2022)
-
 - **Mainframe Application Programmer - Programming Tools - z/OS Connect Enterprise Edition - Experienced** (Jan 2022)
-
 - **Mainframe Operator - Db2 V12 Operations** (Jan 2022)
-
 - **Mainframe Specialist - Parallel Sysplex - Foundations 2.4** (Jan 2022)
-
 - **Mainframe Specialist - VSAM Management - Experienced 2.4** (Jan 2022)
-
 
 ## 🏢 Experiência Profissional
 
@@ -125,26 +112,23 @@
   - Desenvolvimento de soluções em Mainframe, utilizando tecnologias como z/OS e COBOL.
   - Implementação de esteiras DevOps e análise de código.
 
-
 ## 📚 Projetos
 
 ### CodeRunner
 Uma plataforma para hospedar, editar e executar códigos Python, transformando-os instantaneamente em APIs REST. Inclui:
-- Editor de código com suporte a upload, comparação e execução.
-- Validações de segurança e sintaxe.
-- Integração com Splunk para logs de execução.
-- Agendamento de execuções e gerenciamento de versões.
+- 📝 Editor de código com suporte a upload, comparação e execução.
+- 🔒 Validações de segurança e sintaxe.
+- 📊 Integração com Splunk para logs de execução.
+- 📅 Agendamento de execuções e gerenciamento de versões.
 
 ### StackSpot IA
 Integração com a API StackSpot IA para execução de comandos rápidos, utilizando métodos assíncronos e padrões de design robustos.
 
-
 ### Projeto Backend
-
-O projeto “Backend” é uma aplicação Node.js desenvolvida com Express, focada em fornecer uma API RESTful robusta e segura, conectada a um banco de dados MongoDB. O sistema inclui autenticação JWT para proteger as rotas e facilita a modularização do código.As principais Tecnologias sao Node.js, Express, MongoDB, JWT (JSON Web Tokens) e possui as funcionalidades:
-- Estrutura modular organizada
-- Conexão segura com MongoDB
-- Autenticação via JWT
+O projeto “Backend” é uma aplicação Node.js desenvolvida com Express, focada em fornecer uma API RESTful robusta e segura, conectada a um banco de dados MongoDB. O sistema inclui autenticação JWT para proteger as rotas e facilita a modularização do código. As principais tecnologias são Node.js, Express, MongoDB, JWT (JSON Web Tokens) e possui as funcionalidades:
+- 🗂️ Estrutura modular organizada
+- 🔐 Conexão segura com MongoDB
+- 🔑 Autenticação via JWT
 
 ## 🌐 Contato
 
@@ -158,4 +142,4 @@ O projeto “Backend” é uma aplicação Node.js desenvolvida com Express, foc
 
 ---
 
-✨ Obrigado por visitar o meu perfil!
+✨ Obrigado por visitar o meu perfil! 
