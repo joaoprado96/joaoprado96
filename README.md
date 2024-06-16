@@ -27,18 +27,62 @@
 
 
 ### Tecnologias e Ferramentas
-- **Mainframe**: z/OS, zCX
-- **Banco de Dados**: DB2, SQL, MongoDB
-- **Frameworks de Desenvolvimento**: Angular, FastAPI, Flask
-- **DevOps**: Docker, Kubernetes, CI/CD, Git
-- **Segurança**: Autenticação com Azure AD, STS Provider
-- **Machine Learning**: Análise de dados de performance, desenvolvimento de modelos preditivos
-- **Desenvolvimento Web**: Criação de APIs REST, desenvolvimento frontend com Angular e TypeScript
 
-### Metodologias
-- **Políticas de Segurança**: Implementação com Open Policy Agent (OPA)
-- **Metodologias Ágeis**: Scrum, Kanban
-- **Kaizen**: Melhoria contínua através da eliminação de desperdícios e aumento de eficiência
+#### Mainframe
+- z/OS, zCX
+- JCL, TSO/ISPF
+- CICS, IMS, GRBE
+
+#### Banco de Dados
+- DB2, SQL, MongoDB
+- PostgreSQL, MySQL
+- Microsoft SQL Server, Redis, Cassandra
+
+### Frameworks de Desenvolvimento
+- Angular, React, Vue.js
+- FastAPI, Flask, Django
+- Spring Boot, Express.js
+
+### DevOps
+- Docker, Kubernetes, OpenShift
+- Jenkins, Jmeter
+- Git, GitLab, GitHub Actions
+- Ansible, Terraform
+
+### Segurança
+- Autenticação com Azure AD, STS Provider
+- OAuth2, OpenID Connect
+
+### Machine Learning
+- Análise de dados de performance, desenvolvimento de modelos preditivos
+- TensorFlow, PyTorch, Scikit-learn
+- Jupyter, Pandas, NumPy
+
+### Desenvolvimento Web
+- Criação de APIs REST, desenvolvimento frontend com Angular, React e TypeScript
+- GraphQL, WebSockets
+- HTML5, CSS3, Sass, LESS
+
+### Ferramentas de Teste
+- PyTest, JUnit, Jest, Nock
+- Selenium, Cypress
+- Postman
+
+### Ferramentas de Esteira
+- Jenkins, GitLab CI/CD, Travis CI
+- SonarQube, Artifactory
+- Prometheus, Grafana, ELK Stack (Elasticsearch, Logstash, Kibana)
+
+### Ferramentas de Monitoramento e Log
+- Prometheus, Grafana
+- Splunk
+
+
+### Metodologias e Práticas
+- Agile (Scrum, Kanban), DevOps
+- Continuous Integration/Continuous Deployment (CI/CD)
+- Infrastructure as Code (IaC), Configuration Management
+
 
 ## 🏅 Certificações
 
