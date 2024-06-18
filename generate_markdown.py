@@ -8,15 +8,19 @@ markdown_content = """
 1. [Introdução](#introdução)
 2. [Pré-requisitos](#pré-requisitos)
 3. [Objetivo](#objetivo)
-4. [Passo 1: Criação da Rede Docker](#passo-1-criação-da-rede-docker)
-5. [Passo 2: Criação do Container MySQL](#passo-2-criação-do-container-mysql)
+4. [Passo 1: Instalar Docker](#passo-1-instalar-docker)
+5. [Passo 2: Criação da Rede Docker](#passo-2-criação-da-rede-docker)
+6. [Passo 3: Baixar as Imagens Docker](#passo-3-baixar-as-imagens-docker)
+    - [1. Baixar a imagem do MySQL](#1-baixar-a-imagem-do-mysql)
+    - [2. Baixar a imagem do WordPress](#2-baixar-a-imagem-do-wordpress)
+7. [Passo 4: Criação do Container MySQL](#passo-4-criação-do-container-mysql)
     - [1. Iniciar o container MySQL](#1-iniciar-o-container-mysql)
-6. [Passo 3: Criação do Container WordPress](#passo-3-criação-do-container-wordpress)
+8. [Passo 5: Criação do Container WordPress](#passo-5-criação-do-container-wordpress)
     - [1. Iniciar o container WordPress](#1-iniciar-o-container-wordpress)
-7. [Passo 4: Testar a Comunicação](#passo-4-testar-a-comunicação)
+9. [Passo 6: Testar a Comunicação](#passo-6-testar-a-comunicação)
     - [1. Acessar a aplicação WordPress](#1-acessar-a-aplicação-wordpress)
-8. [Conclusão](#conclusão)
-9. [Recursos Adicionais](#recursos-adicionais)
+10. [Conclusão](#conclusão)
+11. [Recursos Adicionais](#recursos-adicionais)
 
 ## Introdução
 ### O que é WordPress?
@@ -32,14 +36,29 @@ MySQL é um sistema de gerenciamento de banco de dados relacional (RDBMS) de có
 ## Objetivo
 Criar dois containers: um com uma aplicação WordPress e outro com um banco de dados MySQL, e configurar a comunicação entre eles manualmente.
 
-## Passo 1: Criação da Rede Docker
+## Passo 1: Instalar Docker
+Se você ainda não tem o Docker instalado na sua máquina, siga as instruções de instalação no site oficial do Docker: [Instruções de instalação](https://docs.docker.com/get-docker/).
+
+## Passo 2: Criação da Rede Docker
 Para que os containers possam se comunicar, vamos criar uma rede Docker.
 
 ```bash
 docker network create wordpress-network
 ```
 
-## Passo 2: Criação do Container MySQL
+## Passo 3: Baixar as Imagens Docker
+
+### 1. Baixar a imagem do MySQL
+```bash
+docker pull mysql:5.7
+```
+
+### 2. Baixar a imagem do WordPress
+```bash
+docker pull wordpress:latest
+```
+
+## Passo 4: Criação do Container MySQL
 
 ### 1. Iniciar o container MySQL
 ```bash
@@ -51,7 +70,7 @@ docker run --name mysql-container --network wordpress-network -e MYSQL_ROOT_PASS
 - **-v**: Monta o volume para persistir os dados do MySQL.
 - **-d**: Executar o container em modo desacoplado (em background).
 
-## Passo 3: Criação do Container WordPress
+## Passo 5: Criação do Container WordPress
 
 ### 1. Iniciar o container WordPress
 ```bash
@@ -64,7 +83,7 @@ docker run --name wordpress-container --network wordpress-network -e WORDPRESS_D
 - **-v**: Monta o volume para persistir os dados do WordPress.
 - **-d**: Executar o container em modo desacoplado (em background).
 
-## Passo 4: Testar a Comunicação
+## Passo 6: Testar a Comunicação
 
 ### 1. Acessar a aplicação WordPress
 Abra o navegador web e vá para `http://localhost:8080`. Você deverá ver a página de configuração do WordPress se tudo estiver configurado corretamente.
