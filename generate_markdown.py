@@ -19,8 +19,13 @@ markdown_content = """
     - [1. Iniciar o container WordPress](#1-iniciar-o-container-wordpress)
 9. [Passo 6: Testar a Comunicação](#passo-6-testar-a-comunicação)
     - [1. Acessar a aplicação WordPress](#1-acessar-a-aplicação-wordpress)
-10. [Conclusão](#conclusão)
-11. [Recursos Adicionais](#recursos-adicionais)
+10. [Passo 7: Criar uma Página no WordPress](#passo-7-criar-uma-página-no-wordpress)
+    - [1. Criar uma nova página](#1-criar-uma-nova-página)
+11. [Passo 8: Consultar a Página no MySQL](#passo-8-consultar-a-página-no-mysql)
+    - [1. Acessar o container MySQL](#1-acessar-o-container-mysql)
+    - [2. Consultar a página salva no banco de dados](#2-consultar-a-página-salva-no-banco-de-dados)
+12. [Conclusão](#conclusão)
+13. [Recursos Adicionais](#recursos-adicionais)
 
 ## Introdução
 ### O que é WordPress?
@@ -50,7 +55,7 @@ docker network create wordpress-network
 
 ### 1. Baixar a imagem do MySQL
 ```bash
-docker pull mysql:5.7
+docker pull mysql:8.0
 ```
 
 ### 2. Baixar a imagem do WordPress
@@ -62,7 +67,7 @@ docker pull wordpress:latest
 
 ### 1. Iniciar o container MySQL
 ```bash
-docker run --name mysql-container --network wordpress-network -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_DATABASE=my_database -e MYSQL_USER=user -e MYSQL_PASSWORD=user_password -v mysql_data:/var/lib/mysql -d mysql:5.7
+docker run --name mysql-container --network wordpress-network -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_DATABASE=my_database -e MYSQL_USER=user -e MYSQL_PASSWORD=user_password -v mysql_data:/var/lib/mysql -d mysql:8.0
 ```
 - **--name**: Nome do container (mysql-container).
 - **--network**: Rede Docker para o container (wordpress-network).
@@ -88,8 +93,34 @@ docker run --name wordpress-container --network wordpress-network -e WORDPRESS_D
 ### 1. Acessar a aplicação WordPress
 Abra o navegador web e vá para `http://localhost:8080`. Você deverá ver a página de configuração do WordPress se tudo estiver configurado corretamente.
 
+## Passo 7: Criar uma Página no WordPress
+
+### 1. Criar uma nova página
+1. Faça login no painel administrativo do WordPress (`http://localhost:8080/wp-admin`).
+2. Vá para **Páginas > Adicionar nova**.
+3. Adicione um título e conteúdo à sua página.
+4. Clique em **Publicar** para salvar a página.
+
+## Passo 8: Consultar a Página no MySQL
+
+### 1. Acessar o container MySQL
+```bash
+docker exec -it mysql-container mysql -uuser -p
+```
+Digite a senha `user_password` quando solicitado. Agora você deve estar no prompt do MySQL.
+
+### 2. Consultar a página salva no banco de dados
+No prompt do MySQL, execute os seguintes comandos:
+
+```sql
+USE my_database;
+SELECT * FROM wp_posts WHERE post_type='page';
+```
+
+Isso retornará uma lista de páginas salvas no WordPress, incluindo a que você acabou de criar.
+
 ## Conclusão
-Você configurou com sucesso dois containers Docker (WordPress e MySQL) manualmente e configurou a comunicação entre eles usando uma rede Docker. Este exemplo usa WordPress, uma aplicação popular que depende do MySQL para armazenar dados.
+Você configurou com sucesso dois containers Docker (WordPress e MySQL) manualmente e configurou a comunicação entre eles usando uma rede Docker. Além disso, você criou uma nova página no WordPress e consultou a página salva diretamente no banco de dados MySQL.
 
 ## Recursos Adicionais
 - [Documentação do Docker](https://docs.docker.com/)
