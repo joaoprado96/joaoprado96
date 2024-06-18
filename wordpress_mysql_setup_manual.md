@@ -1,7 +1,4 @@
 
-# Código Python para gerar o arquivo Markdown para configurar WordPress com MySQL manualmente
-
-markdown_content = """
 # Configuração Manual de Containers Docker: WordPress e MySQL
 
 ## Índice
@@ -157,11 +154,3 @@ Você configurou com sucesso dois containers Docker (WordPress e MySQL) manualme
 - [Imagens Docker no Docker Hub](https://hub.docker.com/)
 - [Documentação do WordPress](https://wordpress.org/support/)
 - [Documentação do MySQL](https://dev.mysql.com/doc/)
-"""
-
-# Salvar o conteúdo em um arquivo Markdown
-file_path = "wordpress_mysql_setup_manual.md"
-with open(file_path, "w") as file:
-    file.write(markdown_content)
-
-print(f"O arquivo Markdown foi salvo como {file_path}")
