@@ -17,10 +17,6 @@
     - [Como o Docker Funciona](#como-o-docker-funciona)
     - [Benefícios do Docker](#benefícios-do-docker)
 5. [Casos de Uso](#casos-de-uso)
-6. [Demonstração Prática](#demonstração-prática)
-    - [Instalação do Docker](#instalação-do-docker)
-    - [Criando um Container Simples](#criando-um-container-simples)
-    - [Construindo uma Imagem Docker](#construindo-uma-imagem-docker)
 7. [Conclusão](#conclusão)
 8. [Recursos Adicionais](#recursos-adicionais)
 
@@ -262,26 +258,7 @@ Containers oferecem uma maneira eficiente e flexível de implantar e gerenciar a
 Docker é uma ferramenta poderosa que simplifica a criação, implantação e execução de aplicações em containers, oferecendo benefícios significativos em termos de consistência, portabilidade e escalabilidade. Seja para desenvolvimento de software, arquiteturas de microservices ou análise de dados, Docker é uma escolha excelente para modernizar e otimizar o fluxo de trabalho de TI.
 
 ## Demonstração Prática
-
-### Instalação do Docker
-- Passos para instalar o Docker em diferentes sistemas operacionais
-
-### Criando um Container Simples
-- Criar e executar um container Docker a partir de uma imagem oficial
-
-### Construindo uma Imagem Docker
-- Escrever um Dockerfile simples e construir uma imagem a partir dele
-
-## Conclusão
-
-### Recapitulação dos Conceitos
-- Virtualização, Containers e Docker
-
-### Importância para o Desenvolvimento Moderno
-- Como essas tecnologias estão moldando o futuro do desenvolvimento de software
-
-### Próximos Passos
-- Recursos para aprendizado contínuo (Documentação do Docker, Cursos, Comunidades)
+- Bora pro exercicio 01
 
 ## Recursos Adicionais
 
