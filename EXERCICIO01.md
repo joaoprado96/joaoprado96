@@ -29,22 +29,22 @@ Criar dois containers: um com uma aplicação web (Nginx) e outro com um banco d
 ## Passo 1: Criação da Rede Docker
 Para que os containers possam se comunicar, vamos criar uma rede Docker.
 
-\`\`\`bash
+```bash
 docker network create my_network
-\`\`\`
+```
 
 ## Passo 2: Criação do Container MySQL
 Vamos criar um container MySQL usando uma imagem oficial do MySQL.
 
 ### 1. Baixar a imagem do MySQL
-\`\`\`bash
+```bash
 docker pull mysql:latest
-\`\`\`
+```
 
 ### 2. Executar o container MySQL
-\`\`\`bash
+```bash
 docker run --name my_mysql_container --network my_network -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_DATABASE=my_database -e MYSQL_USER=user -e MYSQL_PASSWORD=user_password -d mysql:latest
-\`\`\`
+```
 - **--name**: Nome do container (my_mysql_container).
 - **--network**: Rede Docker para o container (my_network).
 - **-e**: Variáveis de ambiente para configuração do MySQL.
@@ -54,14 +54,14 @@ docker run --name my_mysql_container --network my_network -e MYSQL_ROOT_PASSWORD
 Vamos criar um container Nginx que servirá como servidor web.
 
 ### 1. Baixar a imagem do Nginx
-\`\`\`bash
+```bash
 docker pull nginx:latest
-\`\`\`
+```
 
 ### 2. Criar um arquivo de configuração Nginx
-Crie um arquivo chamado \`default.conf\` com o seguinte conteúdo:
+Crie um arquivo chamado `default.conf` com o seguinte conteúdo:
 
-\`\`\`nginx
+```nginx
 server {
     listen 80;
 
@@ -73,12 +73,12 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
-\`\`\`
+```
 
 ### 3. Executar o container Nginx
-\`\`\`bash
+```bash
 docker run --name my_nginx_container --network my_network -v $(pwd)/default.conf:/etc/nginx/conf.d/default.conf:ro -p 8080:80 -d nginx:latest
-\`\`\`
+```
 - **--name**: Nome do container (my_nginx_container).
 - **--network**: Rede Docker para o container (my_network).
 - **-v**: Montar o arquivo de configuração Nginx no container.
@@ -89,22 +89,22 @@ docker run --name my_nginx_container --network my_network -v $(pwd)/default.conf
 Agora que ambos os containers estão em execução e na mesma rede, vamos testar a comunicação entre eles.
 
 ### 1. Verificar os containers em execução
-\`\`\`bash
+```bash
 docker ps
-\`\`\`
-Você deve ver ambos os containers (\`my_mysql_container\` e \`my_nginx_container\`) em execução.
+```
+Você deve ver ambos os containers (`my_mysql_container` e `my_nginx_container`) em execução.
 
 ### 2. Acessar o container Nginx
-Abra um navegador web e acesse \`http://localhost:8080\`. O Nginx deve estar configurado para encaminhar solicitações ao MySQL.
+Abra um navegador web e acesse `http://localhost:8080`. O Nginx deve estar configurado para encaminhar solicitações ao MySQL.
 
 ### 3. Acessar o container MySQL
 Você pode acessar o container MySQL diretamente usando um cliente MySQL ou o CLI do Docker.
 
 #### Usar o CLI do Docker para acessar o MySQL
-\`\`\`bash
+```bash
 docker exec -it my_mysql_container mysql -uuser -p
-\`\`\`
-Digite a senha \`user_password\` quando solicitado. Agora você deve estar no prompt do MySQL.
+```
+Digite a senha `user_password` quando solicitado. Agora você deve estar no prompt do MySQL.
 
 ## Conclusão
 Você configurou com sucesso dois containers Docker (Nginx e MySQL) e configurou a comunicação entre eles usando uma rede Docker. Este é um exemplo básico, e você pode expandir essa configuração para incluir mais containers e serviços conforme necessário.
