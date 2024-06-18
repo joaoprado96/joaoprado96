@@ -258,7 +258,11 @@ Containers oferecem uma maneira eficiente e flexível de implantar e gerenciar a
 Docker é uma ferramenta poderosa que simplifica a criação, implantação e execução de aplicações em containers, oferecendo benefícios significativos em termos de consistência, portabilidade e escalabilidade. Seja para desenvolvimento de software, arquiteturas de microservices ou análise de dados, Docker é uma escolha excelente para modernizar e otimizar o fluxo de trabalho de TI.
 
 ## Demonstração Prática
-- Bora pro exercicio 01
+- Vamos agora colocar esses conhecimentos em pratica
+### Subindo 2 containers com Docker - EX01A
+### Subindo 2 containers com Docker Compose - EX01B
+### Subindo 2 containers com Kubernetes - EX01C
+
 
 ## Recursos Adicionais
 
