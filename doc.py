@@ -1,5 +1,4 @@
 import docx
-from markdownify import markdownify as md
 import os
 
 def read_docx(file_path):
@@ -19,29 +18,46 @@ def read_docx(file_path):
             elements.append(f"* {text}")
         elif style in ['List Number', 'List Number 2', 'List Number 3']:
             elements.append(f"1. {text}")
+        elif style == 'TOCHeading':
+            elements.append(f"[TOC] {text}")
         else:
             elements.append(text)
 
     def handle_table(table):
-        for row in table.rows:
-            row_data = [cell.text.strip() for cell in row.cells]
-            elements.append('| ' + ' | '.join(row_data) + ' |')
+        table_data = []
+        for i, row in enumerate(table.rows):
+            row_data = [cell.text.strip().replace('\n', ' ') for cell in row.cells]
+            table_data.append('| ' + ' | '.join(row_data) + ' |')
+            
+            # Add header separator after the first row
+            if i == 0:
+                header_separator = '| ' + ' | '.join(['---'] * len(row.cells)) + ' |'
+                table_data.insert(1, header_separator)
         
-        if len(table.rows) > 0:
-            header = table.rows[0]
-            separator = '| ' + ' | '.join(['---'] * len(header.cells)) + ' |'
-            elements.append(separator)
+        elements.extend(table_data)
 
+    def handle_table_of_contents(doc):
+        for para in doc.paragraphs:
+            if para.style.name.startswith('TOC'):
+                elements.append(para.text.strip())
+
+    # Handle the table of contents first
+    handle_table_of_contents(doc)
+
+    # Handle the paragraphs and tables
     for para in doc.paragraphs:
         handle_paragraph(para)
 
     for table in doc.tables:
         handle_table(table)
 
-    return '\n\n'.join(elements)
+    # Convert tabs to spaces (4 spaces per tab)
+    content = '\n\n'.join(elements).replace('\t', '    ')
 
-def convert_to_markdown(docx_content):
-    return md(docx_content, heading_style="ATX")
+    # Ensure proper line breaks
+    content = content.replace('\n', '  \n')
+
+    return content
 
 def save_markdown(markdown_content, output_path):
     with open(output_path, 'w', encoding='utf-8') as f:
@@ -49,8 +65,7 @@ def save_markdown(markdown_content, output_path):
 
 def convert_docx_to_markdown(input_file, output_file):
     docx_content = read_docx(input_file)
-    markdown_content = convert_to_markdown(docx_content)
-    save_markdown(markdown_content, output_file)
+    save_markdown(docx_content, output_file)
 
 # Exemplo de uso
 input_file = 'documentacao.docx'
