@@ -7,7 +7,12 @@ def read_docx(file_path):
     elements = []
 
     for para in doc.paragraphs:
-        elements.append(para.text)
+        # Handle headers
+        if para.style.name.startswith('Heading'):
+            level = int(para.style.name.split(' ')[1])
+            elements.append('#' * level + ' ' + para.text)
+        else:
+            elements.append(para.text)
 
     for table in doc.tables:
         for row in table.rows:
@@ -21,7 +26,15 @@ def read_docx(file_path):
             header = table.rows[0]
             separator = '| ' + ' | '.join(['---']*len(header.cells)) + ' |'
             elements.append(separator)
-    
+
+    for para in doc.paragraphs:
+        # Handle lists
+        if para.style.name in ['List Bullet', 'List Number']:
+            if para.style.name == 'List Bullet':
+                elements.append(f"* {para.text}")
+            elif para.style.name == 'List Number':
+                elements.append(f"1. {para.text}")
+
     return '\n'.join(elements)
 
 def convert_to_markdown(docx_content):
