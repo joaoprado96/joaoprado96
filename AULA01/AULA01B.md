@@ -55,7 +55,6 @@ Kubernetes gerencia automaticamente a criação, destruição e replicação de 
 
 ### 4.1. Ferramentas de Gerenciamento
 - **Kubernetes Dashboard**: Interface web para gerenciamento e visualização de recursos no cluster.
-- **Lens**: IDE para Kubernetes que facilita a visualização e gerenciamento de clusters.
 - **Kubectl (CLI)**: Ferramenta de linha de comando para interagir com o cluster Kubernetes.
 
 ### 4.2. Ferramentas de CI/CD
@@ -66,11 +65,8 @@ Kubernetes gerencia automaticamente a criação, destruição e replicação de 
 ### 4.3. Observabilidade
 - **Prometheus & Grafana**: Monitoramento de métricas e visualização.
 - **ELK Stack (Elasticsearch, Logstash, Kibana)**: Solução completa de logging.
-- **Jaeger**: Ferramenta para rastreamento distribuído (tracing).
 
 ### 4.4. Ferramentas de Segurança
-- **Istio (Service Mesh)**: Gerenciamento de tráfego de rede, segurança e observabilidade para serviços.
-- **Linkerd**: Service mesh leve para Kubernetes.
 - **OPA (Open Policy Agent)**: Ferramenta para políticas de segurança e controle de acesso.
 
 ## 5. Casos de Uso
@@ -88,25 +84,141 @@ Kubernetes gerencia automaticamente a criação, destruição e replicação de 
 ### 5.4. Desenvolvimento e Testes
 - Criação de ambientes de desenvolvimento replicáveis e testes automatizados com pipelines CI/CD.
 
+
 ## 6. Hands-on e Demonstrações
 
 ### 6.1. Configurando um Cluster Kubernetes
 - **Minikube**: Ferramenta para rodar um cluster Kubernetes localmente.
-- **Google Kubernetes Engine (GKE)**: Serviço gerenciado de Kubernetes na Google Cloud Platform.
+    1. **Instalação do Minikube**:
+        - Siga as instruções de instalação para seu sistema operacional disponíveis em: [Instalação do Minikube](https://minikube.sigs.k8s.io/docs/start/)
+    2. **Inicialização do Cluster**:
+        ```sh
+        minikube start
+        ```
+    3. **Verificando o Status do Cluster**:
+        ```sh
+        minikube status
+        ```
 
 ### 6.2. Criando e Gerenciando Pods
 - Comandos básicos do Kubectl para criar e gerenciar Pods, ReplicaSets e Deployments.
 
-### 6.3. Configurando Serviços e Ingress
-- Exposição de aplicações com Services e configuração de um Ingress Controller para gerenciamento de tráfego.
+### 6.3. Configurando MySQL e WordPress
+- Configuração de containers MySQL e WordPress que comunicam entre si.
+    1. **Criando um Deployment para MySQL**:
+        - Crie um arquivo `mysql-deployment.yaml` com o seguinte conteúdo:
+            ```yaml
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: mysql
+            spec:
+              selector:
+                matchLabels:
+                  app: mysql
+              strategy:
+                type: Recreate
+              template:
+                metadata:
+                  labels:
+                    app: mysql
+                spec:
+                  containers:
+                  - image: mysql:5.6
+                    name: mysql
+                    env:
+                    - name: MYSQL_ROOT_PASSWORD
+                      value: password
+                    ports:
+                    - containerPort: 3306
+                      name: mysql
+            ```
+        - Aplique a configuração:
+            ```sh
+            kubectl apply -f mysql-deployment.yaml
+            ```
 
-## 7. Conclusão e Perguntas
+    2. **Criando um Service para MySQL**:
+        - Crie um arquivo `mysql-service.yaml` com o seguinte conteúdo:
+            ```yaml
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: mysql
+            spec:
+              ports:
+              - port: 3306
+              selector:
+                app: mysql
+            ```
+        - Aplique a configuração:
+            ```sh
+            kubectl apply -f mysql-service.yaml
+            ```
 
-### 7.1. Resumo dos pontos principais
-- Revisão dos conceitos e funcionalidades abordadas, reforçando a importância do Kubernetes na orquestração de containers.
+    3. **Criando um Deployment para WordPress**:
+        - Crie um arquivo `wordpress-deployment.yaml` com o seguinte conteúdo:
+            ```yaml
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: wordpress
+            spec:
+              selector:
+                matchLabels:
+                  app: wordpress
+              strategy:
+                type: Recreate
+              template:
+                metadata:
+                  labels:
+                    app: wordpress
+                spec:
+                  containers:
+                  - image: wordpress:4.8-apache
+                    name: wordpress
+                    env:
+                    - name: WORDPRESS_DB_HOST
+                      value: mysql:3306
+                    - name: WORDPRESS_DB_PASSWORD
+                      value: password
+                    ports:
+                    - containerPort: 80
+                      name: wordpress
+            ```
+        - Aplique a configuração:
+            ```sh
+            kubectl apply -f wordpress-deployment.yaml
+            ```
 
-### 7.2. Perguntas e Respostas
-- Espaço aberto para dúvidas e discussões, permitindo uma interação enriquecedora com o público.
+    4. **Criando um Service para WordPress**:
+        - Crie um arquivo `wordpress-service.yaml` com o seguinte conteúdo:
+            ```yaml
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: wordpress
+            spec:
+              ports:
+              - port: 80
+              selector:
+                app: wordpress
+              type: LoadBalancer
+            ```
+        - Aplique a configuração:
+            ```sh
+            kubectl apply -f wordpress-service.yaml
+            ```
+
+    5. **Verificando os Deployments e Services**:
+        ```sh
+        kubectl get deployments
+        kubectl get services
+        ```
+
+    6. **Acessando o WordPress**:
+        - Utilize o comando `minikube service wordpress --url` para obter a URL de acesso ao WordPress.
+
 
 ## Materiais de Referência
 - [Documentação oficial do Kubernetes](https://kubernetes.io/docs/)
