@@ -249,8 +249,3 @@ Para garantir que as configurações estejam corretas e o WordPress funcione cor
 
 ## Conclusão
 Neste tutorial, configuramos um cluster Kubernetes local usando Minikube, baixamos e configuramos containers MySQL e WordPress, criamos o banco de dados `wordpress` e garantimos que as configurações estavam corretas. Com isso, conseguimos acessar e utilizar o WordPress com sucesso dentro do nosso cluster Kubernetes.
-"""
-
-O passo a passo completo para configurar o MySQL e o WordPress no Kubernetes, incluindo a criação do banco de dados e a concessão de permissões, foi salvo em um arquivo Markdown. Você pode baixar o arquivo clicando no link abaixo:
-
-[kubernetes_hands_on_tutorial.md](sandbox:/mnt/data/kubernetes_hands_on_tutorial.md?_chatgptios_conversationID=dd3421fc-5e1a-4492-a775-28baa26e9785&_chatgptios_messageID=221bd8f7-3668-4b57-81f8-c06f45eaabff) |oai:code-citation|

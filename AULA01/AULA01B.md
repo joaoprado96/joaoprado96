@@ -1,3 +1,4 @@
+
 # Aula sobre Kubernetes
 
 ## 1. Introdução ao Kubernetes
@@ -35,7 +36,8 @@ Kubernetes gerencia automaticamente a criação, destruição e replicação de 
 
 ### 3.2. Autoescalonamento (Auto-scaling)
 - **Horizontal Pod Autoscaler (HPA)**: Ajusta o número de réplicas de Pods com base na utilização de recursos, como CPU e memória.
-- **Cluster Autoscaler**: Ajusta o número de Nodes no cluster com base na demanda.
+- **Vertical Pod Autoscaler (VPA)**: Recomenda e ajusta automaticamente os valores de CPU e memória para os Pods.
+- **Cluster Autoscaler**: Ajusta o número de Nodes no cluster com base na demanda, expandindo ou encolhendo o pool de Nodes conforme necessário.
 
 ### 3.3. Deployments e atualizações contínuas
 - **Rolling updates**: Atualiza gradualmente os Pods de uma aplicação para garantir zero downtime.
@@ -47,9 +49,9 @@ Kubernetes gerencia automaticamente a criação, destruição e replicação de 
 - **Fluentd**: Ferramenta de coleta de logs para agregação e roteamento.
 
 ### 3.5. Segurança
-- **RBAC (Role-Based Access Control)**: Controle de acesso baseado em funções para gerenciar permissões no cluster.
+- **RBAC (Role-Based Access Control)**: Controle de acesso baseado em funções para gerenciar permissões no cluster. Atribua roles e bindings seguindo o princípio do menor privilégio.
 - **Secrets e ConfigMaps**: Armazenamento de informações sensíveis e configurações de forma segura.
-- **Network Policies**: Definição de regras de rede para controlar a comunicação entre Pods.
+- **Network Policies**: Definição de regras de rede para controlar a comunicação entre Pods. Inclua plugins de rede como Calico, Flannel e Weave Net.
 
 ## 4. Principais Ferramentas de Mercado
 
@@ -84,8 +86,24 @@ Kubernetes gerencia automaticamente a criação, destruição e replicação de 
 ### 5.4. Desenvolvimento e Testes
 - Criação de ambientes de desenvolvimento replicáveis e testes automatizados com pipelines CI/CD.
 
+## 6. Kubernetes no IBM ZCX
 
-## Materiais de Referência
+### 6.1. O que é IBM ZCX?
+IBM z/OS Container Extensions (ZCX) é uma solução que permite a execução de containers Linux no z/OS. Isso possibilita a execução de workloads modernos em containers diretamente no mainframe, integrando o ambiente tradicional do z/OS com aplicações baseadas em containers.
+
+### 6.2. Benefícios do IBM ZCX
+- **Integração**: Permite a execução de aplicações em containers junto com workloads tradicionais no z/OS.
+- **Segurança**: Aproveita os recursos de segurança robustos do z/OS.
+- **Performance**: Tira proveito da alta performance do hardware IBM Z.
+- **Eficiência Operacional**: Reduz a necessidade de transferências de dados entre ambientes diferentes.
+
+### 6.3. Como Kubernetes se integra com IBM ZCX
+- **Gestão de Containers**: Kubernetes pode ser utilizado para gerenciar os containers executados no IBM ZCX, proporcionando uma interface unificada para orquestração.
+- **Resiliência**: A combinação do Kubernetes com o IBM ZCX aumenta a resiliência e disponibilidade das aplicações.
+- **DevOps**: Facilita a adoção de práticas DevOps, integrando aplicações mainframe com pipelines de CI/CD modernos.
+
+## 7. Materiais de Referência
 - [Documentação oficial do Kubernetes](https://kubernetes.io/docs/)
+- [Documentação do IBM ZCX](https://www.ibm.com/docs/en/zos-container-extensions)
 - "Kubernetes Up & Running" (livro)
 - Tutoriais e vídeos no YouTube (canal do Kubernetes)
