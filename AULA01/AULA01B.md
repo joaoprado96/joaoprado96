@@ -1,19 +1,47 @@
-
 # Aula sobre Kubernetes
 
-## 1. Introdução ao Kubernetes
+## Índice
+1. [Introdução](#1-introdução)
+   1.1. [O que é Kubernetes?](#11-o-que-é-kubernetes)
+   1.2. [Principais conceitos](#12-principais-conceitos)
+2. [Arquitetura do Kubernetes](#2-arquitetura-do-kubernetes)
+   2.1. [Componentes do Plano de Controle (Control Plane)](#21-componentes-do-plano-de-controle-control-plane)
+   2.2. [Componentes dos Nós (Nodes)](#22-componentes-dos-nós-nodes)
+3. [Funcionalidades do Kubernetes](#3-funcionalidades-do-kubernetes)
+   3.1. [Orquestração de containers](#31-orquestração-de-containers)
+   3.2. [Autoescalonamento (Auto-scaling)](#32-autoescalonamento-auto-scaling)
+   3.3. [Deployments e atualizações contínuas](#33-deployments-e-atualizações-contínuas)
+   3.4. [Monitoramento e logging](#34-monitoramento-e-logging)
+   3.5. [Segurança](#35-segurança)
+4. [Principais Ferramentas de Mercado](#4-principais-ferramentas-de-mercado)
+   4.1. [Ferramentas de Gerenciamento](#41-ferramentas-de-gerenciamento)
+   4.2. [Ferramentas de CI/CD](#42-ferramentas-de-cicd)
+   4.3. [Observabilidade](#43-observabilidade)
+   4.4. [Ferramentas de Segurança](#44-ferramentas-de-segurança)
+5. [Casos de Uso](#5-casos-de-uso)
+   5.1. [Deploy de Aplicações Web](#51-deploy-de-aplicações-web)
+   5.2. [Processamento em Lote (Batch Processing)](#52-processamento-em-lote-batch-processing)
+   5.3. [Microservices](#53-microservices)
+   5.4. [Desenvolvimento e Testes](#54-desenvolvimento-e-testes)
+6. [Kubernetes no IBM ZCX](#6-kubernetes-no-ibm-zcx)
+   6.1. [O que é IBM ZCX?](#61-o-que-é-ibm-zcx)
+   6.2. [Benefícios do IBM ZCX](#62-benefícios-do-ibm-zcx)
+   6.3. [Como Kubernetes se integra com IBM ZCX](#63-como-kubernetes-se-integra-com-ibm-zcx)
+7. [Materiais de Referência](#7-materiais-de-referência)
 
-### 1.1. O que é Kubernetes?
+## 1. Introdução
+
+### 1.1. Introdução ao Kubernetes
 Kubernetes, também conhecido como K8s, é uma plataforma open-source para orquestração de containers, permitindo automação na implantação, escalonamento e operações de aplicações em containers. Foi originalmente desenvolvido pelo Google, inspirado no seu sistema interno chamado Borg, e agora é mantido pela Cloud Native Computing Foundation (CNCF).
 
-### 1.2. Principais conceitos
-- **Containers e Docker**: Containers são unidades leves e portáveis de software que empacotam código e todas as suas dependências. Docker é a plataforma mais comum para criação de containers.
-- **Cluster**: Conjunto de máquinas (físicas ou virtuais) que executam os containers gerenciados pelo Kubernetes.
-- **Nodes (Master e Worker)**: Máquinas dentro do cluster. O Master Node gerencia o cluster e os Worker Nodes executam os containers.
-- **Pods**: A menor unidade de execução no Kubernetes, um Pod pode conter um ou mais containers.
-- **ReplicaSets**: Garante que um número especificado de réplicas de um Pod esteja rodando em qualquer momento.
-- **Deployments**: Controla a criação e atualização de ReplicaSets.
-- **Services**: Abstração que define um conjunto lógico de Pods e uma política para acessar esses Pods.
+### 1.2. Objetivos
+Nesta aula, você aprenderá:
+- Os conceitos fundamentais do Kubernetes.
+- A arquitetura e os componentes principais do Kubernetes.
+- As funcionalidades e capacidades do Kubernetes, incluindo orquestração de containers, autoescalonamento, e segurança.
+- As principais ferramentas de mercado que complementam o Kubernetes.
+- Casos de uso práticos para Kubernetes.
+- A integração do Kubernetes com IBM ZCX.
 
 ## 2. Arquitetura do Kubernetes
 
