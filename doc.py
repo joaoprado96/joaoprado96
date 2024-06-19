@@ -6,36 +6,39 @@ def read_docx(file_path):
     doc = docx.Document(file_path)
     elements = []
 
-    for para in doc.paragraphs:
-        # Handle headers
-        if para.style.name.startswith('Heading'):
-            level = int(para.style.name.split(' ')[1])
-            elements.append('#' * level + ' ' + para.text)
-        else:
-            elements.append(para.text)
+    def handle_paragraph(para):
+        style = para.style.name
+        text = para.text.strip()
 
-    for table in doc.tables:
+        if style.startswith('Heading'):
+            level = int(style.split(' ')[1])
+            elements.append('#' * level + ' ' + text)
+        elif style in ['Normal', 'BodyText', 'Body Text', 'Body Text Indent']:
+            elements.append(text)
+        elif style in ['List Bullet', 'List Bullet 2', 'List Bullet 3']:
+            elements.append(f"* {text}")
+        elif style in ['List Number', 'List Number 2', 'List Number 3']:
+            elements.append(f"1. {text}")
+        else:
+            elements.append(text)
+
+    def handle_table(table):
         for row in table.rows:
-            row_data = []
-            for cell in row.cells:
-                row_data.append(cell.text)
+            row_data = [cell.text.strip() for cell in row.cells]
             elements.append('| ' + ' | '.join(row_data) + ' |')
         
-        # Adding a separator line for markdown tables
         if len(table.rows) > 0:
             header = table.rows[0]
-            separator = '| ' + ' | '.join(['---']*len(header.cells)) + ' |'
+            separator = '| ' + ' | '.join(['---'] * len(header.cells)) + ' |'
             elements.append(separator)
 
     for para in doc.paragraphs:
-        # Handle lists
-        if para.style.name in ['List Bullet', 'List Number']:
-            if para.style.name == 'List Bullet':
-                elements.append(f"* {para.text}")
-            elif para.style.name == 'List Number':
-                elements.append(f"1. {para.text}")
+        handle_paragraph(para)
 
-    return '\n'.join(elements)
+    for table in doc.tables:
+        handle_table(table)
+
+    return '\n\n'.join(elements)
 
 def convert_to_markdown(docx_content):
     return md(docx_content, heading_style="ATX")
