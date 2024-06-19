@@ -1,4 +1,3 @@
-
 # Kubernetes Hands-on e Demonstrações
 
 ## Índice
@@ -10,6 +9,8 @@
    - [Baixando as Imagens do Docker](#baixando-as-imagens-do-docker)
    - [Configurando MySQL e WordPress](#configurando-mysql-e-wordpress)
    - [Verificando Conectividade](#verificando-conectividade)
+   - [Criando Banco de Dados e Concedendo Permissões](#criando-banco-de-dados-e-concedendo-permissões)
+   - [Verificando e Ajustando Configurações](#verificando-e-ajustando-configurações)
 5. [Conclusão](#conclusão)
 
 ## Introdução
@@ -135,6 +136,12 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
                 ports:
                 - containerPort: 80
                   name: wordpress
+                readinessProbe:
+                  httpGet:
+                    path: /
+                    port: 80
+                  initialDelaySeconds: 10
+                  periodSeconds: 5
         ```
     - Aplique a configuração:
         ```sh
@@ -174,9 +181,19 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
 Para verificar se o WordPress pode se conectar ao MySQL, você pode usar um Pod temporário para testar a conectividade:
 
 1. **Criar um Pod Temporário para Teste**:
-    ```sh
-    kubectl run -i --tty --rm debug --image=busybox --restart=Never -- sh
-    ```
+
+    Se você encontrar o erro "pods 'debug' already exists", você tem duas opções:
+
+    - **Opção 1: Excluir o Pod Existente e Criar um Novo**:
+        ```sh
+        kubectl delete pod debug
+        kubectl run -i --tty --rm debug --image=busybox --restart=Never -- sh
+        ```
+
+    - **Opção 2: Criar um Novo Pod com um Nome Diferente**:
+        ```sh
+        kubectl run -i --tty --rm debug2 --image=busybox --restart=Never -- sh
+        ```
 
 2. **Testar Resolução de Nome e Conectividade**:
     Dentro do Pod, tente os seguintes comandos:
@@ -188,5 +205,52 @@ Para verificar se o WordPress pode se conectar ao MySQL, você pode usar um Pod 
     - `nslookup mysql.default.svc.cluster.local`: Verifica se o nome do serviço MySQL está sendo resolvido corretamente.
     - `nc -zv mysql.default.svc.cluster.local 3306`: Verifica se a porta 3306 do serviço MySQL está aberta e acessível.
 
+### Criando Banco de Dados e Concedendo Permissões
+Para criar o banco de dados `wordpress` e conceder as permissões necessárias ao usuário:
+
+1. **Acessar o MySQL**:
+    ```sh
+    kubectl exec -it $(kubectl get pods -l app=mysql -o jsonpath='{.items[0].metadata.name}') -- mysql -u root -p
+    ```
+
+2. **Criar o Banco de Dados `wordpress`**:
+    ```sql
+    CREATE DATABASE wordpress;
+    ```
+
+3. **Conceder Permissões ao Usuário**:
+    ```sql
+    GRANT ALL PRIVILEGES ON wordpress.* TO 'root'@'%';
+    FLUSH PRIVILEGES;
+    ```
+
+4. **Verificar se o Banco de Dados foi Criado**:
+    ```sql
+    SHOW DATABASES;
+    ```
+
+### Verificando e Ajustando Configurações
+Para garantir que as configurações estejam corretas e o WordPress funcione corretamente:
+
+1. **Acessar o Pod do WordPress**:
+    ```sh
+    kubectl exec -it $(kubectl get pods -l app=wordpress -o jsonpath='{.items[0].metadata.name}') -- /bin/bash
+    ```
+
+2. **Reiniciar Apache**:
+    ```sh
+    service apache2 restart
+    ```
+
+4. **Verificar Logs de Erro do WordPress**:
+    ```sh
+    tail -f /var/www/html/wp-content/debug.log
+    ```
+
 ## Conclusão
-Neste tutorial, configuramos um cluster Kubernetes local utilizando Minikube, baixamos as imagens Docker do MySQL e WordPress, e configuramos dois containers para que se comuniquem entre si. Também verificamos a conectividade entre os serviços para garantir que o WordPress possa se conectar ao MySQL. Esperamos que este guia tenha ajudado a entender os conceitos básicos de Kubernetes e como ele pode ser usado para orquestrar aplicações em containers. Continue explorando e experimentando com diferentes configurações e aplicações para aprofundar seu conhecimento em Kubernetes.
+Neste tutorial, configuramos um cluster Kubernetes local usando Minikube, baixamos e configuramos containers MySQL e WordPress, criamos o banco de dados `wordpress` e garantimos que as configurações estavam corretas. Com isso, conseguimos acessar e utilizar o WordPress com sucesso dentro do nosso cluster Kubernetes.
+"""
+
+O passo a passo completo para configurar o MySQL e o WordPress no Kubernetes, incluindo a criação do banco de dados e a concessão de permissões, foi salvo em um arquivo Markdown. Você pode baixar o arquivo clicando no link abaixo:
+
+[kubernetes_hands_on_tutorial.md](sandbox:/mnt/data/kubernetes_hands_on_tutorial.md?_chatgptios_conversationID=dd3421fc-5e1a-4492-a775-28baa26e9785&_chatgptios_messageID=221bd8f7-3668-4b57-81f8-c06f45eaabff) |oai:code-citation|
