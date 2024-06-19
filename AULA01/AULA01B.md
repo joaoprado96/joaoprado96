@@ -28,6 +28,7 @@
    - [Benefícios do IBM ZCX](#benefícios-do-ibm-zcx)
    - [Provisionamento de uma Instância ZCX](#provisionamento-de-uma-instância-zcx)
    - [Como Kubernetes se integra com IBM ZCX](#como-kubernetes-se-integra-com-ibm-zcx)
+8. [Conclusao](#conclusao)
 
 ## 1. Introdução
 
@@ -163,3 +164,20 @@ spec:
 - Gestão de Containers: Kubernetes pode ser utilizado para gerenciar os containers executados no IBM ZCX, proporcionando uma interface unificada para orquestração.
 - Resiliência: A combinação do Kubernetes com o IBM ZCX aumenta a resiliência e disponibilidade das aplicações.
 - DevOps: Facilita a adoção de práticas DevOps, integrando aplicações mainframe com pipelines de CI/CD modernos.
+
+## 7. Conclusão
+
+Nesta aula, exploramos os fundamentos do Kubernetes, uma plataforma poderosa e amplamente utilizada para orquestração de containers. Discutimos a arquitetura do Kubernetes, incluindo os componentes do plano de controle e dos nós, e examinamos suas principais funcionalidades, como orquestração de containers, autoescalonamento, e segurança.
+
+Também abordamos as principais ferramentas de mercado que complementam o Kubernetes, como ferramentas de gerenciamento, CI/CD, observabilidade e segurança. Além disso, exploramos casos de uso práticos, desde o deploy de aplicações web até o desenvolvimento e testes de microservices.
+
+Por fim, discutimos a integração do Kubernetes com o IBM z/OS Container Extensions (ZCX), destacando os benefícios e os passos para provisionar uma instância ZCX.
+
+Esperamos que esta aula tenha fornecido uma compreensão sólida do Kubernetes e suas capacidades, capacitando você a aplicar esses conhecimentos em seus projetos e ambientes de trabalho.
+
+## 8. Materiais de Referência
+
+- [Documentação oficial do Kubernetes](https://kubernetes.io/docs/home/)
+- [Documentação do IBM ZCX](https://www.ibm.com/docs/en/zos-container-extensions)
+- "Kubernetes Up & Running" (livro)
+- Tutoriais e vídeos no YouTube (canal do Kubernetes)
