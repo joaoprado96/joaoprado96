@@ -9,7 +9,6 @@
    - [Configurando um Cluster Kubernetes](#configurando-um-cluster-kubernetes)
    - [Baixando as Imagens do Docker](#baixando-as-imagens-do-docker)
    - [Configurando MySQL e WordPress](#configurando-mysql-e-wordpress)
-   - [Verificando Conectividade](#verificando-conectividade)
 5. [Conclusão](#conclusão)
 
 ## Introdução
@@ -125,7 +124,7 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
                 name: wordpress
                 env:
                 - name: WORDPRESS_DB_HOST
-                  value: mysql.default.svc.cluster.local
+                  value: mysql
                 - name: WORDPRESS_DB_USER
                   value: root
                 - name: WORDPRESS_DB_PASSWORD
@@ -170,23 +169,5 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
 6. **Acessando o WordPress**:
     - Utilize o comando `minikube service wordpress --url` para obter a URL de acesso ao WordPress.
 
-### Verificando Conectividade
-Para verificar se o WordPress pode se conectar ao MySQL, você pode usar um Pod temporário para testar a conectividade:
-
-1. **Criar um Pod Temporário para Teste**:
-    ```sh
-    kubectl run -i --tty --rm debug --image=busybox --restart=Never -- sh
-    ```
-
-2. **Testar Resolução de Nome e Conectividade**:
-    Dentro do Pod, tente os seguintes comandos:
-    ```sh
-    nslookup mysql.default.svc.cluster.local
-    nc -zv mysql.default.svc.cluster.local 3306
-    ```
-
-    - `nslookup mysql.default.svc.cluster.local`: Verifica se o nome do serviço MySQL está sendo resolvido corretamente.
-    - `nc -zv mysql.default.svc.cluster.local 3306`: Verifica se a porta 3306 do serviço MySQL está aberta e acessível.
-
 ## Conclusão
-Neste tutorial, configuramos um cluster Kubernetes local utilizando Minikube, baixamos as imagens Docker do MySQL e WordPress, e configuramos dois containers para que se comuniquem entre si. Também verificamos a conectividade entre os serviços para garantir que o WordPress possa se conectar ao MySQL. Esperamos que este guia tenha ajudado a entender os conceitos básicos de Kubernetes e como ele pode ser usado para orquestrar aplicações em containers. Continue explorando e experimentando com diferentes configurações e aplicações para aprofundar seu conhecimento em Kubernetes.
+Neste tutorial, configuramos um cluster Kubernetes local utilizando Minikube, baixamos as imagens Docker do MySQL e WordPress, e configuramos dois containers para que se comuniquem entre si. Esperamos que este guia tenha ajudado a entender os conceitos básicos de Kubernetes e como ele pode ser usado para orquestrar aplicações em containers. Continue explorando e experimentando com diferentes configurações e aplicações para aprofundar seu conhecimento em Kubernetes.
