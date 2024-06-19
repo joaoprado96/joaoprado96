@@ -1,4 +1,4 @@
-# Virtualização, Containers, Docker e Kubernets
+# Virtualização, Containers, Docker
 
 ## Índice
 
