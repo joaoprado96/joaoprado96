@@ -1,48 +1,47 @@
 # Aula sobre Kubernetes
 
 ## Índice
-
 1. [Introdução](#introdução)
-    - [O que é Kubernetes?](#o-que-é-kubernetes)
-    - [Principais conceitos](#principais-conceitos)
+   - [O que é Kubernetes?](#o-que-é-kubernetes)
+   - [Principais conceitos](#principais-conceitos)
 2. [Arquitetura do Kubernetes](#arquitetura-do-kubernetes)
-    - [Componentes do Plano de Controle (Control Plane)](#componentes-do-plano-de-controle-control-plane)
-    - [Componentes dos Nós (Nodes)](#componentes-dos-nós-nodes)
+   - [Componentes do Plano de Controle (Control Plane)](#componentes-do-plano-de-controle-control-plane)
+   - [Componentes dos Nós (Nodes)](#componentes-dos-nós-nodes)
 3. [Funcionalidades do Kubernetes](#funcionalidades-do-kubernetes)
-    - [Orquestração de containers](#orquestração-de-containers)
-    - [Autoescalonamento (Auto-scaling)](#autoescalonamento-auto-scaling)
-    - [Deployments e atualizações contínuas](#deployments-e-atualizações-contínuas)
-    - [Monitoramento e logging](#monitoramento-e-logging)
-    - [Segurança](#segurança)
+   - [Orquestração de containers](#orquestração-de-containers)
+   - [Autoescalonamento (Auto-scaling)](#autoescalonamento-auto-scaling)
+   - [Deployments e atualizações contínuas](#deployments-e-atualizações-contínuas)
+   - [Monitoramento e logging](#monitoramento-e-logging)
+   - [Segurança](#segurança)
 4. [Principais Ferramentas de Mercado](#principais-ferramentas-de-mercado)
-    - [Ferramentas de Gerenciamento](#ferramentas-de-gerenciamento)
-    - [Ferramentas de CI/CD](#ferramentas-de-cicd)
-    - [Observabilidade](#observabilidade)
-    - [Ferramentas de Segurança](#ferramentas-de-segurança)
+   - [Ferramentas de Gerenciamento](#ferramentas-de-gerenciamento)
+   - [Ferramentas de CI/CD](#ferramentas-de-cicd)
+   - [Observabilidade](#observabilidade)
+   - [Ferramentas de Segurança](#ferramentas-de-segurança)
 5. [Casos de Uso](#casos-de-uso)
-    - [Deploy de Aplicações Web](#deploy-de-aplicações-web)
-    - [Processamento em Lote (Batch Processing)](#processamento-em-lote-batch-processing)
-    - [Microservices](#microservices)
-    - [Desenvolvimento e Testes](#desenvolvimento-e-testes)
+   - [Deploy de Aplicações Web](#deploy-de-aplicações-web)
+   - [Processamento em Lote (Batch Processing)](#processamento-em-lote-batch-processing)
+   - [Microservices](#microservices)
+   - [Desenvolvimento e Testes](#desenvolvimento-e-testes)
 6. [Kubernetes no IBM ZCX](#kubernetes-no-ibm-zcx)
-    - [O que é IBM ZCX?](#o-que-é-ibm-zcx)
-    - [Benefícios do IBM ZCX](#benefícios-do-ibm-zcx)
-    - [Como Kubernetes se integra com IBM ZCX](#como-kubernetes-se-integra-com-ibm-zcx)
-7. [Materiais de Referência](#materiais-de-referência)
+   - [O que é IBM ZCX?](#o-que-é-ibm-zcx)
+   - [Benefícios do IBM ZCX](#benefícios-do-ibm-zcx)
+   - [Provisionamento de uma Instância ZCX](#provisionamento-de-uma-instância-zcx)
+   - [Como Kubernetes se integra com IBM ZCX](#como-kubernetes-se-integra-com-ibm-zcx)
 
 ## 1. Introdução
 
-### 1.1. Introdução ao Kubernetes
-Kubernetes, também conhecido como K8s, é uma plataforma open-source para orquestração de containers, permitindo automação na implantação, escalonamento e operações de aplicações em containers. Foi originalmente desenvolvido pelo Google, inspirado no seu sistema interno chamado Borg, e agora é mantido pela Cloud Native Computing Foundation (CNCF).
+### 1.1. O que é Kubernetes?
+[Kubernetes](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/), também conhecido como K8s, é uma plataforma open-source para orquestração de containers, permitindo automação na implantação, escalonamento e operações de aplicações em containers. Foi originalmente desenvolvido pelo Google, inspirado no seu sistema interno chamado Borg, e agora é mantido pela Cloud Native Computing Foundation (CNCF).
 
-### 1.2. Objetivos
-Nesta aula, você aprenderá:
-- Os conceitos fundamentais do Kubernetes.
-- A arquitetura e os componentes principais do Kubernetes.
-- As funcionalidades e capacidades do Kubernetes, incluindo orquestração de containers, autoescalonamento, e segurança.
-- As principais ferramentas de mercado que complementam o Kubernetes.
-- Casos de uso práticos para Kubernetes.
-- A integração do Kubernetes com IBM ZCX.
+### 1.2. Principais conceitos
+- **Containers e Docker**: Containers são unidades leves e portáveis de software que empacotam código e todas as suas dependências. Docker é a plataforma mais comum para criação de containers.
+- **Cluster**: Conjunto de máquinas (físicas ou virtuais) que executam os containers gerenciados pelo Kubernetes.
+- **Nodes (Master e Worker)**: Máquinas dentro do cluster. O Master Node gerencia o cluster e os Worker Nodes executam os containers.
+- **Pods**: A menor unidade de execução no Kubernetes, um Pod pode conter um ou mais containers.
+- **ReplicaSets**: Garante que um número especificado de réplicas de um Pod esteja rodando em qualquer momento.
+- **Deployments**: Controla a criação e atualização de ReplicaSets.
+- **Services**: Abstração que define um conjunto lógico de Pods e uma política para acessar esses Pods.
 
 ## 2. Arquitetura do Kubernetes
 
@@ -126,13 +125,41 @@ IBM z/OS Container Extensions (ZCX) é uma solução que permite a execução de
 - **Performance**: Tira proveito da alta performance do hardware IBM Z.
 - **Eficiência Operacional**: Reduz a necessidade de transferências de dados entre ambientes diferentes.
 
-### 6.3. Como Kubernetes se integra com IBM ZCX
-- **Gestão de Containers**: Kubernetes pode ser utilizado para gerenciar os containers executados no IBM ZCX, proporcionando uma interface unificada para orquestração.
-- **Resiliência**: A combinação do Kubernetes com o IBM ZCX aumenta a resiliência e disponibilidade das aplicações.
-- **DevOps**: Facilita a adoção de práticas DevOps, integrando aplicações mainframe com pipelines de CI/CD modernos.
+### 6.3. Provisionamento de uma Instância ZCX
+#### Passos para Provisionamento
+**Pré-requisitos:**
+- Certifique-se de que o ambiente z/OS está configurado corretamente.
+- Verifique se os recursos necessários (CPU, memória, armazenamento) estão disponíveis.
 
-## 7. Materiais de Referência
-- [Documentação oficial do Kubernetes](https://kubernetes.io/docs/)
-- [Documentação do IBM ZCX](https://www.ibm.com/docs/en/zos-container-extensions)
-- "Kubernetes Up & Running" (livro)
-- Tutoriais e vídeos no YouTube (canal do Kubernetes)
+**Configuração do Ambiente:**
+- Configure o ambiente z/OS para suportar ZCX, incluindo a configuração de redes e armazenamento.
+
+**Criação da Instância ZCX:**
+- Utilize comandos específicos do z/OS para criar e configurar uma instância ZCX.
+- Exemplo de comando:
+  ```sh
+  CREATE ZCX INSTANCE <instance_name> ...
+  ```
+
+**Configuracao da instancia**
+- Configure a instância ZCX para atender aos requisitos específicos da aplicação.
+- Isso pode incluir a configuração de volumes, redes e outras dependências.
+
+**Deploy de Containers:**
+- Utilize ferramentas de orquestração de containers, como Kubernetes, para gerenciar os containers dentro da instância ZCX.
+- Exemplo de comando Kubernetes:
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+   - name: my-container
+    image: my-image
+```
+
+**Deploy de Containers:**
+- Gestão de Containers: Kubernetes pode ser utilizado para gerenciar os containers executados no IBM ZCX, proporcionando uma interface unificada para orquestração.
+- Resiliência: A combinação do Kubernetes com o IBM ZCX aumenta a resiliência e disponibilidade das aplicações.
+- DevOps: Facilita a adoção de práticas DevOps, integrando aplicações mainframe com pipelines de CI/CD modernos.
