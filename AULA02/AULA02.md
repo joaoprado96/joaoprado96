@@ -76,6 +76,11 @@ Na interface do CodeRunner, você pode criar, editar, comparar, fazer upload, ex
 - **Logs**: Visualiza os logs da execução do script, redirecionando para o Splunk.
 
 ### Exemplo de Uso do CodeRunner com StackSpot IA
+O CodeRunner fornece uma classe completa para os usuarios, com o intuito de abstrair a parte infraestrutural das chamadas do StackSpot, a classe pode ser importada nos codigos pythons atraves de `from app.functions.stackspot import *`, segue o codigo da classe:
+
+```python
+class ExecutarComandoRapido
+```
 
 1. **Configuração Inicial**: Crie uma instância da classe `ExecutarComandoRapido`.
 
