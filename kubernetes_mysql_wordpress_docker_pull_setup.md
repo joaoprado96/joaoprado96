@@ -7,17 +7,18 @@
 3. [Objetivo](#objetivo)
 4. [Passo a Passo](#passo-a-passo)
    - [Configurando um Cluster Kubernetes](#configurando-um-cluster-kubernetes)
-   - [Criando e Gerenciando Pods](#criando-e-gerenciando-pods)
+   - [Baixando as Imagens do Docker](#baixando-as-imagens-do-docker)
    - [Configurando MySQL e WordPress](#configurando-mysql-e-wordpress)
 5. [Conclusão](#conclusão)
 
 ## Introdução
-Neste tutorial, vamos configurar um cluster Kubernetes local usando Minikube, criar e gerenciar Pods, e configurar dois containers, MySQL e WordPress, para que se comuniquem entre si. Este é um guia prático que ajudará a entender os conceitos básicos de Kubernetes e como ele pode ser usado para orquestrar aplicações em containers.
+Neste tutorial, vamos configurar um cluster Kubernetes local usando Minikube, baixar as imagens Docker do MySQL e WordPress, e configurar os containers para que se comuniquem entre si. Este é um guia prático que ajudará a entender os conceitos básicos de Kubernetes e como ele pode ser usado para orquestrar aplicações em containers.
 
 ## Pré-requisitos
 - Sistema operacional: Windows, macOS ou Linux
 - Minikube instalado ([Guia de Instalação](https://minikube.sigs.k8s.io/docs/start/))
 - Kubectl instalado ([Guia de Instalação](https://kubernetes.io/docs/tasks/tools/install-kubectl/))
+- Docker instalado ([Guia de Instalação](https://docs.docker.com/get-docker/))
 - Helm instalado ([Guia de Instalação](https://helm.sh/docs/intro/install/))
 
 ## Objetivo
@@ -37,31 +38,14 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
     minikube status
     ```
 
-### Criando e Gerenciando Pods
-1. **Criando um Pod**:
+### Baixando as Imagens do Docker
+1. **Baixando a Imagem do MySQL**:
     ```sh
-    kubectl run nginx --image=nginx
+    docker pull mysql:5.6
     ```
-2. **Listando Pods**:
+2. **Baixando a Imagem do WordPress**:
     ```sh
-    kubectl get pods
-    ```
-3. **Criando um Deployment**:
-    ```sh
-    kubectl create deployment nginx --image=nginx
-    ```
-4. **Escalando o Deployment**:
-    ```sh
-    kubectl scale deployment nginx --replicas=3
-    ```
-5. **Atualizando o Deployment**:
-    ```sh
-    kubectl set image deployment/nginx nginx=nginx:1.16.1
-    ```
-6. **Listando Deployments e ReplicaSets**:
-    ```sh
-    kubectl get deployments
-    kubectl get rs
+    docker pull wordpress:4.8-apache
     ```
 
 ### Configurando MySQL e WordPress
@@ -180,4 +164,4 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
     - Utilize o comando `minikube service wordpress --url` para obter a URL de acesso ao WordPress.
 
 ## Conclusão
-Neste tutorial, configuramos um cluster Kubernetes local utilizando Minikube, criamos e gerenciamos Pods, e configuramos dois containers, MySQL e WordPress, para que se comuniquem entre si. Esperamos que este guia tenha ajudado a entender os conceitos básicos de Kubernetes e como ele pode ser usado para orquestrar aplicações em containers. Continue explorando e experimentando com diferentes configurações e aplicações para aprofundar seu conhecimento em Kubernetes.
+Neste tutorial, configuramos um cluster Kubernetes local utilizando Minikube, baixamos as imagens Docker do MySQL e WordPress, e configuramos dois containers para que se comuniquem entre si. Esperamos que este guia tenha ajudado a entender os conceitos básicos de Kubernetes e como ele pode ser usado para orquestrar aplicações em containers. Continue explorando e experimentando com diferentes configurações e aplicações para aprofundar seu conhecimento em Kubernetes.
