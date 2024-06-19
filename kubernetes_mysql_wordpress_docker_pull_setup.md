@@ -41,11 +41,11 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
 ### Baixando as Imagens do Docker
 1. **Baixando a Imagem do MySQL**:
     ```sh
-    docker pull mysql:5.6
+    docker pull mysql:8.0
     ```
 2. **Baixando a Imagem do WordPress**:
     ```sh
-    docker pull wordpress:4.8-apache
+    docker pull wordpress:latest
     ```
 
 ### Configurando MySQL e WordPress
@@ -68,7 +68,7 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
                 app: mysql
             spec:
               containers:
-              - image: mysql:5.6
+              - image: mysql:8.0
                 name: mysql
                 env:
                 - name: MYSQL_ROOT_PASSWORD
@@ -119,7 +119,7 @@ Ao final deste tutorial, você terá um cluster Kubernetes rodando localmente co
                 app: wordpress
             spec:
               containers:
-              - image: wordpress:4.8-apache
+              - image: wordpress:latest
                 name: wordpress
                 env:
                 - name: WORDPRESS_DB_HOST
