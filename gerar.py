@@ -2,106 +2,49 @@ import os
 import re
 from bs4 import BeautifulSoup
 import markdownify
-import re
-import nltk
-from nltk.tokenize import sent_tokenize, word_tokenize
 
-# Download nltk resources if not already available
-nltk.download('punkt')
-
-def format_string(input_string):
-    # Remover espaços desnecessários
-    input_string = input_string.strip()
-    
-    # Tokenizar o texto em palavras
-    words = word_tokenize(input_string)
-    
-    formatted_sentences = []
-    current_sentence = []
-    
-    for i, word in enumerate(words):
-        # Verificar se é um código seguido de uma descrição
-        if word.isupper() and (i + 1 < len(words) and not words[i + 1].isupper()):
-            # Adicionar a sentença atual à lista se houver
-            if current_sentence:
-                formatted_sentences.append(' '.join(current_sentence))
-            current_sentence = [word]
-        else:
-            current_sentence.append(word)
-    
-    # Adicionar a última sentença se houver
-    if current_sentence:
-        formatted_sentences.append(' '.join(current_sentence))
-    
-    # Reconstituir o texto formatado com sentenças separadas por vírgula
-    formatted_string = ", ".join(formatted_sentences)
-    return formatted_string
+def markdown_table(rows):
+    if not rows:
+        return ""
+    num_columns = len(rows[0])
+    headers = [f'' for i in range(num_columns)]
+    table = '| ' + ' | '.join(headers) + ' |\n'
+    table += '| ' + ' | '.join(['---'] * num_columns) + ' |\n'
+    for row in rows:
+        table += f'| ' + ' | '.join(row) + ' |\n'
+    return table
 
 def format_table(table_html):
     soup = BeautifulSoup(table_html, 'html.parser')
     rows = [[cell.get_text(strip=True) for cell in tr.find_all(['td', 'th'])] for tr in soup.find_all('tr')]
-
-    long_contents = {}  # Dictionary to store long contents and their identifiers
-
-    for i, row in enumerate(rows):
-        for j, cell in enumerate(row):
-            if len(cell) > 150:  # If the cell content is too long
-                identifier = f'({i}-{j})'  # Create an identifier based on the cell's position
-                long_contents[identifier] = format_string(cell)  # Store the long content and its identifier
-                rows[i][j] = identifier  # Replace the cell content with the identifier
-
-    if soup.find('tr').find('th'):  # Check if the first row contains 'th' elements
-        table_md = markdown_table_with_headers(rows)
-    else:
-        table_md = markdown_table_without_headers(rows)
-
-    # Add the long contents to the table description
-    table_description = '\n'.join(f'> {identifier} {content}\n' for identifier, content in long_contents.items())
-    table_md += '---\n' + table_description + '\n'
-
+    table_md = markdown_table(rows)
     return table_md
-
-def markdown_table_with_headers(rows):
-    headers = rows[0]
-    table = '| ' + ' | '.join(headers) + ' |\n'
-    table += '| ' + ' | '.join(['---'] * len(headers)) + ' |\n'
-    for row in rows[1:]:
-        table += '| ' + ' | '.join(row) + ' |\n'
-    table += '\n'
-    return table
-
-def markdown_table_without_headers(rows):
-    table = ''
-    for row in rows:
-        table += '| ' + ' | '.join(row) + ' |\n'
-    table += '\n'
-    return table
 
 def process_html_content(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
     main_content = soup.find(id='main-content')
 
     if main_content:
-        # Process tables separately
-        for table in main_content.find_all('table'):
-            formatted_table = format_table(str(table))
-            table.replace_with(BeautifulSoup(formatted_table, 'html.parser'))
-
-        markdown_content = markdownify.markdownify(str(main_content), heading_style="ATX")
+        markdown_content = markdownify.markdownify(str(main_content), 
+                                                   heading_style="ATX",
+                                                   strip_comments=True,
+                                                   escape_underscores=True
+                                                   )
 
         # Remove unnecessary line breaks but keep them before headers, lists, and citations
         lines = markdown_content.split('\n')
         processed_lines = []
         for i in range(len(lines)):
-            if (i < len(lines) - 1 and re.match(r'^\s*$', lines[i]) and
-                not (lines[i + 1].startswith('#') or lines[i + 1].startswith('*') or lines[i + 1].startswith('>'))):
+            # Trocar o marcador
+            if lines[i].startswith('* '):
+                processed_lines.append(lines[i].replace('* ','+ ').rstrip())
                 continue
-            processed_lines.append(lines[i].rstrip())
+            # Remover as linhas em branco
+            if lines[i].strip():
+                processed_lines.append(lines[i].rstrip())
+                continue
+        
         markdown_content = '\n'.join(processed_lines)
-
-        # Add line breaks before "Observação:" e "Legenda:"
-        markdown_content = markdown_content.replace('**Observação:**', '\n**Observação:**\n')
-        markdown_content = markdown_content.replace('**Legenda:**', '\n**Legenda:**\n')
 
         return markdown_content
     else:
@@ -111,7 +54,7 @@ def convert_html_file_to_markdown(input_file, output_file):
     with open(input_file, 'r', encoding='utf-8') as f:
         html_content = f.read()
 
-    markdown_content = process_html_content(html_content)  # Call process_html_content here
+    markdown_content = process_html_content(html_content)
 
     if markdown_content is not None:
         soup = BeautifulSoup(html_content, 'html.parser')

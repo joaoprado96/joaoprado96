@@ -4,32 +4,23 @@ type: docs
 weight: 1
 ---
 
-
 # 1 - Descrição e Conceitos
 Essa função permite que uma aplicação sob GRBE obtenha informações à respeito do monitor, sistema e task em que esta executando.
-
 # 2 - Descrição dos Parâmetros
-
 ## 2.1 Primeiro Parâmetro
 O aplicativo devera chamar a função "CAM" através da ponte "MONITOR", passando os seguintes parâmetros:
-| 1 Byte | Return-Code da Ponte |
-| --- | --- |
-| 3 Bytes | Código da função da Ponte MONITOR – “CAM”. |
-| 8 Bytes | Entidade, deve ser preenchido com “GRBE “ |
----
-
+| 1 Byte | Return-Code da Ponte | |
+| --- | --- | --- |
+| 3 Bytes | Código da função da Ponte MONITOR – “CAM”. | |
+| 8 Bytes | Entidade, deve ser preenchido com “GRBE “ | |
 ## 2.2 Segundo Parâmetro
 | 1 Byte | Return-Code da Função |
 | --- | --- |
-| 3 Bytes | (1-1) |
+| 3 Bytes | Opção da chamada:TRA Dados da TransaçãoCOM Dados da Área de Comunicação GRBE-Aplicação (LPARAM4)TER Dados do TerminalGMT Horário GMTBRANCOS Dados do GRBE e task |
 | 4 Bytes | Fixo: 4 Bytes com brancos |
 | 8 Bytes | Tamanho da área para receber o LPARAM4 (apenas para opção “COM”) |
----
-> (1-1) Opção da chamada :, TRA Dados da TransaçãoCOM Dados da Área de Comunicação GRBE-Aplicação (, LPARAM4 ), TER Dados do TerminalGMT Horário, GMTBRANCOS Dados do, GRBE e task
-
 ## 2.3 Terceiro Parâmetro
 O terceiro parâmetro depende da opção da chamada (descritos no segundo parâmetro):
-
 **OPÇÃO = BRANCOS**
 Essa área deverá conter 30 bytes.
 Se não foi solicitado a opção no segundo parâmetro (ficou com “brancos”), serão
@@ -42,15 +33,13 @@ devolvidas as seguintes informações sobre o GRBE e a Task:
 | 2 Bytes | Id task em decimal nao utilizado mais |
 | 8 bytes | Indica nome applid real |
 | 3 Bytes | Filler |
----
-| 8 Bytes | Applid do monitor onde a aplicação está executando |
-| 3 Bytes | Versão do GRBE nesse monitor |
-| 4 Bytes | Computador onde esse monitor executa. |
-| 4 Bytes | Id da task em 4 bytes. |
-| 8 Bytes | Indica nome applid real |
-| 3 Bytes | Filler |
----
-
+| **8 Bytes** | Applid do monitor onde a aplicação está executando |
+| --- | --- |
+| **3 Bytes** | Versão do GRBE nesse monitor |
+| **4 Bytes** | Computador onde esse monitor executa. |
+| **4 Bytes** | Id da task em 4 bytes. |
+| **8 Bytes** | Indica nome applid real |
+| **3 Bytes** | Filler |
 **OPÇÃO = TRA**
 Essa área deverá conter 35 bytes.
 Essa opção irá devolver as mesmas informações da opção branco, acrescentando o
@@ -63,8 +52,6 @@ nome da transação e o nome do programa:
 | 2 Bytes | Id da task em decimal, valido apenas para tasks de processamento. |
 | 8 Bytes | Nome da transação |
 | 8 Bytes | Nome do programa |
----
-
 **OPÇÃO = COM**
 O 3º parâmetro para a opção "COM" deverá indicar o início de uma área na workingstorage do programa onde será copiada a Área de Comunicação GRBE-Aplicação
 (LPARAM4, também conhecida como 4ª área). O tamanho dessa área deverá ser sempre informado no último campo (8 bytes zonados) do 2º parâmetro.
@@ -72,8 +59,6 @@ O GRBE moverá a cópia da área para a área destino da aplicação se o tamanh
 Mudanças feitas nesta cópia da 4ª área não terão reflexo na 4ª área original.
 | --- | Início da área na working-storage destinada para a cópia da 4ª área (LPARAM4), com o tamanho fornecido no segundo parâmetro. |
 | --- | --- |
----
-
 **OPÇÃO = TER**
 Essa área deverá conter 40 bytes. Essa opção irá devolver várias informações sobre o terminal que solicitou a transação em execução:
 | 8 Bytes | Nome lógico do terminal |
@@ -87,32 +72,22 @@ Essa área deverá conter 40 bytes. Essa opção irá devolver várias informaç
 | 1 Byte | Tempo da transação anterior |
 | 4 Bytes | Tamanho do buffer |
 | 1 Byte | Filler |
----
-
 **OPÇÃO = GMT**
 Essa área deverá conter 8 bytes (double) e trará a data/ hora GMT.
 | 8 Bytes | data/hora GMT |
 | --- | --- |
----
-
 # 3 - Códigos de Retorno
 | Código de Retorno | Descrição |
 | --- | --- |
-| A | Processamento Normal. Foi completado o processamento solicitado com sucesso.Tamanho passado pela aplicação e tamanho da 4ª área são iguais. |
-| B | (2-1) |
-| C | (3-1) |
-| D | Ocorreu erro no processamento. Foi solicitado opção "COM" e o tamanhoinformado é igual a ZEROS. |
-| E | Ocorreu erro no processamento. Foi solicitado opção "COM" e o tamanhoinformado é inválido. |
----
-> (2-1) Processamento Normal . Foi solicitado opção ``, COM '' e o tamanho passadopela aplicação é, MENOR do que o tamanho da 4ª área , que é copiada etruncada de acordo com o tamanho especificado pela aplicação .
-
-> (3-1) Processamento Normal . Foi solicitado opção ``, COM '' e o tamanho passadopela aplicação é, MAIOR do que o tamanho da 4ª área , que é copiada como seu tamanho correto
+| **A** | Processamento Normal. Foi completado o processamento solicitado com sucesso.Tamanho passado pela aplicação e tamanho da 4ª área são iguais. |
+| **B** | Processamento Normal. Foi solicitado opção "COM" e o tamanho passadopela aplicação é MENOR do que o tamanho da 4ª área, que é copiada etruncada de acordo com o tamanho especificado pela aplicação. |
+| **C** | Processamento Normal. Foi solicitado opção "COM" e o tamanho passadopela aplicação é MAIOR do que o tamanho da 4ª área, que é copiada como seu tamanho correto |
+| **D** | Ocorreu erro no processamento. Foi solicitado opção "COM" e o tamanhoinformado é igual a ZEROS. |
+| **E** | Ocorreu erro no processamento. Foi solicitado opção "COM" e o tamanhoinformado é inválido. |
 Observação
  1. No primeiro parâmetro está o código de retorno da ponte "MONITOR" informando o status de processamento da ponte.
 2. O código acima retorna no segundo parâmetro
-
 # 4 - Exemplos
-
 ## 4.1 Exemplo 1
 Exemplo de uma aplicação que esta' executando no monitor SP01 e na task de processamento de ID "0A".
 ```
@@ -155,7 +130,6 @@ DATA DIVISION
  WPARAM3-IDTK ---> 0A (id da task - hexadecimal)
  WPARAM3-IDTKD ---> 10 (id da task em decimal)
 ```
-
 ## 4.2 Exemplo 2
 Exemplo de uma aplicação que necessita de uma cópia da 4ª área
 ```
