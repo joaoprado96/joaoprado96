@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import markdownify
 import re
 import nltk
-from nltk.tokenize import sent_tokenize
+from nltk.tokenize import sent_tokenize, word_tokenize
 
 # Download nltk resources if not already available
 nltk.download('punkt')
@@ -22,8 +22,16 @@ def format_string(input_string):
         title = "Conteúdo"
         content = input_string
 
+    # Remover hífens desnecessários e capitalizar frases
+    def clean_text(text):
+        text = re.sub(r' - ', ' ', text)
+        text = re.sub(r'(\w)-(\w)', r'\1\2', text)  # Remove hífens entre letras
+        sentences = sent_tokenize(text)
+        capitalized_sentences = ' '.join(sentence.capitalize() for sentence in sentences)
+        return capitalized_sentences
+
     # Regex para identificar códigos e suas descrições
-    pattern = re.compile(r'([A-Za-z0-9]+)\s*([^\s].*?)(?=[A-Za-z0-9]+\s|$)')
+    pattern = re.compile(r'([A-Za-z0-9]+)\s+([^A-Za-z0-9\s].*?)(?=[A-Za-z0-9]+\s|$)')
     matches = pattern.findall(content)
     
     if not matches:
@@ -32,13 +40,9 @@ def format_string(input_string):
     formatted_lines = []
     for match in matches:
         code = match[0]
-        description = match[1].strip()
+        description = clean_text(match[1].strip())
 
-        # Tokenize and capitalize sentences in the description
-        sentences = sent_tokenize(description)
-        capitalized_sentences = ' '.join(sentence.capitalize() for sentence in sentences)
-
-        formatted_line = f"{code} - {capitalized_sentences}"
+        formatted_line = f"{code} - {description}"
         formatted_lines.append(formatted_line)
     
     formatted_string = f"{title}\n" + "\n".join(formatted_lines)
