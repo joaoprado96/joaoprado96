@@ -203,11 +203,13 @@ A seguir descrevemos os demais parâmetro necessários, conforme a função soli
 ---
 > (0-1) Código da função.LA Leitura sequencial de chave AnteriorLC Leitura Comum com chaveLCH Leitura Comum com chave e com HoldLCM Leitura Comum com chave Maior ou igualLI Leitura de Início de sequênciaLIA Leitura de Início de sequência por chave AnteriorLIM Leitura de Início de sequência com chave Maior ou igualLK Leitura sKip-sequencialLKM Leitura sKip-sequencial com chave Maior ou igualLP Leitura por chave Pa
 > (3-1) No caso de arquivos VSAM este campo é usado para retornar o tamanho doregistro lido:Se arquivo VSAM Read Only: SIAD retorna o LRECL.Se arquivo VSAM não Read Only: SIAD retorna o LRECL-10.Nos demais casos, o programa de aplicação deve informar o tamanho daárea de dados para conter o registro.
+
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |
 | --- | --- |
 ---
 > (0-1) Chave para de pesquisa do registro em questão, ou a chave parcial (completadacom zeros binários) para leitura por chave parcial (LP). N é o tamanho da chaveem bytes, que pode ter até 255 bytes.Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado,com tamanho de até 8 bytes.Nas funções LS e LA este parâmetro é desprezado.
+
 ### Quarto Parâmetro
 | Área de Dados |
 | --- |
@@ -229,6 +231,7 @@ A seguir descrevemos os demais parâmetro necessários, conforme a função soli
 | 2 Bytes | Tamanho da chave parcial. Este campo não é utilizado nesta função |
 ---
 > (3-1) Tamanho da área que contem o registro a ser incluído.Para arquivos PS: N = LRECLPara arquivos DA: N = BLKSIZE-10Para arquivos VSAM: (RKP+KEYLEN-10) <= N <= LRECL-10
+
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |
 | --- | --- |
@@ -268,6 +271,7 @@ Observação
 | --- | --- |
 ---
 > (0-1) Chave do registro a ser incluido. N é o tamanho da chave em bytes, que pode ter até 255 bytes.Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado, com tamanho de até 8 bytes.
+
 ## 4.4 Função de Alteração
 
 ### Segundo Parâmetro
@@ -284,6 +288,7 @@ Observação
 | --- | --- |
 ---
 > (0-1) Chave do registro a ser incluido. N é o tamanho da chave em bytes, que pode ter até 255 bytes.Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado, com tamanho de até 8 bytes.
+
 ### Quarto Parâmetro
 | Área de Dados |
 | --- |
