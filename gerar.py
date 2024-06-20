@@ -10,46 +10,34 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 nltk.download('punkt')
 
 def format_string(input_string):
-    # Remove espaços desnecessários
+    # Remover espaços desnecessários
     input_string = input_string.strip()
     
-    # Quebrar em sentenças
+    # Tokenizar o texto em sentenças
     sentences = sent_tokenize(input_string)
-    
+
+    # Processar sentenças
     formatted_lines = []
     for sentence in sentences:
         # Tokenizar a sentença em palavras
         words = word_tokenize(sentence)
         
-        # Inicializa uma lista para armazenar palavras processadas
-        processed_words = []
-        i = 0
-        while i < len(words):
-            word = words[i]
-            # Verificar se é um código
-            if word.isupper() and i < len(words) - 1 and words[i + 1][0].islower():
-                # É um código seguido por uma descrição
-                code = word
-                description_words = []
-                i += 1
-                while i < len(words) and not (words[i].isupper() and i < len(words) - 1 and words[i + 1][0].islower()):
-                    description_words.append(words[i])
-                    i += 1
-                description = ' '.join(description_words).lower().capitalize()
-                formatted_lines.append(f"{code} - {description}\n\n")
-            else:
-                # Não é um código, adiciona como está
-                processed_words.append(word)
-                i += 1
+        # Verificar se é um código e descrição
+        if len(words) > 1 and words[0].isupper():
+            code = words[0]
+            description = ' '.join(words[1:])
+            # Capitalizar adequadamente a descrição
+            description = description.capitalize()
+            formatted_line = f"{code} - {description}"
+        else:
+            formatted_line = sentence.capitalize()
         
-        # Junta as palavras processadas como uma sentença normal, se houver
-        if processed_words:
-            formatted_lines.append(' '.join(processed_words).capitalize())
+        formatted_lines.append(formatted_line)
     
     # Reconstituir o texto formatado
     formatted_string = "\n".join(formatted_lines)
+    print(formatted_string)
     return formatted_string
-
 
 
 
