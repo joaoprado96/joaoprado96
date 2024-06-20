@@ -201,28 +201,139 @@ A seguir descrevemos os demais parâmetro necessários, conforme a função soli
 | 2 Bytes | (3-1) |
 | 2 Bytes | Tamanho da Chave Parcial em bytes. É utilizado apenas em Funções de leitura por chave parcial (LP). |
 ---
-> (0-1) Código da função:
-LA - Leitura sequencial de chave anteriorlc leitura comum com chavelch leitura comum com chave e com holdlcm leitura comum com chave maior ou igualli leitura de in
-LIA - Leitura de in
-LIM - Leitura de in
-LK - Leitura skip
-LKM - Leitura skip
-LP - Leitura por chave pa
+> (0-1) Conteúdo
+C - Ó
+digo - D
+a - Função.
+LA - L
+eitura - S
+equencial - D
+e - C
+have - A
+nteriorLC - L
+eitura - C
+omum - C
+om - C
+haveLCH - L
+eitura - C
+omum - C
+om - C
+have - E
+com - H
+oldLCM - L
+eitura - C
+omum - C
+om - C
+have - M
+aior - O
+u - I
+gualLI - L
+eitura - D
+e - Iní
+cio - D
+e - Sequê
+nciaLIA - L
+eitura - D
+e - Iní
+cio - D
+e - Sequê
+ncia - P
+or - C
+have - A
+nteriorLIM - L
+eitura - D
+e - Iní
+cio - D
+e - Sequê
+ncia - C
+om - C
+have - M
+aior - O
+u - I
+gualLK - L
+eitura - Skip-
+sequencialLKM - L
+eitura - Skip-
+sequencial - C
+om - C
+have - M
+aior - O
+u - I
+gualLP - L
+eitura - P
+or - C
+have - Pa
 
-> (3-1) Código da função:
-VSAM - Este campo
-VSAM - Read only
-SIAD - Retorna o lrecl
-VSAM - N
-SIAD - Retorna o lrecl
+> (3-1) No caso de arquivos VSAM este campo é usado para retornar o tamanho doregistro lido:Se arquivo VSAM Read Only: SIAD retorna o LRECL.Se arquivo VSAM não Read Only:
+SIAD - R
+etorna - O lrecl-10.
+Nos - D
+emais - Casos,
+o - P
+rograma - D
+e - Aplicaçã
+o - D
+eve - I
+nformar - O
+tamanho - Daá
+rea - D
+e - D
+ados - P
+ara - C
+onter - O registro.
 
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |
 | --- | --- |
 ---
-> (0-1) Código da função:
-DA - Ou vsam rrds, a chave deve estar em formato compactado,com tamanho de at
-LS - E la este par
+> (0-1) Conteúdo
+Chave - P
+ara - D
+e - P
+esquisa - D
+o - R
+egistro - E
+m - Questão,
+ou - A
+chave - P
+arcial - (
+completadacom - Z
+eros - Binários)
+para - L
+eitura - P
+or - C
+have - P
+arcial - (lp).
+N - É
+o - T
+amanho - D
+a - C
+haveem - Bytes,
+que - P
+ode - T
+er - Até
+255 - Bytes.
+Para - A
+rquivos - D
+A - O
+u - V
+SAM - Rrds,
+a - C
+have - D
+eve - E
+star - E
+m - F
+ormato - Compactado,
+com - T
+amanho - D
+e - Até
+8 - Bytes.
+Nas - Funçõ
+es - L
+S - E
+LA - E
+ste - Parâ
+metro - É desprezado.
 
 ### Quarto Parâmetro
 | Área de Dados |
@@ -244,16 +355,62 @@ LS - E la este par
 | 2 Bytes | (3-1) |
 | 2 Bytes | Tamanho da chave parcial. Este campo não é utilizado nesta função |
 ---
-> (3-1) Nenhum código encontrado.
+> (3-1) Tamanho da área que contem o registro a ser incluído.Para arquivos PS: N = LRECLPara arquivos DA: N = BLKSIZE-10Para arquivos VSAM:
+RKP - +keylen-10) <=
+N - <= lrecl-10
 
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |
 | --- | --- |
 ---
-> (0-1) Código da função:
-DA - Ou vsam rrds, a chave deve estar em formato compactado, com tamanho de at
-SIAD - Retorna, nesse campo, a chave que ele atribuiu aoregistro
-DA - Ou rrds, retorna no formato compactado
+> (0-1) Conteúdo
+Chave - D
+o - R
+egistro - A
+ser - Incluido.
+N - É
+o - T
+amanho - D
+a - C
+have - E
+m - Bytes,
+que - P
+ode - T
+er - Até
+255 - Bytes.
+Para - A
+rquivos - D
+A - O
+u - V
+SAM - Rrds,
+a - C
+have - D
+eve - E
+star - E
+m - F
+ormato - Compactado,
+com - T
+amanho - D
+e - Até
+8 - Bytes.
+Na - Funçã
+o - Is,
+o - S
+IAD - Retorna,
+nesse - Campo,
+a - C
+have - Q
+ue - E
+le - A
+tribuiu - A
+oregistro - (
+se - A
+rquivo - D
+A - O
+u - Rrds,
+retorna - N
+o - F
+ormato - Compactado).
 Observação
  1) Na Inclusão Seqüencial o SIAD devolve neste campo a chave que ele forneceu ao registro.
 2) Para Inclusão Seqüencial o campo chave do arquivo deve sempre estar no formato compactado e ter 4 bytes de tamanho.
@@ -287,8 +444,36 @@ Observação
 | "n" Bytes | (0-1) |
 | --- | --- |
 ---
-> (0-1) Código da função:
-DA - Ou vsam rrds, a chave deve estar em formato compactado, com tamanho de at
+> (0-1) Conteúdo
+Chave - D
+o - R
+egistro - A
+ser - Incluido.
+N - É
+o - T
+amanho - D
+a - C
+have - E
+m - Bytes,
+que - P
+ode - T
+er - Até
+255 - Bytes.
+Para - A
+rquivos - D
+A - O
+u - V
+SAM - Rrds,
+a - C
+have - D
+eve - E
+star - E
+m - F
+ormato - Compactado,
+com - T
+amanho - D
+e - Até
+8 - Bytes.
 
 ## 4.4 Função de Alteração
 
@@ -305,8 +490,36 @@ DA - Ou vsam rrds, a chave deve estar em formato compactado, com tamanho de at
 | "n" Bytes | (0-1) |
 | --- | --- |
 ---
-> (0-1) Código da função:
-DA - Ou vsam rrds, a chave deve estar em formato compactado, com tamanho de at
+> (0-1) Conteúdo
+Chave - D
+o - R
+egistro - A
+ser - Incluido.
+N - É
+o - T
+amanho - D
+a - C
+have - E
+m - Bytes,
+que - P
+ode - T
+er - Até
+255 - Bytes.
+Para - A
+rquivos - D
+A - O
+u - V
+SAM - Rrds,
+a - C
+have - D
+eve - E
+star - E
+m - F
+ormato - Compactado,
+com - T
+amanho - D
+e - Até
+8 - Bytes.
 
 ### Quarto Parâmetro
 | Área de Dados |

@@ -13,23 +13,35 @@ def format_string(input_string):
     # Remove qualquer espaço desnecessário
     input_string = input_string.strip()
     
+    # Detectar título dinamicamente
+    title_match = re.match(r'^[^\s]+(\s+[^\s]+)*:', input_string)
+    if title_match:
+        title = title_match.group(0).strip()
+        content = input_string[len(title):].strip()
+    else:
+        title = "Conteúdo"
+        content = input_string
+
     # Regex para identificar códigos e suas descrições
-    pattern = re.compile(r'([A-Z]{2,})\s+([A-Za-z ,;]+)')
-    matches = pattern.findall(input_string)
+    pattern = re.compile(r'([A-Za-z0-9]+)\s*([^\s].*?)(?=[A-Za-z0-9]+\s|$)')
+    matches = pattern.findall(content)
     
     if not matches:
         return "Nenhum código encontrado."
 
     formatted_lines = []
     for match in matches:
-        code, description = match
+        code = match[0]
+        description = match[1].strip()
+
         # Tokenize and capitalize sentences in the description
-        sentences = sent_tokenize(description.strip().lower())
+        sentences = sent_tokenize(description)
         capitalized_sentences = ' '.join(sentence.capitalize() for sentence in sentences)
+
         formatted_line = f"{code} - {capitalized_sentences}"
         formatted_lines.append(formatted_line)
     
-    formatted_string = "Código da função:\n" + "\n".join(formatted_lines)
+    formatted_string = f"{title}\n" + "\n".join(formatted_lines)
     return formatted_string
 
 
