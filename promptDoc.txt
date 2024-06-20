@@ -1,8 +1,4 @@
-Claro! Aqui está uma versão mais refinada e detalhada do prompt para a IA:
 
----
-
-**Prompt para IA:**
 
 A seguir está uma documentação técnica de funcionalidades Mainframe em formato markdown. Esta documentação está mal estruturada e precisa de melhorias significativas para ser útil e compreensível. O conteúdo abrange várias funcionalidades de um sistema Mainframe, com exemplos de código em Cobol.
 
@@ -75,4 +71,4 @@ COBOL Code Example:
 - Melhore a clareza e a organização do conteúdo.
 - Corrija todos os erros gramaticais e de digitação.
 
-Com estas instruções detalhadas, a IA deve ser capaz de melhorar significativamente a documentação técnica, tornando-a clara, organizada e fácil de entender para os desenvolvedores que trabalham com sistemas Mainframe e Cobol.
+Forneca a documentacao alterada considerando todas as boas praticas de escrita utilizar Markdown (.md).

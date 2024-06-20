@@ -48,33 +48,125 @@ class DocumentConverter:
 
     def handle_text_styles(self, style, text):
         styles_map = {
+            # Basic Styles
             'Normal': text,
+            'Texto do Corpo': text,
+            
+            # Body Text Variants
             'BodyText': text,
             'Body Text': text,
             'Body Text Indent': text,
+            'Texto do Corpo Indentado': text,
+            
+            # List Bullet Styles
             'List Bullet': f"* {text}",
             'List Bullet 2': f"* {text}",
             'List Bullet 3': f"* {text}",
+            'Lista com Marcadores': f"* {text}",
+            'Lista com Marcadores 2': f"* {text}",
+            'Lista com Marcadores 3': f"* {text}",
+            
+            # List Number Styles
             'List Number': f"1. {text}",
             'List Number 2': f"1. {text}",
             'List Number 3': f"1. {text}",
+            'Lista Numerada': f"1. {text}",
+            'Lista Numerada 2': f"1. {text}",
+            'Lista Numerada 3': f"1. {text}",
+            
+            # Table of Contents
             'TOCHeading': f"[TOC] {text}",
+            'Cabeçalho TOC': f"[TOC] {text}",
+            
+            # Text Formatting
             'Italic': f"*{text}*",
             'Emphasis': f"*{text}*",
+            'Cursiva': f"*{text}*",
+            'Ênfase': f"*{text}*",
+            
             'Bold': f"**{text}**",
             'Strong': f"**{text}**",
+            'Negrito': f"**{text}**",
+            'Forte': f"**{text}**",
+            
             'Underline': f"__{text}__",
+            'Sublinhado': f"__{text}__",
+            
             'Strikethrough': f"~~{text}~~",
+            'Tachado': f"~~{text}~~",
+            
             'Subscript': f"<sub>{text}</sub>",
+            'Subscrito': f"<sub>{text}</sub>",
+            
             'Superscript': f"<sup>{text}</sup>",
+            'Sobrescrito': f"<sup>{text}</sup>",
+            
             'Highlight': f"`{text}`",
+            'Destaque': f"`{text}`",
+            
             'Hyperlink': f"[Link]({text})",
+            'Hiperlink': f"[Link]({text})",
+            
+            # Quote Styles
             'Quote': f"> {text}",
+            'Citação': f"> {text}",
+            
             'Intense Quote': f"> **{text}**",
+            'Citação Intensa': f"> **{text}**",
+            
+            # Heading Styles
             'Title': f"# {text}",
-            'Subtitle': f"## {text}"
+            'Título': f"# {text}",
+            
+            'Subtitle': f"## {text}",
+            'Subtítulo': f"## {text}",
+            
+            'Heading 1': f"# {text}",
+            'Heading 2': f"## {text}",
+            'Heading 3': f"### {text}",
+            'Heading 4': f"#### {text}",
+            'Heading 5': f"##### {text}",
+            'Heading 6': f"###### {text}",
+            'Título 1': f"# {text}",
+            'Título 2': f"## {text}",
+            'Título 3': f"### {text}",
+            'Título 4': f"#### {text}",
+            'Título 5': f"##### {text}",
+            'Título 6': f"###### {text}",
+            
+            # HTML Styles
+            'HTML Acronym': f"<acronym>{text}</acronym>",
+            'HTML Address': f"<address>{text}</address>",
+            'HTML Cite': f"<cite>{text}</cite>",
+            'HTML Code': f"<code>{text}</code>",
+            'HTML Definition': f"<dfn>{text}</dfn>",
+            'HTML Keyboard': f"<kbd>{text}</kbd>",
+            'HTML Preformatted': f"<pre>{text}</pre>",
+            'HTML Sample': f"<samp>{text}</samp>",
+            'HTML Typewriter': f"<tt>{text}</tt>",
+            'HTML Variable': f"<var>{text}</var>",
+            
+            # Index Styles
+            'Index 1': f"{text}",
+            'Index 2': f"{text}",
+            'Index 3': f"{text}",
+            'Index 4': f"{text}",
+            'Index 5': f"{text}",
+            'Index 6': f"{text}",
+            'Index 7': f"{text}",
+            'Index 8': f"{text}",
+            'Index 9': f"{text}",
+            'Index Heading': f"**{text}**",
+            
+            # Line and List Styles
+            'Line Number': text,
+            'List': f"{text}",
+            'List 2': f"{text}",
+            'List 3': f"{text}",
+            'List 4': f"{text}",
+            'List 5': f"{text}",
+            'List Bullet 4': f"* {text}",
         }
-
         self.elements.append(styles_map.get(style, text))
 
     def handle_table(self, table):
