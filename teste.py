@@ -6,6 +6,17 @@ def format_table(table_html):
     soup = BeautifulSoup(table_html, 'html.parser')
     headers = [th.get_text(strip=True) for th in soup.find_all('th')]
     rows = [[td.get_text(strip=True) for td in tr.find_all('td')] for tr in soup.find_all('tr')]
+
+    if not headers and rows:
+        headers = rows[0]
+        rows = rows[1:]
+    
+    # Ensure all rows have the same number of columns as headers
+    num_columns = len(headers)
+    for row in rows:
+        while len(row) < num_columns:
+            row.append('')
+
     return markdown_table(headers, rows)
 
 def markdown_table(headers, rows):
