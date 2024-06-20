@@ -22,7 +22,7 @@ def format_table(table_html):
         table_md = markdown_table_without_headers(rows)
 
     # Add the long contents to the table description
-    table_description = '---\n'.join(f'> {identifier} {content}' for identifier, content in long_contents.items())
+    table_description = '\n \n'.join(f'> {identifier} {content}' for identifier, content in long_contents.items())
     print(table_description)
     table_md += '---\n' + table_description + '\n'
 
