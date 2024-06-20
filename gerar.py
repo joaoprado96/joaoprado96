@@ -36,7 +36,7 @@ def format_string(input_string):
                     description_words.append(words[i])
                     i += 1
                 description = ' '.join(description_words).lower().capitalize()
-                formatted_lines.append(f"{code} - {description}")
+                formatted_lines.append(f"{code} - {description}\n\n")
             else:
                 # Não é um código, adiciona como está
                 processed_words.append(word)
