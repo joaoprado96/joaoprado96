@@ -291,6 +291,51 @@ class DocumentConverter:
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(markdown_content)
 
+def handle_element(self, element):
+    if isinstance(element, docx.text.paragraph.Paragraph):
+        print("Processando parágrafo...")
+        self.handle_paragraph(element)
+    elif isinstance(element, docx.table.Table):
+        print("Processando tabela...")
+        self.handle_table(element)
+    elif isinstance(element, docx.shape.InlineShape):
+        print("Processando imagem inline...")
+        self.handle_image(element)
+    elif isinstance(element, docx.oxml.CT_Drawing):
+        print("Processando desenho...")
+        self.handle_image(element)
+    else:
+        print(f"Elemento desconhecido encontrado: {type(element)}")
+        self.errors.append(f"Elemento desconhecido encontrado: {type(element)}")
+
+def read_docx(self, file_path):
+    print(f"Lendo o arquivo DOCX: {file_path}")
+    try:
+        doc = docx.Document(file_path)
+    except Exception as e:
+        self.errors.append(f"Erro ao ler o documento DOCX: {str(e)}")
+        return ""
+    self.elements = []
+    self.errors = []
+    self.image_counter = 1
+
+    print("Processando sumário...")
+    self.handle_table_of_contents(doc)
+
+    print("Processando elementos do documento...")
+    for element in doc.element.body:
+        if isinstance(element, docx.oxml.CT_SectPr):
+            continue  # Ignorar seções de configuração de página
+        self.handle_element(element)
+
+    content = '\n\n'.join(self.elements).replace('\t', '    ')
+    content = content.replace('\n', ' \n')
+
+    if self.errors:
+        error_report = "\n\n# Relatório de Erros\n\n" + "\n".join(self.errors)
+        content += error_report
+
+    return content
 # Exemplo de uso
 converter = DocumentConverter()
 input_file = 'documentacao.docx'  # ou 'documentacao.html'
