@@ -4,6 +4,8 @@ import markdownify
 
 def format_table(table_html):
     soup = BeautifulSoup(table_html, 'html.parser')
+    
+    # Extract table headers and rows
     headers = [th.get_text(strip=True) for th in soup.find_all('th')]
     rows = [[td.get_text(strip=True) for td in tr.find_all('td')] for tr in soup.find_all('tr')]
 
@@ -31,6 +33,18 @@ def process_html_content(html_content):
     main_content = soup.find(id='main-content')
 
     if main_content:
+        # Extract and remove observations and legends before processing tables
+        observations = []
+        legends = []
+        
+        for tag in main_content.find_all():
+            if 'Observação:' in tag.text:
+                observations.append(tag.text)
+                tag.decompose()
+            elif 'Legenda:' in tag.text:
+                legends.append(tag.text)
+                tag.decompose()
+
         # Process tables separately
         for table in main_content.find_all('table'):
             formatted_table = format_table(str(table))
@@ -48,9 +62,11 @@ def process_html_content(html_content):
             processed_lines.append(lines[i].rstrip())
         markdown_content = '\n'.join(processed_lines)
 
-        # Add line breaks before "Observação:" and "Legenda:"
-        markdown_content = markdown_content.replace('**Observação:**', '\n**Observação:**\n')
-        markdown_content = markdown_content.replace('**Legenda:**', '\n**Legenda:**\n')
+        # Reinsert observations and legends with line breaks before them
+        for obs in observations:
+            markdown_content += '\n\n' + obs + '\n'
+        for leg in legends:
+            markdown_content += '\n\n' + leg + '\n'
 
         return markdown_content
     else:
