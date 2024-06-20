@@ -25,7 +25,7 @@ O aplicativo devera chamar a função "CAM" através da ponte "MONITOR", passand
 | 4 Bytes | Fixo: 4 Bytes com brancos |
 | 8 Bytes | Tamanho da área para receber o LPARAM4 (apenas para opção “COM”) |
 ---
-> (1-1) Opção da chamada:tra dados da transaçãocom dados da área de comunicação grbe-aplicação (lparam4)ter dados do terminalgmt horário gmtbrancos dados do grbe e task
+> (1-1) Opção da chamada: tra dados da transaçãocom dados da área de comunicação grbe-aplicação ( lparam4 ) ter dados do terminalgmt horário gmtbrancos dados do grbe e task
 
 ## 2.3 Terceiro Parâmetro
 O terceiro parâmetro depende da opção da chamada (descritos no segundo parâmetro):
@@ -104,11 +104,9 @@ Essa área deverá conter 8 bytes (double) e trará a data/ hora GMT.
 | D | Ocorreu erro no processamento. Foi solicitado opção "COM" e o tamanhoinformado é igual a ZEROS. |
 | E | Ocorreu erro no processamento. Foi solicitado opção "COM" e o tamanhoinformado é inválido. |
 ---
-> (2-1) Processamento normal.
-Foi solicitado opção "com" e o tamanho passadopela aplicação é menor do que o tamanho da 4ª área, que é copiada etruncada de acordo com o tamanho especificado pela aplicação.
+> (2-1) Processamento normal., Foi solicitado opção `` com '' e o tamanho passadopela aplicação é menor do que o tamanho da 4ª área, que é copiada etruncada de acordo com o tamanho especificado pela aplicação.
 
-> (3-1) Processamento normal.
-Foi solicitado opção "com" e o tamanho passadopela aplicação é maior do que o tamanho da 4ª área, que é copiada como seu tamanho correto
+> (3-1) Processamento normal., Foi solicitado opção `` com '' e o tamanho passadopela aplicação é maior do que o tamanho da 4ª área, que é copiada como seu tamanho correto
 Observação
  1. No primeiro parâmetro está o código de retorno da ponte "MONITOR" informando o status de processamento da ponte.
 2. O código acima retorna no segundo parâmetro

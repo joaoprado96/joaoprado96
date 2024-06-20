@@ -15,31 +15,30 @@ def format_string(input_string):
     
     # Tokenizar o texto em sentenças
     sentences = sent_tokenize(input_string)
-
-    # Processar sentenças
-    formatted_lines = []
+    
+    formatted_sentences = []
     for sentence in sentences:
         # Tokenizar a sentença em palavras
         words = word_tokenize(sentence)
         
-        # Verificar se é um código e descrição
-        if len(words) > 1 and words[0].isupper():
-            code = words[0]
-            description = ' '.join(words[1:])
-            # Capitalizar adequadamente a descrição
-            description = description.capitalize()
-            formatted_line = f"{code} - {description}"
-        else:
-            formatted_line = sentence.capitalize()
+        # Inicializa a sentença formatada
+        formatted_sentence = ""
         
-        formatted_lines.append(formatted_line)
+        # Percorrer as palavras para ajustá-las
+        for i, word in enumerate(words):
+            # Corrigir espaços e pontuações
+            if word in [',', '.', '!', '?', ':', ';']:
+                formatted_sentence = formatted_sentence.strip() + word + " "
+            else:
+                formatted_sentence += word + " "
+        
+        # Capitalizar a primeira letra da sentença
+        formatted_sentence = formatted_sentence.strip().capitalize()
+        formatted_sentences.append(formatted_sentence)
     
-    # Reconstituir o texto formatado
-    formatted_string = "\n".join(formatted_lines)
-    print(formatted_string)
+    # Reconstituir o texto formatado com sentenças separadas por vírgula
+    formatted_string = ", ".join(formatted_sentences).replace(" .", ".").replace(" ,", ",").replace(" !", "!").replace(" ?", "?").replace(" :", ":").replace(" ;", ";")
     return formatted_string
-
-
 
 def format_table(table_html):
     soup = BeautifulSoup(table_html, 'html.parser')
