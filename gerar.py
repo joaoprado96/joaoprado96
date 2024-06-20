@@ -10,43 +10,34 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 nltk.download('punkt')
 
 def format_string(input_string):
-    # Remove qualquer espaço desnecessário
+    # Remover espaços desnecessários
     input_string = input_string.strip()
     
-    # Detectar título dinamicamente
-    title_match = re.match(r'^[^\s]+(\s+[^\s]+)*:', input_string)
-    if title_match:
-        title = title_match.group(0).strip()
-        content = input_string[len(title):].strip()
-    else:
-        title = "Conteúdo"
-        content = input_string
+    # Tokenizar o texto em sentenças
+    sentences = sent_tokenize(input_string)
 
-    # Remover hífens desnecessários e capitalizar frases
-    def clean_text(text):
-        text = re.sub(r' - ', ' ', text)
-        text = re.sub(r'(\w)-(\w)', r'\1\2', text)  # Remove hífens entre letras
-        sentences = sent_tokenize(text)
-        capitalized_sentences = ' '.join(sentence.capitalize() for sentence in sentences)
-        return capitalized_sentences
-
-    # Regex para identificar códigos e suas descrições
-    pattern = re.compile(r'([A-Za-z0-9]+)\s+([^A-Za-z0-9\s].*?)(?=[A-Za-z0-9]+\s|$)')
-    matches = pattern.findall(content)
-    
-    if not matches:
-        return "Nenhum código encontrado."
-
+    # Processar sentenças
     formatted_lines = []
-    for match in matches:
-        code = match[0]
-        description = clean_text(match[1].strip())
-
-        formatted_line = f"{code} - {description}"
+    for sentence in sentences:
+        # Tokenizar a sentença em palavras
+        words = word_tokenize(sentence)
+        
+        # Verificar se é um código e descrição
+        if len(words) > 1 and words[0].isupper():
+            code = words[0]
+            description = ' '.join(words[1:])
+            # Capitalizar adequadamente a descrição
+            description = description.capitalize()
+            formatted_line = f"{code} - {description}"
+        else:
+            formatted_line = sentence.capitalize()
+        
         formatted_lines.append(formatted_line)
     
-    formatted_string = f"{title}\n" + "\n".join(formatted_lines)
+    # Reconstituir o texto formatado
+    formatted_string = "\n".join(formatted_lines)
     return formatted_string
+
 
 
 def format_table(table_html):
