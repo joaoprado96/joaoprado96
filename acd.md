@@ -201,7 +201,7 @@ A seguir descrevemos os demais parâmetro necessários, conforme a função soli
 | 2 Bytes | (3-1) |
 | 2 Bytes | Tamanho da Chave Parcial em bytes. É utilizado apenas em Funções de leitura por chave parcial (LP). |
 ---
-> (0-1) Código da função.LA Leitura sequencial de chave AnteriorLC Leitura Comum com chaveLCH Leitura Comum com chave e com HoldLCM Leitura Comum com chave Maior ou igualLI Leitura de Início de sequênciaLIA Leitura de Início de sequência por chave AnteriorLIM Leitura de Início de sequência com chave Maior ou igualLK Leitura sKip-sequencialLKM Leitura sKip-sequencial com chave Maior ou igualLP Leitura por chave Pa
+> (0-1) Código da função.LA Leitura sequencial de chave AnteriorLC Leitura Comum com chaveLCH Leitura Comum com chave e com HoldLCM Leitura Comum com chave Maior ou igualLI Leitura de Início de sequênciaLIA Leitura de Início de sequência por chave AnteriorLIM Leitura de Início de sequência com chave Maior ou igualLK Leitura sKip-sequencialLKM Leitura sKip-sequencial com chave Maior ou igualLP Leitura por chave Pa---
 > (3-1) No caso de arquivos VSAM este campo é usado para retornar o tamanho doregistro lido:Se arquivo VSAM Read Only: SIAD retorna o LRECL.Se arquivo VSAM não Read Only: SIAD retorna o LRECL-10.Nos demais casos, o programa de aplicação deve informar o tamanho daárea de dados para conter o registro.
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |

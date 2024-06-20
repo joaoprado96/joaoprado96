@@ -103,7 +103,7 @@ Essa área deverá conter 8 bytes (double) e trará a data/ hora GMT.
 | D | Ocorreu erro no processamento. Foi solicitado opção "COM" e o tamanhoinformado é igual a ZEROS. |
 | E | Ocorreu erro no processamento. Foi solicitado opção "COM" e o tamanhoinformado é inválido. |
 ---
-> (2-1) Processamento Normal. Foi solicitado opção "COM" e o tamanho passadopela aplicação é MENOR do que o tamanho da 4ª área, que é copiada etruncada de acordo com o tamanho especificado pela aplicação.
+> (2-1) Processamento Normal. Foi solicitado opção "COM" e o tamanho passadopela aplicação é MENOR do que o tamanho da 4ª área, que é copiada etruncada de acordo com o tamanho especificado pela aplicação.---
 > (3-1) Processamento Normal. Foi solicitado opção "COM" e o tamanho passadopela aplicação é MAIOR do que o tamanho da 4ª área, que é copiada como seu tamanho correto
 Observação
  1. No primeiro parâmetro está o código de retorno da ponte "MONITOR" informando o status de processamento da ponte.
