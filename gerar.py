@@ -2,6 +2,36 @@ import os
 import re
 from bs4 import BeautifulSoup
 import markdownify
+import re
+import nltk
+from nltk.tokenize import sent_tokenize
+
+# Download nltk resources if not already available
+nltk.download('punkt')
+
+def format_string(input_string):
+    # Remove qualquer espaço desnecessário
+    input_string = input_string.strip()
+    
+    # Regex para identificar códigos e suas descrições
+    pattern = re.compile(r'([A-Z]{2,})\s+([A-Za-z ,;]+)')
+    matches = pattern.findall(input_string)
+    
+    if not matches:
+        return "Nenhum código encontrado."
+
+    formatted_lines = []
+    for match in matches:
+        code, description = match
+        # Tokenize and capitalize sentences in the description
+        sentences = sent_tokenize(description.strip().lower())
+        capitalized_sentences = ' '.join(sentence.capitalize() for sentence in sentences)
+        formatted_line = f"{code} - {capitalized_sentences}"
+        formatted_lines.append(formatted_line)
+    
+    formatted_string = "Código da função:\n" + "\n".join(formatted_lines)
+    return formatted_string
+
 
 def format_table(table_html):
     soup = BeautifulSoup(table_html, 'html.parser')
@@ -13,7 +43,7 @@ def format_table(table_html):
         for j, cell in enumerate(row):
             if len(cell) > 150:  # If the cell content is too long
                 identifier = f'({i}-{j})'  # Create an identifier based on the cell's position
-                long_contents[identifier] = cell  # Store the long content and its identifier
+                long_contents[identifier] = format_string(cell)  # Store the long content and its identifier
                 rows[i][j] = identifier  # Replace the cell content with the identifier
 
     if soup.find('tr').find('th'):  # Check if the first row contains 'th' elements
@@ -23,7 +53,6 @@ def format_table(table_html):
 
     # Add the long contents to the table description
     table_description = '\n'.join(f'> {identifier} {content}\n' for identifier, content in long_contents.items())
-    print(table_description)
     table_md += '---\n' + table_description + '\n'
 
     return table_md
