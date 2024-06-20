@@ -26,7 +26,6 @@ O aplicativo devera chamar a função "CAM" através da ponte "MONITOR", passand
 | 8 Bytes | Tamanho da área para receber o LPARAM4 (apenas para opção “COM”) |
 ---
 (1-1) Opção da chamada:TRA Dados da TransaçãoCOM Dados da Área de Comunicação GRBE-Aplicação (LPARAM4)TER Dados do TerminalGMT Horário GMTBRANCOS Dados do GRBE e task
-
 ## 2.3 Terceiro Parâmetro
 O terceiro parâmetro depende da opção da chamada (descritos no segundo parâmetro):
 
