@@ -23,7 +23,7 @@ def format_table(table_html):
 
     # Add the long contents to the table description
     table_description = '\n'.join(f'!!! **{identifier}**:\n> {content}' for identifier, content in long_contents.items())
-    table_md += '\n' + table_description + '\n'
+    table_md += '---\n' + table_description + '\n'
 
     return table_md
 

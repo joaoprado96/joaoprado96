@@ -177,6 +177,7 @@ As operações de I/O aceitas e tratadas pelo SIAD dependem da organização e d
 | LKM | | | | | OK |
 | LP | | | | | OK |
 | LS | RO | | | OK | OK |
+---
 RO: Função válida para arquivo com atributo Read-Only (LEITURA).
 UPD: Função válida para arquivo com atributo UPDATE (ATUALIZAÇÃO).
 OK: Função válida para o arquivo, independentemente do atributo.
@@ -187,6 +188,7 @@ Todas as funções de acesso a arquivos devem ter um primeiro parâmetro da Pont
 | --- | --- |
 | 1 Byte | Código de Retorno da Ponte MONITOR |
 | 8 Bytes | Recurso. Deve ser preenchido com “SIAD “. |
+---
 A seguir descrevemos os demais parâmetro necessários, conforme a função solicitada:
 
 ## 4.1 Funções de Leitura
@@ -198,6 +200,7 @@ A seguir descrevemos os demais parâmetro necessários, conforme a função soli
 | 8 bytes | DDname; deve ser preenchido com brancos à direita. |
 | 2 Bytes | (3-1) |
 | 2 Bytes | Tamanho da Chave Parcial em bytes. É utilizado apenas em Funções de leitura por chave parcial (LP). |
+---
 !!! \*\*(0-1)\*\*:
 > Código da função.LA Leitura sequencial de chave AnteriorLC Leitura Comum com chaveLCH Leitura Comum com chave e com HoldLCM Leitura Comum com chave Maior ou igualLI Leitura de Início de sequênciaLIA Leitura de Início de sequência por chave AnteriorLIM Leitura de Início de sequência com chave Maior ou igualLK Leitura sKip-sequencialLKM Leitura sKip-sequencial com chave Maior ou igualLP Leitura por chave Pa
 !!! \*\*(3-1)\*\*:
@@ -205,6 +208,7 @@ A seguir descrevemos os demais parâmetro necessários, conforme a função soli
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |
 | --- | --- |
+---
 !!! \*\*(0-1)\*\*:
 > Chave para de pesquisa do registro em questão, ou a chave parcial (completadacom zeros binários) para leitura por chave parcial (LP). N é o tamanho da chaveem bytes, que pode ter até 255 bytes.Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado,com tamanho de até 8 bytes.Nas funções LS e LA este parâmetro é desprezado.
 ### Quarto Parâmetro
@@ -215,6 +219,7 @@ A seguir descrevemos os demais parâmetro necessários, conforme a função soli
 | N>=LRECL-10 | Para arquivos VSAM não Read Only. |
 | N=BLKSIZE-10 | Para arquivos de organização direta (DA). |
 | N=LRECL | Para arquivos sequenciasi (PS). |
+---
 
 ## 4.2 Funções de Inclusão
 
@@ -225,11 +230,13 @@ A seguir descrevemos os demais parâmetro necessários, conforme a função soli
 | 8 bytes | DDname; deve ser preenchido com brancos à direita. |
 | 2 Bytes | (3-1) |
 | 2 Bytes | Tamanho da chave parcial. Este campo não é utilizado nesta função |
+---
 !!! \*\*(3-1)\*\*:
 > Tamanho da área que contem o registro a ser incluído.Para arquivos PS: N = LRECLPara arquivos DA: N = BLKSIZE-10Para arquivos VSAM: (RKP+KEYLEN-10) <= N <= LRECL-10
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |
 | --- | --- |
+---
 !!! \*\*(0-1)\*\*:
 > Chave do registro a ser incluido. N é o tamanho da chave em bytes, que pode ter até 255 bytes.Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado, com tamanho de até 8 bytes.Na função IS, o SIAD retorna, nesse campo, a chave que ele atribuiu aoregistro (se arquivo DA ou RRDS, retorna no formato compactado).
 Observação
@@ -243,6 +250,7 @@ Observação
 | (RKP+KEYLEN-10) <= N <= LRECL-10 | Para arquivos VSAM. |
 | N=BLKSIZE-10 | Para arquivos de organização direta (DA). |
 | N=LRECL | Para arquivos sequenciasi (PS). |
+---
 Observação
  1)) Quando o arquivo for SYSOUT (DSORG=SY), o primeiro byte deve ser o controle de carro para a impressão: Pode ser:
 " " = grava o registro na sysout
@@ -258,10 +266,12 @@ Observação
 | 8 bytes | DDname; deve ser preenchido com brancos à direita. |
 | 2 Bytes | Este campo não é utilizado nesta função. |
 | 2 Bytes | Este campo não é utilizado nesta função. |
+---
 
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |
 | --- | --- |
+---
 !!! \*\*(0-1)\*\*:
 > Chave do registro a ser incluido. N é o tamanho da chave em bytes, que pode ter até 255 bytes.Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado, com tamanho de até 8 bytes.
 ## 4.4 Função de Alteração
@@ -273,10 +283,12 @@ Observação
 | 8 bytes | DDname; deve ser preenchido com brancos à direita. |
 | 2 Bytes | Tamanho da área que contem o registro a ser alterado.Para arquivos DA: N = BLKSIZE-10Para arquivos VSAM: (RKP+KEYLEN-10) <= N <= LRECL-10 |
 | 2 Bytes | Este campo não é utilizado nesta função. |
+---
 
 ### Terceiro Parâmetro
 | "n" Bytes | (0-1) |
 | --- | --- |
+---
 !!! \*\*(0-1)\*\*:
 > Chave do registro a ser incluido. N é o tamanho da chave em bytes, que pode ter até 255 bytes.Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado, com tamanho de até 8 bytes.
 ### Quarto Parâmetro
@@ -285,6 +297,7 @@ Observação
 | Tamanho | Tipo de arquivo |
 | (RKP+KEYLEN-10) <= N <= LRECL-10 | Para arquivos VSAM. |
 | N=BLKSIZE-10 | Para arquivos de organização direta (DA). |
+---
 
 ## 4.5 Funções de Finalização
 
@@ -292,6 +305,7 @@ Observação
 | 3 Bytes | Código da função.LIB Final LiberarREC Final Recuparação ( ou Desfazer) |
 | --- | --- |
 | 1 Byte | Código de Retorno. |
+---
 
 ## 5 Códigos de Retorno
 O código de retorno da função vem no quarto byte do segundo parâmetro. Este pode conter os seguintes valores:
@@ -328,6 +342,7 @@ O código de retorno da função vem no quarto byte do segundo parâmetro. Este 
 | 6 | Atingido limite de leituras com hold por recovery unit para arquivos TVS |
 | 7 | Atingido limite de atualizações por recovery unit para arquivos TVS |
 | 8 | Erro grave no notepad |
+---
  (1) Alguns arquivos críticos cadastrados na Classe $DSNCRIT do RACF só podem ser acessados por subprogramas autorizados.
 Para o cadastro de novos profiles (arquivos ou subprogramas) favor entrar em contato com o grupo de suporte aos monitores Banco Eletrônico.
 Relação dos códigos de retorno possíveis para cada Função:
@@ -350,6 +365,7 @@ Relação dos códigos de retorno possíveis para cada Função:
 | A | A | B | | D | E | F | | H | I | J | | | | N | O | P | Q | R | S | T | | | | X | | | | | 3 | 4 | 5 | 6 | | |
 | LIB | A | | C | | | | | | | | | L | | | | | Q | | | | | | | X | | | | | | | | | | |
 | REC | A | | C | | | | | | | | | | | | | | Q | | | | | | | X | | | | | | | | | | |
+---
 Exemplo de utilização da função XXX
  ## 6 Exemplos
 Seguem 2 exemplos de utilização da ponte MONITOR para acesso a arquivos. O primeiro na linguagem COBOL e o segundo em ASSEMBLER /370.
