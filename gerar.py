@@ -52,21 +52,21 @@ def process_html_content(html_content):
         # Process tables separately
         for table in main_content.find_all('table'):
             formatted_table = format_table(str(table))
-            table.replace_with(BeautifulSoup(formatted_table, 'html.parser', from_encoding='utf-8'))
+            table.replace_with(BeautifulSoup(formatted_table, 'html.parser'))
 
         markdown_content = markdownify.markdownify(str(main_content), heading_style="ATX")
 
-        # Remove unnecessary line breaks but keep them before headers and lists
+        # Remove unnecessary line breaks but keep them before headers, lists, and citations
         lines = markdown_content.split('\n')
         processed_lines = []
         for i in range(len(lines)):
             if (i < len(lines) - 1 and re.match(r'^\s*$', lines[i]) and
-                not (lines[i + 1].startswith('#') or lines[i + 1].startswith('*'))):
+                not (lines[i + 1].startswith('#') or lines[i + 1].startswith('*') or lines[i + 1].startswith('>'))):
                 continue
             processed_lines.append(lines[i].rstrip())
         markdown_content = '\n'.join(processed_lines)
 
-        # Add line breaks before "Observação:" and "Legenda:"
+        # Add line breaks before "Observação:" e "Legenda:"
         markdown_content = markdown_content.replace('**Observação:**', '\n**Observação:**\n')
         markdown_content = markdown_content.replace('**Legenda:**', '\n**Legenda:**\n')
 
