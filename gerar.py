@@ -13,31 +13,28 @@ def format_string(input_string):
     # Remover espaços desnecessários
     input_string = input_string.strip()
     
-    # Tokenizar o texto em sentenças
-    sentences = sent_tokenize(input_string)
+    # Tokenizar o texto em palavras
+    words = word_tokenize(input_string)
     
     formatted_sentences = []
-    for sentence in sentences:
-        # Tokenizar a sentença em palavras
-        words = word_tokenize(sentence)
-        
-        # Inicializa a sentença formatada
-        formatted_sentence = ""
-        
-        # Percorrer as palavras para ajustá-las
-        for i, word in enumerate(words):
-            # Corrigir espaços e pontuações
-            if word in [',', '.', '!', '?', ':', ';']:
-                formatted_sentence = formatted_sentence.strip() + word + " "
-            else:
-                formatted_sentence += word + " "
-        
-        # Capitalizar a primeira letra da sentença
-        formatted_sentence = formatted_sentence.strip().capitalize()
-        formatted_sentences.append(formatted_sentence)
+    current_sentence = []
+    
+    for i, word in enumerate(words):
+        # Verificar se é um código seguido de uma descrição
+        if word.isupper() and (i + 1 < len(words) and not words[i + 1].isupper()):
+            # Adicionar a sentença atual à lista se houver
+            if current_sentence:
+                formatted_sentences.append(' '.join(current_sentence))
+            current_sentence = [word]
+        else:
+            current_sentence.append(word)
+    
+    # Adicionar a última sentença se houver
+    if current_sentence:
+        formatted_sentences.append(' '.join(current_sentence))
     
     # Reconstituir o texto formatado com sentenças separadas por vírgula
-    formatted_string = ", ".join(formatted_sentences).replace(" .", ".").replace(" ,", ",").replace(" !", "!").replace(" ?", "?").replace(" :", ":").replace(" ;", ";")
+    formatted_string = ", ".join(formatted_sentences)
     return formatted_string
 
 def format_table(table_html):
