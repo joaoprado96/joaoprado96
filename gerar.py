@@ -5,6 +5,7 @@ import markdownify
 from markdown import MarkdownRewriter
 from stackspot import ExecucaoComandoRapido
 import re
+import tempfile
 
 def replace_single_quotes(text):
     # Define o padrão regex para encontrar conteúdos entre " " ( ) [ ] <>
@@ -88,10 +89,35 @@ def process_html_content(html_content):
     else:
         return None
 
-def quebrar_em_blocos(markdown_content, tamanho_bloco=150):
+def salvar_blocos_temp(blocos):
+    arquivos_temp = []
+    for i, bloco in enumerate(blocos):
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.md', prefix=f'bloco_{i}_', mode='w', dir='.') as temp_file:
+            temp_file.write(bloco)
+            arquivos_temp.append(temp_file.name)
+    return arquivos_temp
+
+def quebrar_em_blocos(markdown_content, tamanho_bloco=250):
     linhas = markdown_content.split('\n')
-    blocos = [linhas[i:i + tamanho_bloco] for i in range(0, len(linhas), tamanho_bloco)]
-    return ["\n".join(bloco) for bloco in blocos]
+    blocos = []
+    bloco_atual = []
+    contador_linhas = 0
+
+    for linha in linhas:
+        bloco_atual.append(linha)
+        contador_linhas += 1
+        
+        if contador_linhas >= tamanho_bloco and linha.strip() == '':
+            blocos.append('\n'.join(bloco_atual))
+            bloco_atual = []
+            contador_linhas = 0
+
+    # Adiciona o último bloco, se houver
+    if bloco_atual:
+        blocos.append('\n'.join(bloco_atual))
+    
+    return blocos
+
 
 def executar_comandos_rapidos(executor, slug, blocos):
     respostas = []
@@ -132,7 +158,9 @@ def convert_html_file_to_markdown(input_file, output_file):
 
         if len(markdown_content.split('\n')) > 250:
             blocos = quebrar_em_blocos(markdown_content)
+            arquivos_temp = salvar_blocos_temp(blocos)
             resultado_final = executar_comandos_rapidos(executor, "revisao-doc", blocos)
+            print(f'Arquivos temporários gerados: {arquivos_temp}')
         else:
             sucesso, resultado_final = executor.executar_comando_rapido(slug="revisao-doc", input_data={"doc": markdown_content})
 

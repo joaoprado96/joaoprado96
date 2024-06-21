@@ -91,6 +91,12 @@ class ExecucaoComandoRapido:
             return True, resposta.json()
         except requests.exceptions.RequestException as e:
             print(f"Erro ao obter o status da execução: {e}")
+            self.token_autorizacao = self.obter_token_autorizacao()
+            print(f"Obtido um novo token de Autorizacao: {e}")
+            self.headers = {
+                "Authorization": f"Bearer {self.token_autorizacao}",
+                "Content-Type": "application/json"
+            }
             return False, {"erro": str(e)}
 
     def executar_comando_rapido(self, slug: str, input_data: Union[str, dict] = None) -> Tuple[bool, dict]:
@@ -116,7 +122,6 @@ class ExecucaoComandoRapido:
                 print(f"Erro ao obter o status da execução: {status_resposta.get('erro', 'Resposta inesperada da API')}")
                 time.sleep(self.intervalo_consultas)
                 continue
-            
             
             status = status_resposta.get('progress', {}).get('status')
             print(status)
