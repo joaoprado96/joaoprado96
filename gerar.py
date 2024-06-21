@@ -155,5 +155,5 @@ def convert_all_html_in_folder(input_folder, output_folder):
 
 if __name__ == "__main__":
     input_folder = './doc-html-2'
-    output_folder = './'
+    output_folder = './doc-md'
     convert_all_html_in_folder(input_folder, output_folder)
