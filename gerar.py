@@ -100,7 +100,8 @@ def executar_comandos_rapidos(executor, slug, blocos):
         if sucesso:
             respostas.append(resultado)
         else:
-            raise Exception("Erro ao executar comando rápido")
+            respostas.append("ERRO: Consulta falhou na execucao do Comando")
+            print("Erro ao executar comando rápido")
     return "\n".join(respostas)
 
 
