@@ -2,23 +2,7 @@ import os
 import re
 from bs4 import BeautifulSoup
 import markdownify
-
-def markdown_table(rows):
-    if not rows:
-        return ""
-    num_columns = len(rows[0])
-    headers = [f'' for i in range(num_columns)]
-    table = '| ' + ' | '.join(headers) + ' |\n'
-    table += '| ' + ' | '.join(['---'] * num_columns) + ' |\n'
-    for row in rows:
-        table += f'| ' + ' | '.join(row) + ' |\n'
-    return table
-
-def format_table(table_html):
-    soup = BeautifulSoup(table_html, 'html.parser')
-    rows = [[cell.get_text(strip=True) for cell in tr.find_all(['td', 'th'])] for tr in soup.find_all('tr')]
-    table_md = markdown_table(rows)
-    return table_md
+import stackspot
 
 def process_html_content(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -68,6 +52,17 @@ def convert_html_file_to_markdown(input_file, output_file):
         # Add header to the markdown content
         header = f'---\ntitle: {title}\ntype: docs\nweight: 1\n---\n\n'
         markdown_content = header + markdown_content
+        executor = stackspot.ExecucaoComandoRapido(
+            base_url="https://genai-code-buddy-api.stackspot.com",
+            client_id="119d6c80-5ad7-4815-8d6a-79523db69158",
+            client_secret="BbGRM3a8d255o7W6dw4bp87oGCAIaNuB6eYxgFVW11Kv75h35UOa4Xe4bzsZE0ft",
+            intervalo_consultas=5,  # tempo em segundos entre as consultas
+            proxies={}
+        )
+        sucesso, resultado = executor.executar_comando_rapido(slug="teste-api", input_data={"doc": markdown_content})
+
+        with open(f'stack{output_file}', 'w', encoding='utf-8') as f:
+            f.write(resultado)
 
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(markdown_content)

@@ -1,0 +1,12 @@
+Com base na análise detalhada  {{aprimoramento1.answer}}  , agora você deve reescrever o documento Markdown, implementando as melhorias sugeridas. Certifique-se de:
+
+1. **Melhorar a Estrutura**: Criar Ajustar a hierarquia dos títulos e organizar o conteúdo de maneira mais lógica. (Estrutura Obrigatoria para todas: Indice, Introducao, Objetivo, ...) 
+2. **Aumentar a Clareza**: Reformular partes ambíguas e tornar o texto mais direto e compreensível.
+3. **Aprimorar o Estilo**: Tornar o estilo de escrita mais consistente e adequado ao público-alvo que sao desenvolvedores mainframe (Cobol).
+4. **Ajustar o Formato**: Corrigir e melhorar o uso de listas, tabelas, links, imagens e outros elementos de formatação.
+5. **Exemplos:** Ao fornecer exemplos nao utilizar imagens, colocar blocos de codigos com exemplo de como seria a montagem do parametro e movimentacoes de acordo com a documentacao. Considerar sempre exemplos em Cobol.
+
+### Documento Markdown Original:
+{{input_data}} 
+
+Reescreva o documento implementando as melhorias sugeridas na análise  {{aprimoramento1.answer}}. Ou seja, nao devolver  ```markdown ```
