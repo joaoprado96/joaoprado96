@@ -1,0 +1,65 @@
+Prompt para ser Criado no StackSpot
+revisao-doc
+revisao-doc
+
+Trecho de documentação em Markdown:
+{{input_data}} 
+
+1.	Análise Inicial do Conteúdo (analiseinicial)
+Prompt: “Analise o seguinte trecho de documentação Markdown e identifique os pontos que podem ser melhorados em termos de clareza, visual, acentuação, pontuação e tabulação. Não faça nenhuma alteração ainda, apenas identifique os pontos de melhoria.”
+Input: Trecho de documentação em Markdown
+
+Analise o seguinte trecho de documentação Markdown e identifique os pontos que podem ser melhorados em termos de clareza, visual, acentuação, pontuação e tabulação. Não faça nenhuma alteração ainda, apenas identifique os pontos de melhoria.
+
+Trecho de documentação em Markdown:
+{{input_data}} 
+
+----------------------------------------------------------------------
+2.	Melhoria de Clareza e Conteúdo Técnico (melhoriaclareza)
+Prompt: “Baseado na análise inicial, reescreva o seguinte trecho de documentação Markdown para melhorar a clareza e o conteúdo técnico. Ajuste os termos técnicos para torná-los mais precisos e claros.”
+Input: Trecho de documentação em Markdown
+
+Baseado na análise inicial {{analiseinicial.answer}} , reescreva o seguinte trecho de documentação Markdown para melhorar a clareza e o conteúdo técnico. Ajuste os termos técnicos para torná-los mais precisos e claros.
+
+Trecho de documentação em Markdown:
+{{input_data}} 
+
+----------------------------------------------------------------------
+3.	Ajuste de Aspectos Visuais (ajustesvisuais)
+Prompt: “Ajuste o trecho de documentação Markdown reescrito para melhorar os aspectos visuais. Quebre informações em linhas, utilize cabeçalhos apropriados e destaque termos importantes. Não altere o conteúdo técnico.”
+Input: Trecho reescrito do prompt anterior
+
+Ajuste o trecho de documentação Markdown reescrito para melhorar os aspectos visuais. Quebre informações em linhas, utilize cabeçalhos apropriados e destaque termos importantes. Não altere o conteúdo técnico.
+
+Trecho de documentação em Markdown:
+{{melhoriaclareza.answer}} 
+
+----------------------------------------------------------------------
+4.	Correção de Acentuação e Pontuação (correcaoap)
+Prompt: “Revise o seguinte trecho de documentação Markdown para corrigir acentuação e pontuação. Certifique-se de que todas as frases estejam corretas e bem estruturadas.”
+Input: Trecho ajustado do prompt anterior
+
+Revise o seguinte trecho de documentação Markdown para corrigir acentuação e pontuação. Certifique-se de que todas as frases estejam corretas e bem estruturadas.
+
+Trecho de documentação em Markdown:
+{{ajustesvisuais.answer}}
+
+----------------------------------------------------------------------
+5.	Ajuste de Tabulação e Formatação (ajustetf)
+Prompt: “Ajuste a tabulação e a formatação do seguinte trecho de documentação Markdown. Certifique-se de que todas as listas, blocos de código e tabelas estejam corretamente formatados e alinhados.”
+Input: Trecho revisado do prompt anterior
+
+Ajuste a tabulação e a formatação do seguinte trecho de documentação Markdown. Certifique-se de que todas as listas, blocos de código e tabelas estejam corretamente formatados e alinhados.
+
+Trecho de documentação em Markdown:
+{{correcaoap.answer}}
+
+----------------------------------------------------------------------
+6.	Revisão Final e Fornecimento do Trecho (revisaofinal)
+Prompt: “Faça uma revisão final do seguinte trecho de documentação Markdown e forneça apenas o trecho final melhorado como resultado. Não forneça feedback adicional, apenas o trecho final revisado.”
+Input: Trecho ajustado do prompt anterior
+
+Faça uma revisão final do seguinte trecho de documentação Markdown e forneça apenas o trecho final melhorado como resultado. Não forneça feedback adicional, apenas o trecho final revisado.
+
+Trecho de documentação em Markdown:
+ {{ajustetf.answer}} 

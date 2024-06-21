@@ -127,5 +127,6 @@ class ExecucaoComandoRapido:
                     return True, status_resposta.get('result', {"erro": "Resultado não encontrado"})
                 else:
                     return False, {"erro": "Falha ao consultar o comando rápido"}
+                
 
             

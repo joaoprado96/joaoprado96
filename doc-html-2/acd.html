@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="pt-BR" >
+<head>
+                            <title>Função ACD – Acesso à dados - GRBE - Confluence Itaú</title>
+    
+        
+
+
+                        
+    
+                        
+    
+
+
+                
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE,chrome=IE7">
+<meta charset="UTF-8">
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="https://confluence-itau.tecnologia.prod.ops.aws.cloud.ihf">
+
+
+    <meta id="atlassian-token" name="atlassian-token" content="d84bd187a95ec4ac1c03334ca06050d66dd76873">
+
+
+<meta id="confluence-cluster-node-id" name="confluence-cluster-node-id" value="408acb91">
+<meta id="confluence-cluster-node-name" name="confluence-cluster-node-name" value="nod249">
+
+
+<meta id="confluence-space-key" name="confluence-space-key" content="GRBE">
+<script type="text/javascript">
+        var contextPath = '';
+</script>
+
+
+    
+
+
+    <meta name="confluence-request-time" content="1718890356512">
+        
+    
+        
+            <meta name="ajs-show-space-welcome-dialog" content="true">
+            <style>.ia-fixed-sidebar, .ia-splitter-left {width: 285px;}.theme-default .ia-splitter #main {margin-left: 285px;}.ia-fixed-sidebar {visibility: hidden;}</style>
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+            <meta name="ajs-discovered-plugin-features" content="{&quot;com.atlassian.confluence.plugins.confluence-dashboard&quot;:[&quot;dialog&quot;,&quot;tips&quot;],&quot;com.atlassian.confluence.plugins.confluence-jira-metadata&quot;:[&quot;linked-issues-dropdown&quot;],&quot;com.atlassian.confluence.plugins.confluence-hipchat-integration-plugin&quot;:[&quot;hipChatServerIntegration&quot;]}">
+            <meta name="ajs-keyboardshortcut-hash" content="8385a0aa359f0bd68d05001ad73a057b">
+            
+
+
+
+
+
+
+
+
+
+
+<style>
+                                    #title-text a:first-of-type:not(.sv-ti-done) {
+                visibility: hidden;
+            }
+                                                #breadcrumbs:not(.sv-ti-done) {
+                visibility: hidden;
+            }
+                                                .ia-secondary-container[data-tree-type=page-tree] .ia-secondary-content:not(.sv-ti-done) {
+                visibility: hidden;
+            }
+                                                .ia-secondary-container[data-tree-type=pages]:not(.sv-ti-done) {
+                visibility: hidden;
+            }
+                    </style>
+
+
+<meta id="sv-space-config" name="sv-space-config" content="  sv-sc-enablePermalinks sv-sc-enableVariants sv-sc-any-isTargetSpace-enableVersionManagement-enableTranslation-enableVariants-enablePermalinks sv-sc-any-isTargetSpace-enableVersionManagement-enableTranslation-enableVariants sv-sc-any-enableVersionManagement-enableTranslation-enablePermalinks sv-sc-any-enableVersionManagement-enableTranslation-enableVariants sv-sc-any-enableVersionManagement-enableTranslation-enableVariants-enablePermalinks sv-sc-any " class="  sv-sc-enablePermalinks sv-sc-enableVariants sv-sc-any-isTargetSpace-enableVersionManagement-enableTranslation-enableVariants-enablePermalinks sv-sc-any-isTargetSpace-enableVersionManagement-enableTranslation-enableVariants sv-sc-any-enableVersionManagement-enableTranslation-enablePermalinks sv-sc-any-enableVersionManagement-enableTranslation-enableVariants sv-sc-any-enableVersionManagement-enableTranslation-enableVariants-enablePermalinks sv-sc-any "></meta>
+<meta id="sv-scroll-page-context" name="sv-scroll-page-context" content="{&quot;product&quot;:{&quot;version&quot;:&quot;4.6.0&quot;,&quot;pluginKey&quot;:&quot;com.k15t.scroll.scroll-platform&quot;},&quot;products&quot;:{&quot;com.k15t.scroll.scroll-platform&quot;:{&quot;version&quot;:&quot;4.6.0&quot;,&quot;pluginKey&quot;:&quot;com.k15t.scroll.scroll-platform&quot;},&quot;com.k15t.scroll.scroll-versions&quot;:{&quot;version&quot;:&quot;4.6.0&quot;,&quot;pluginKey&quot;:&quot;com.k15t.scroll.scroll-versions&quot;}},&quot;modules&quot;:{&quot;Publishing&quot;:{&quot;type&quot;:&quot;Publishing&quot;,&quot;isActive&quot;:true,&quot;hasValidLicense&quot;:true,&quot;licenseValidationMessageAsHtml&quot;:&quot;License for Scroll Versions is valid.&quot;,&quot;isEnabledInSpace&quot;:false},&quot;TranslationManagement&quot;:{&quot;type&quot;:&quot;TranslationManagement&quot;,&quot;isActive&quot;:false,&quot;hasValidLicense&quot;:false,&quot;licenseValidationMessageAsHtml&quot;:&quot;&lt;p&gt;Error in &lt;b&gt;TranslationManagement&lt;/b&gt; module of &lt;b&gt;Scroll Translations&lt;/b&gt;. Ask your Confluence administrator to make sure that the app is installed and working correctly. &lt;/p&gt; &lt;ul class=\&quot;aui-nav-actions-list\&quot;&gt;        &lt;li&gt;&lt;button class=\&quot;aui-button aui-button-link\&quot;&gt;&lt;a href=\&quot;/plugins/servlet/upm?fragment=manage/com.k15t.scroll.scroll-translations\&quot;&gt;Manage Apps&lt;/a&gt;&lt;/button&gt;&lt;/li&gt;        &lt;li&gt;&lt;button class=\&quot;aui-button aui-button-link\&quot;&gt;&lt;a href=\&quot;https://marketplace.atlassian.com/plugins/com.k15t.scroll.scroll-translations\&quot;&gt;Atlassian Marketplace&lt;/a&gt;&lt;/button&gt;&lt;/li&gt;    &lt;/ul&gt;&quot;,&quot;isEnabledInSpace&quot;:false},&quot;PermalinkSupport&quot;:{&quot;type&quot;:&quot;PermalinkSupport&quot;,&quot;isActive&quot;:true,&quot;hasValidLicense&quot;:true,&quot;licenseValidationMessageAsHtml&quot;:&quot;License for Scroll Versions is valid.&quot;,&quot;isEnabledInSpace&quot;:true},&quot;WorkflowManagement&quot;:{&quot;type&quot;:&quot;WorkflowManagement&quot;,&quot;isActive&quot;:true,&quot;hasValidLicense&quot;:true,&quot;licenseValidationMessageAsHtml&quot;:&quot;License for Scroll Versions is valid.&quot;,&quot;isEnabledInSpace&quot;:false,&quot;isComalaPluginEnabled&quot;:false,&quot;isComalaIntegrationPluginEnabled&quot;:false},&quot;TargetSpace&quot;:{&quot;type&quot;:&quot;TargetSpace&quot;,&quot;isActive&quot;:true,&quot;hasValidLicense&quot;:true,&quot;licenseValidationMessageAsHtml&quot;:&quot;&quot;,&quot;isEnabledInSpace&quot;:false},&quot;Seo&quot;:{&quot;type&quot;:&quot;Seo&quot;,&quot;isActive&quot;:true,&quot;hasValidLicense&quot;:true,&quot;licenseValidationMessageAsHtml&quot;:&quot;License for Scroll Versions is valid.&quot;,&quot;isEnabledInSpace&quot;:false},&quot;VariantManagement&quot;:{&quot;type&quot;:&quot;VariantManagement&quot;,&quot;isActive&quot;:true,&quot;hasValidLicense&quot;:true,&quot;licenseValidationMessageAsHtml&quot;:&quot;License for Scroll Versions is valid.&quot;,&quot;isEnabledInSpace&quot;:true},&quot;VersionManagement&quot;:{&quot;type&quot;:&quot;VersionManagement&quot;,&quot;isActive&quot;:true,&quot;hasValidLicense&quot;:true,&quot;licenseValidationMessageAsHtml&quot;:&quot;License for Scroll Versions is valid.&quot;,&quot;isEnabledInSpace&quot;:false}},&quot;confluenceMarketplaceBuildNumber&quot;:18048,&quot;space&quot;:{&quot;config&quot;:{&quot;enableVersionManagement&quot;:false,&quot;enableTranslation&quot;:false,&quot;enableVariants&quot;:true,&quot;isAllVariantVisibleInViewport&quot;:false,&quot;enablePermalinks&quot;:true,&quot;enableSeo&quot;:false,&quot;isTargetSpace&quot;:false,&quot;restrictEditInReaderView&quot;:false,&quot;workflowType&quot;:&quot;NONE&quot;,&quot;hasCorrectComalaSpaceSetup&quot;:false,&quot;enableSearch&quot;:false},&quot;allVersions&quot;:[],&quot;allVariants&quot;:[],&quot;allRemoteSystems&quot;:[],&quot;allLanguages&quot;:[],&quot;isScrollVersionsEnabled&quot;:false,&quot;theme&quot;:{&quot;selectedTheme&quot;:&quot;com.atlassian.confluence.themes.default:theme-default&quot;,&quot;isDerived&quot;:true,&quot;isThemeCompatible&quot;:true,&quot;pageTitleSelector&quot;:&quot;#title-text a:first-of-type&quot;,&quot;pageKeySelector&quot;:&quot;#title-text&quot;,&quot;contentManagementToolbarSelector&quot;:&quot;.theme-default #custom-content-header, .theme-default #main-header&quot;,&quot;breadcrumbsSelector&quot;:&quot;#breadcrumbs&quot;,&quot;breadcrumbsFilter&quot;:&quot;&gt; li:has(a[href*=\&quot;collector\&quot;]) ~ li&quot;,&quot;breadcrumbsTypeFilter&quot;:&quot;space&quot;,&quot;pageTreeContainerSelector&quot;:&quot;.ia-secondary-container[data-tree-type=page-tree] .ia-secondary-content&quot;,&quot;pageTreeContainerTemplate&quot;:&quot;Scroll.Versions.Templates.ThemeIntegration.ConfluenceDefault.defaultThemeIntegration&quot;,&quot;pageTreeChildrenTemplate&quot;:&quot;Scroll.Versions.Templates.ThemeIntegration.ConfluenceDefault.childrenDefaultTheme&quot;,&quot;pageTreeChildrenContainerSelector&quot;:&quot;.sv-pt-children.plugin_pagetree_children_list&quot;,&quot;pageTreeChildrenToggleClassesToToggle&quot;:&quot;icon-section-opened icon-section-closed&quot;,&quot;customJavaScript&quot;:&quot;Scroll.Versions.ThemeIntegration.ConfluenceDefault.postProcess&quot;,&quot;customCssSelectorsToHide&quot;:&quot;.ia-secondary-container[data-tree-type=pages]&quot;,&quot;svContentFooterSelector&quot;:&quot;append: #main&quot;,&quot;svContentHeaderSelector&quot;:&quot;before: #main-header&quot;,&quot;svNavigationSelector&quot;:&quot;after: .acs-nav-wrapper&quot;,&quot;svBylineSelector&quot;:&quot;append: .page-metadata&quot;},&quot;isRestrictEditInReaderView&quot;:false,&quot;isRemotePublishingToSameSystemAllowed&quot;:false,&quot;isTargetSpace&quot;:false,&quot;messages&quot;:[{&quot;id&quot;:&quot;sv.plugin.upgrade.lock.message&quot;,&quot;severity&quot;:&quot;Hint&quot;,&quot;text&quot;:&quot;The space is currently being upgraded. Please wait a minute.&quot;,&quot;closeable&quot;:false},{&quot;id&quot;:&quot;sv.banner.message.compliance.error&quot;,&quot;severity&quot;:&quot;Error&quot;,&quot;text&quot;:&quot;This space is not compatible with the currently installed version of Scroll Versions or Scroll Translations. Please check the log files for more information. After the situation causing the error has been resolved, you can restart the upgrade of this space &lt;a href=\&quot;/plugins/scroll-platform/scroll-addons.action?key=GRBE#/versions-spacetools/upgrade\&quot; onclick=\&quot;return ( Scroll.Versions.SPARK &amp;&amp;  Scroll.Versions.SPARK.bootstrapScroll(&#39;versions&#39;, &#39;upgrade&#39; ) )\&quot;&gt;here&lt;/a&gt;.&quot;,&quot;closeable&quot;:false}],&quot;homePage&quot;:{&quot;pageId&quot;:259097806,&quot;scrollPageId&quot;:&quot;0A1E432C016E5BF884A52D352BB30582&quot;,&quot;scrollPageTitle&quot;:&quot;Home&quot;},&quot;isUnrecommendedFeatureRestrictEditInReaderViewEnabled&quot;:false,&quot;isUnrecommendedFeaturePublishToSameEnabled&quot;:false},&quot;editor&quot;:{&quot;useDraft&quot;:false},&quot;user&quot;:{&quot;workingVersion&quot;:{&quot;id&quot;:&quot;current&quot;,&quot;name&quot;:&quot;Currently Published&quot;,&quot;archived&quot;:false,&quot;color&quot;:&quot;#999999&quot;,&quot;runtimeAccessible&quot;:true,&quot;versionId&quot;:&quot;current&quot;,&quot;releaseDateAsString&quot;:&quot;&quot;,&quot;isArchived&quot;:false,&quot;isEditableVersion&quot;:true},&quot;hasEditRestrictionForVersion&quot;:true,&quot;currentVariant&quot;:{&quot;id&quot;:&quot;all&quot;,&quot;name&quot;:&quot;all&quot;,&quot;description&quot;:&quot;&quot;,&quot;isPublic&quot;:false,&quot;isDefault&quot;:false,&quot;conditions&quot;:[]},&quot;currentLanguage&quot;:{&quot;key&quot;:&quot;en&quot;,&quot;encodedKey&quot;:&quot;en&quot;,&quot;displayName&quot;:&quot;inglês&quot;,&quot;isOriginal&quot;:true},&quot;permissions&quot;:{&quot;View&quot;:true,&quot;Contribute&quot;:true,&quot;Review&quot;:true,&quot;ManageContent&quot;:true,&quot;AdministerSpace&quot;:true,&quot;Translate&quot;:true},&quot;settings&quot;:{&quot;isShowTopLevelPages&quot;:false,&quot;isShowUnavailablePages&quot;:true,&quot;isHighlightIncludes&quot;:true,&quot;isHighlightConditionalContent&quot;:true,&quot;isShowArchivedVersions&quot;:false,&quot;isDisplayPageInfoPanel&quot;:true,&quot;isDisplayDefaultLanguageContent&quot;:false,&quot;isReadOnlyView&quot;:false,&quot;isRememberTreeState&quot;:true}},&quot;page&quot;:{&quot;isAvailable&quot;:true,&quot;isMasterPage&quot;:true,&quot;variants&quot;:{&quot;availableInVariants&quot;:[],&quot;isAvailableInCurrentVariant&quot;:true},&quot;isFallbackChange&quot;:false,&quot;targetVersion&quot;:{&quot;id&quot;:&quot;current&quot;,&quot;name&quot;:&quot;Currently Published&quot;,&quot;archived&quot;:false,&quot;color&quot;:&quot;#999999&quot;,&quot;runtimeAccessible&quot;:true,&quot;versionId&quot;:&quot;current&quot;,&quot;releaseDateAsString&quot;:&quot;&quot;,&quot;isArchived&quot;:false,&quot;isEditableVersion&quot;:false},&quot;scrollPageTitle&quot;:&quot;Função ACD – Acesso à dados&quot;,&quot;workflowStateId&quot;:&quot;&quot;,&quot;scrollPageKeyUrl&quot;:&quot;&quot;,&quot;isNonMatchingVersion&quot;:true,&quot;childrenCount&quot;:0,&quot;isHomePage&quot;:false,&quot;isUnresolvedChange&quot;:false,&quot;availableChildrenCount&quot;:0,&quot;changeType&quot;:&quot;&quot;,&quot;isKeepUnversioned&quot;:false,&quot;scrollBreadcrumbs&quot;:[{&quot;type&quot;:&quot;space&quot;,&quot;target&quot;:&quot;/dashboard.action&quot;,&quot;cssClass&quot;:&quot;&quot;},{&quot;type&quot;:&quot;space&quot;,&quot;displayTitle&quot;:&quot;GRBE&quot;,&quot;target&quot;:&quot;/display/GRBE/Home&quot;,&quot;cssClass&quot;:&quot;&quot;},{&quot;type&quot;:&quot;page&quot;,&quot;displayTitle&quot;:&quot;GRBE&quot;,&quot;target&quot;:&quot;/display/GRBE/GRBE&quot;,&quot;cssClass&quot;:&quot;&quot;,&quot;scrollPageId&quot;:&quot;0A1E432B016E4D2C7E7C4E2E10B034B3&quot;},{&quot;type&quot;:&quot;page&quot;,&quot;displayTitle&quot;:&quot;Aplicativos Online&quot;,&quot;target&quot;:&quot;/display/GRBE/Aplicativos+Online&quot;,&quot;cssClass&quot;:&quot;&quot;,&quot;scrollPageId&quot;:&quot;0A194E570170EDF713C5D80A5C954EC9&quot;},{&quot;type&quot;:&quot;page&quot;,&quot;displayTitle&quot;:&quot;Ponte Monitor&quot;,&quot;target&quot;:&quot;/display/GRBE/Ponte+Monitor&quot;,&quot;cssClass&quot;:&quot;&quot;,&quot;scrollPageId&quot;:&quot;0A194E5701702FE76133A59133F5A16A&quot;}],&quot;pageId&quot;:365035720,&quot;scrollPageKey&quot;:&quot;&quot;,&quot;translationStatus&quot;:&quot;&quot;,&quot;isUnversionedPage&quot;:true,&quot;isLastVersion&quot;:false,&quot;isAddedInCurrentVersion&quot;:true,&quot;workflowState&quot;:&quot;&quot;,&quot;permalink&quot;:&quot;Função ACD – Acesso à dados&quot;,&quot;scrollPageId&quot;:&quot;0A194E57017058DFC995D8B52F06F6BD&quot;,&quot;isChange&quot;:false,&quot;masterPageId&quot;:365035720}}"></meta>
+<script>
+    (function() {
+        'use strict';
+        var pageContext = document.getElementById('sv-scroll-page-context').getAttribute("content");
+        if (pageContext) {
+            var scrollContext = JSON.parse(pageContext);
+            if (window.Scroll) {
+                if (window.Scroll.Versions) {
+                    window.Scroll.Versions.Context = scrollContext;
+                } else {
+                    window.Scroll.Versions = { Context: scrollContext };
+                }
+            } else {
+                window.Scroll = { Versions: { Context: scrollContext } };
+            }
+        }
+    })();
+</script>
+<meta id="sv-active-indicator" name="sv-active-indicator" content="" class="sv-platform-active"></meta>
+
+
+            <meta name="ajs-team-calendars-display-time-format" content="displayTimeFormat12">
+            <meta id="team-calendars-display-week-number" content="false">
+            <meta id="team-calendars-user-timezone" content="America/Sao_Paulo">
+            <script type="text/x-template" id="team-calendars-messages" title="team-calendars-messages"><fieldset class="i18n hidden"><input type="hidden" name="calendar3.month.long.july" value="Julho"><input type="hidden" name="calendar3.day.short.wednesday" value="Qua"><input type="hidden" name="calendar3.day.short.thursday" value="Qui"><input type="hidden" name="calendar3.month.short.march" value="mar"><input type="hidden" name="calendar3.month.long.april" value="Abril"><input type="hidden" name="calendar3.month.long.october" value="Outubro"><input type="hidden" name="calendar3.month.long.august" value="Agosto"><input type="hidden" name="calendar3.month.short.july" value="jul"><input type="hidden" name="calendar3.month.short.may" value="mai"><input type="hidden" name="calendar3.month.short.november" value="nov"><input type="hidden" name="calendar3.day.long.friday" value="Sexta-feira"><input type="hidden" name="calendar3.day.long.sunday" value="Domingo"><input type="hidden" name="calendar3.day.long.saturday" value="Sábado"><input type="hidden" name="calendar3.month.short.april" value="abr"><input type="hidden" name="calendar3.day.long.wednesday" value="Quarta-feira"><input type="hidden" name="calendar3.month.long.december" value="Dezembro"><input type="hidden" name="calendar3.month.short.october" value="out"><input type="hidden" name="calendar3.day.long.monday" value="Segunda-feira"><input type="hidden" name="calendar3.month.short.june" value="jun"><input type="hidden" name="calendar3.day.short.monday" value="Seg"><input type="hidden" name="calendar3.day.short.tuesday" value="Ter"><input type="hidden" name="calendar3.day.short.saturday" value="Sáb"><input type="hidden" name="calendar3.month.long.march" value="Março"><input type="hidden" name="calendar3.month.long.june" value="Junho"><input type="hidden" name="calendar3.month.short.february" value="fev"><input type="hidden" name="calendar3.month.short.august" value="ago"><input type="hidden" name="calendar3.month.short.december" value="dez"><input type="hidden" name="calendar3.day.short.sunday" value="Dom"><input type="hidden" name="calendar3.month.long.february" value="Fevereiro"><input type="hidden" name="calendar3.day.long.tuesday" value="Terça-feira"><input type="hidden" name="calendar3.month.long.may" value="Maio"><input type="hidden" name="calendar3.month.long.september" value="Setembro"><input type="hidden" name="calendar3.month.long.november" value="Novembro"><input type="hidden" name="calendar3.month.short.january" value="jan"><input type="hidden" name="calendar3.month.short.september" value="set"><input type="hidden" name="calendar3.day.long.thursday" value="Quinta-feira"><input type="hidden" name="calendar3.month.long.january" value="Janeiro"><input type="hidden" name="calendar3.day.short.friday" value="Sex"></fieldset></script>
+            
+
+
+<script type="application/javascript">
+    window.Bitvoodoo = window.Bitvoodoo || {};
+    window.Bitvoodoo.Viewtracker = window.Bitvoodoo.Viewtracker || {};
+
+
+    window.Bitvoodoo.Viewtracker.Info = window.Bitvoodoo.Viewtracker.Info || {};
+    window.Bitvoodoo.Viewtracker.Info.version = "8.2.5";
+    window.Bitvoodoo.Viewtracker.Info.commitId = "38dda26";
+
+
+    window.Bitvoodoo.Viewtracker.Configuration = window.Bitvoodoo.Viewtracker.Configuration || {};
+    window.Bitvoodoo.Viewtracker.Configuration.desktopTrackingEnabled = true;
+    window.Bitvoodoo.Viewtracker.Configuration.mobileWebTrackingEnabled = false;
+    window.Bitvoodoo.Viewtracker.Configuration.mobileNativeTrackingEnabled = false;
+    window.Bitvoodoo.Viewtracker.Configuration.linchpinPluginEnabled = false;
+    window.Bitvoodoo.Viewtracker.Configuration.scrollViewportPluginEnabled = false;
+    window.Bitvoodoo.Viewtracker.Configuration.privacyMode = false;
+    window.Bitvoodoo.Viewtracker.Configuration.hiddenUserStatistic = false;
+    window.Bitvoodoo.Viewtracker.Configuration.isDataSecurityInfoBoxFeatureEnabled = false;
+    window.Bitvoodoo.Viewtracker.Configuration.isDataSecurityLinkFeatureEnabled = false;
+    window.Bitvoodoo.Viewtracker.Configuration.isPrivacyModeShowUsersReportFeatureEnabled = false;
+    window.Bitvoodoo.Viewtracker.Configuration.isViewsCounterEnabled = true;
+    window.Bitvoodoo.Viewtracker.Configuration.isStatisticCacheEnabled = true;
+    window.Bitvoodoo.Viewtracker.Configuration.isAnonymizeViewersEnabled = false;
+    window.Bitvoodoo.Viewtracker.Configuration.isSpaceExcludedFromTracking = false;
+    window.Bitvoodoo.Viewtracker.Configuration.viewTrackerInstallationDate = 1469052636662;
+    window.Bitvoodoo.Viewtracker.Configuration.excludedSpacesTotal = 2803;
+    window.Bitvoodoo.Viewtracker.Configuration.userExcludedGroupsTotal = 0;
+    window.Bitvoodoo.Viewtracker.Configuration.debug = false;
+    window.Bitvoodoo.Viewtracker.Configuration.serverTimezone = "America/Sao_Paulo";
+    window.Bitvoodoo.Viewtracker.Configuration.isUserHasUserDataAccess = true;
+
+
+    
+    window.Bitvoodoo.Viewtracker.Configuration.trackedUrls = [
+            ];
+</script>
+
+
+            <meta name="ajs-public-signup-permitted" content="false">
+            <meta name="ajs-cq-is-admin" content="false"><meta name="ajs-cq-is-anonymous" content="false">
+            
+            <meta name="ajs-is-confluence-admin" content="false">
+            <meta name="ajs-connection-timeout" content="10000">
+            
+    
+    
+            <meta name="ajs-page-title" content="Função ACD – Acesso à dados">
+            <meta name="ajs-latest-published-page-title" content="Função ACD – Acesso à dados">
+            <meta name="ajs-space-name" content="GRBE">
+            <meta name="ajs-page-id" content="365035720">
+            <meta name="ajs-latest-page-id" content="365035720">
+            <meta name="ajs-content-type" content="page">
+            <meta name="ajs-parent-page-title" content="Ponte Monitor">
+            <meta name="ajs-parent-page-id" content="359596599">
+            <meta name="ajs-space-key" content="GRBE">
+            <meta name="ajs-max-number-editors" content="12">
+            <meta name="ajs-macro-placeholder-timeout" content="5000">
+            <meta name="ajs-jira-metadata-count" content="0">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-can-remove-page" content="true">
+            <meta name="ajs-can-remove-page-hierarchy" content="true">
+            <meta name="ajs-browse-page-tree-mode" content="view">
+            <meta name="ajs-shared-drafts" content="false">
+            <meta name="ajs-user-display-name" content="Joao Vitor Santos Prado">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-base-url" content="https://confluence-itau.tecnologia.prod.ops.aws.cloud.ihf">
+            <meta name="ajs-version-number" content="7.19.17">
+            <meta name="ajs-build-number" content="8804">
+            <meta name="ajs-remote-user" content="jvsppnx">
+            <meta name="ajs-remote-user-key" content="8a99ced67bcc23e8017cc186428a002e">
+            <meta name="ajs-remote-user-has-licensed-access" content="true">
+            <meta name="ajs-remote-user-has-browse-users-permission" content="true">
+            <meta name="ajs-current-user-fullname" content="Joao Vitor Santos Prado">
+            <meta name="ajs-current-user-avatar-url" content="/download/attachments/551175315/user-avatar">
+            <meta name="ajs-current-user-avatar-uri-reference" content="/download/attachments/551175315/user-avatar">
+            <meta name="ajs-static-resource-url-prefix" content="/s/czf1db/8804/xgjkrn/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="62914560">
+            <meta name="ajs-global-settings-quick-search-enabled" content="true">
+            <meta name="ajs-user-locale" content="pt_BR">
+            <meta name="ajs-user-timezone-offset" content="-10800000">
+            <meta name="ajs-enabled-dark-features" content="bv.viewtracker.tracking.service-desk.disabled,site-wide.synchrony.disable,bv.viewtracker.visits.batch.inserting.enabled,site-wide.shared-drafts.disable,bv.viewtracker.tracking.mobile-native.disabled,enable.legacy.edit.in.office,bv.viewtracker.tracking.mobile-web.disabled,clc.quick.create,confluence.view.edit.transition,cql.search.screen,confluence-inline-comments-resolved,http.session.registrar,frontend.editor.v4,nps.survey.inline.dialog,confluence.efi.onboarding.new.templates,frontend.editor.v4.compatibility,atlassian.cdn.static.assets,pdf-preview,previews.sharing,previews.versions,file-annotations,collaborative-audit-log,confluence.efi.onboarding.rich.space.content,confluence.reindex.improvements,previews.conversion-service,editor.ajax.save,graphql,read.only.mode,previews.trigger-all-file-types,lucene.caching.filter,attachment.extracted.text.extractor,confluence.table.resizable,notification.batch,previews.sharing.pushstate,tc.tacca.dacca,confluence-inline-comments-rich-editor,atlassian.webresource.twophase.js.i18n.disabled,site-wide.synchrony.opt-in,confluence.denormalisedpermissions,file-annotations.likes,gatekeeper-ui-v2,v2.content.name.searcher,mobile.supported.version,confluence.editor.tinymce.tables,pulp,confluence-inline-comments,quick-reload-inline-comments-flags,confluence-inline-comments-dangling-comment,confluence.retention.rules">
+            <meta name="ajs-atl-token" content="d84bd187a95ec4ac1c03334ca06050d66dd76873">
+            <meta name="ajs-confluence-flavour" content="VANILLA">
+            <meta name="ajs-user-date-pattern" content="dd/MM/yyyy">
+            <meta name="ajs-access-mode" content="READ_WRITE">
+            <meta name="ajs-render-mode" content="READ_WRITE">
+            <meta name="ajs-date.format" content="MMM dd, yyyy">
+    
+    <link rel="shortcut icon" href="/s/s19t7f/8804/xgjkrn/12/_/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/s/s19t7f/8804/xgjkrn/12/_/favicon.ico">
+
+
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch/osd.action" title="Confluence Itaú"/>
+    
+                    
+            <meta name="ajs-create-issue-metadata-show-discovery" content="true">
+            
+
+
+    <script>
+window.WRM=window.WRM||{};window.WRM._unparsedData=window.WRM._unparsedData||{};window.WRM._unparsedErrors=window.WRM._unparsedErrors||{};
+WRM._unparsedData["com.atlassian.applinks.applinks-plugin:applinks-common-exported.entity-types"]="{\u0022singular\u0022:{\u0022refapp.charlie\u0022:\u0022Charlie\u0022,\u0022fecru.project\u0022:\u0022Projeto Crucible\u0022,\u0022fecru.repository\u0022:\u0022Reposit\u00f3rio do FishEye\u0022,\u0022stash.project\u0022:\u0022Projeto do Servidor Bitbucket\u0022,\u0022generic.entity\u0022:\u0022Projeto gen\u00e9rico\u0022,\u0022confluence.space\u0022:\u0022Espa\u00e7o Confluence\u0022,\u0022bamboo.project\u0022:\u0022Projeto no Bamboo\u0022,\u0022jira.project\u0022:\u0022Projeto do Jira\u0022},\u0022plural\u0022:{\u0022refapp.charlie\u0022:\u0022Charlies\u0022,\u0022fecru.project\u0022:\u0022Projetos Crucible\u0022,\u0022fecru.repository\u0022:\u0022Reposit\u00f3rios do FishEye\u0022,\u0022stash.project\u0022:\u0022Projetos do Servidor Bitbucket\u0022,\u0022generic.entity\u0022:\u0022Projetos gen\u00e9ricos\u0022,\u0022confluence.space\u0022:\u0022Espa\u00e7os Confluence\u0022,\u0022bamboo.project\u0022:\u0022Projetos do Bamboo\u0022,\u0022jira.project\u0022:\u0022Projetos do Jira\u0022}}";
+WRM._unparsedData["com.atlassian.analytics.analytics-client:programmatic-analytics-init.programmatic-analytics-data-provider"]="false";
+WRM._unparsedData["com.atlassian.confluence.plugins.confluence-license-banner:confluence-license-banner-resources.license-details"]="{\u0022daysBeforeLicenseExpiry\u0022:0,\u0022daysBeforeMaintenanceExpiry\u0022:0,\u0022showLicenseExpiryBanner\u0022:false,\u0022showMaintenanceExpiryBanner\u0022:false,\u0022renewUrl\u0022:null,\u0022salesUrl\u0022:null}";
+WRM._unparsedData["com.atlassian.plugins.atlassian-plugins-webresource-plugin:context-path.context-path"]="\u0022\u0022";
+WRM._unparsedData["com.atlassian.analytics.analytics-client:policy-update-init.policy-update-data-provider"]="false";
+WRM._unparsedData["com.atlassian.applinks.applinks-plugin:applinks-common-exported.authentication-types"]="{\u0022com.atlassian.applinks.api.auth.types.BasicAuthenticationProvider\u0022:\u0022Acesso B\u00e1sico\u0022,\u0022com.atlassian.applinks.api.auth.types.TrustedAppsAuthenticationProvider\u0022:\u0022Aplica\u00e7\u00f5es confi\u00e1veis\u0022,\u0022com.atlassian.applinks.api.auth.types.CorsAuthenticationProvider\u0022:\u0022CORS\u0022,\u0022com.atlassian.applinks.api.auth.types.OAuthAuthenticationProvider\u0022:\u0022OAuth\u0022,\u0022com.atlassian.applinks.api.auth.types.TwoLeggedOAuthAuthenticationProvider\u0022:\u0022OAuth\u0022,\u0022com.atlassian.applinks.api.auth.types.TwoLeggedOAuthWithImpersonationAuthenticationProvider\u0022:\u0022OAuth\u0022}";
+WRM._unparsedData["com.atlassian.confluence.plugins.confluence-search-ui-plugin:confluence-search-ui-plugin-resources.i18n-data"]="{\u0022search.ui.recent.link.text\u0022:\u0022Ver conte\u00fados mais visitados recentemente\u0022,\u0022search.ui.filter.clear.selected\u0022:\u0022Limpar elementos selecionados\u0022,\u0022search.ui.search.results.empty\u0022:\u0022N\u00e3o foi poss\u00edvel encontrar nenhum resultado para \u005C\u0022{0}\u005C\u0022.\u0022,\u0022search.ui.content.name.search.items.panel.load.all.top.items.button.text\u0022:\u0022Mostrar mais resultados de app...\u0022,\u0022search.ui.filter.contributor.button.text\u0022:\u0022Colaborador\u0022,\u0022search.ui.filter.space.current.label\u0022:\u0022ATUAL\u0022,\u0022search.ui.clear.input.button.text\u0022:\u0022Apagar texto\u0022,\u0022help.search.ui.link.title\u0022:\u0022Dicas de pesquisa\u0022,\u0022search.ui.container.close.text\u0022:\u0022Fechar\u0022,\u0022search.ui.search.results.clear.button\u0022:\u0022limpar seus filtros.\u0022,\u0022search.ui.filter.date.month.text\u0022:\u0022M\u00eas passado\u0022,\u0022search.ui.infinite.scroll.button.text\u0022:\u0022Mais resultados\u0022,\u0022search.ui.filter.date.button.text\u0022:\u0022Data\u0022,\u0022search.ui.filter.date.week.text\u0022:\u0022Semana passada\u0022,\u0022search.ui.result.subtitle.calendar\u0022:\u0022Calend\u00e1rio da equipe\u0022,\u0022search.ui.filter.date.heading\u0022:\u0022\u00daltima modifica\u00e7\u00e3o dentro de\u0022,\u0022search.ui.filter.space.input.label\u0022:\u0022Encontrar espa\u00e7os...\u0022,\u0022search.ui.generic.error\u0022:\u0022Algo deu errado. Atualize a p\u00e1gina ou entre em contato com o administrador se isso continuar acontecendo.\u0022,\u0022search.ui.recent.spaces\u0022:\u0022Espa\u00e7os recentes\u0022,\u0022search.ui.result.subtitle.space\u0022:\u0022Espa\u00e7o\u0022,\u0022search.ui.filter.space.category.input.label\u0022:\u0022Encontrar categorias de espa\u00e7o...\u0022,\u0022search.ui.filter.space.archive.label\u0022:\u0022Pesquisar em espa\u00e7os arquivados\u0022,\u0022search.ui.filter.label\u0022:\u0022filtro\u0022,\u0022search.ui.filter.date.all.text\u0022:\u0022Qualquer data\u0022,\u0022search.ui.filter.date.hour.text\u0022:\u0022Dia anterior\u0022,\u0022search.ui.filters.heading\u0022:\u0022Filtrar por\u0022,\u0022search.ui.filter.label.input.label\u0022:\u0022Encontrar r\u00f3tulos...\u0022,\u0022search.ui.recent.items.anonymous\u0022:\u0022Comece a explorar. Os resultados das suas pesquisas ser\u00e3o exibidos aqui.\u0022,\u0022search.ui.input.label\u0022:\u0022Pesquisar\u0022,\u0022search.ui.input.aria.label\u0022:\u0022Pesquisa: quando voc\u00ea digitar, os resultados v\u00e3o ser exibidos abaixo.\u0022,\u0022search.ui.search.result\u0022:\u0022{0,choice,1#{0} resultado de pesquisa|1\u003c{0} resultados de pesquisa}\u0022,\u0022search.ui.container.clear.ariaLabel\u0022:\u0022Limpar\u0022,\u0022search.ui.filter.label.button.text\u0022:\u0022R\u00f3tulo\u0022,\u0022search.ui.input.alert\u0022:\u0022Digite enter para pesquisar\u0022,\u0022search.ui.filter.no.result.text\u0022:\u0022N\u00e3o encontramos nenhum resultado para sua pesquisa\u0022,\u0022search.ui.result.subtitle.user\u0022:\u0022Perfil de usu\u00e1rio\u0022,\u0022search.ui.filter.contributor.input.label\u0022:\u0022Encontrar pessoas...\u0022,\u0022search.ui.filter.content.type.button.text\u0022:\u0022Tipo\u0022,\u0022search.ui.filter.date.year.text\u0022:\u0022Ano passado\u0022,\u0022search.ui.filter.space.button.text\u0022:\u0022Espa\u00e7o\u0022,\u0022search.ui.advanced.search.link.text\u0022:\u0022Pesquisa avan\u00e7ada\u0022,\u0022search.ui.search.results.clear.line2\u0022:\u0022Tente usar um termo de pesquisa diferente ou\u0022,\u0022search.ui.filter.space.category.button.text\u0022:\u0022Categoria de espa\u00e7o\u0022,\u0022search.ui.search.results.clear.line1\u0022:\u0022N\u00e3o encontramos nenhum resultado para sua pesquisa.\u0022,\u0022search.ui.content.name.search.items.panel.load.all.top.items.admin.button.text\u0022:\u0022Mostrar mais configura\u00e7\u00f5es e resultados de app...\u0022,\u0022search.ui.recent.pages\u0022:\u0022Visitado recentemente\u0022,\u0022search.ui.search.result.anonymous\u0022:\u0022{0,choice,1#{0} resultado de pesquisa|1\u003c{0} resultados de pesquisa}. J\u00e1 tem uma conta? {1}Fa\u00e7a login{2} para expandir sua pesquisa.\u0022,\u0022search.ui.recent.items.empty\u0022:\u0022Comece a explorar. As p\u00e1ginas e os espa\u00e7os que voc\u00ea visitou recentemente ser\u00e3o exibidos aqui.\u0022,\u0022search.ui.filter.space.init.heading\u0022:\u0022espa\u00e7os recentes\u0022}";
+WRM._unparsedData["com.atlassian.applinks.applinks-plugin:applinks-common-exported.applinks-types"]="{\u0022crowd\u0022:\u0022Crowd\u0022,\u0022confluence\u0022:\u0022Confluence\u0022,\u0022fecru\u0022:\u0022Fisheye / Crucible\u0022,\u0022stash\u0022:\u0022Bitbucket\u0022,\u0022jira\u0022:\u0022Jira\u0022,\u0022refapp\u0022:\u0022Aplica\u00e7\u00e3o de refer\u00eancia\u0022,\u0022bamboo\u0022:\u0022Bamboo\u0022,\u0022generic\u0022:\u0022Aplica\u00e7\u00e3o gen\u00e9rica\u0022}";
+WRM._unparsedData["com.atlassian.confluence.plugins.synchrony-interop:synchrony-status-banner-loader.synchrony-status"]="false";
+WRM._unparsedData["com.atlassian.applinks.applinks-plugin:applinks-common-exported.applinks-help-paths"]="{\u0022entries\u0022:{\u0022applinks.docs.root\u0022:\u0022https://confluence.atlassian.com/display/APPLINKS-082/\u0022,\u0022applinks.docs.diagnostics.troubleshoot.sslunmatched\u0022:\u0022SSL+and+application+link+troubleshooting+guide\u0022,\u0022applinks.docs.diagnostics.troubleshoot.oauthsignatureinvalid\u0022:\u0022OAuth+troubleshooting+guide\u0022,\u0022applinks.docs.diagnostics.troubleshoot.oauthtimestamprefused\u0022:\u0022OAuth+troubleshooting+guide\u0022,\u0022applinks.docs.delete.entity.link\u0022:\u0022Create+links+between+projects\u0022,\u0022applinks.docs.adding.application.link\u0022:\u0022Link+Atlassian+applications+to+work+together\u0022,\u0022applinks.docs.administration.guide\u0022:\u0022Application+Links+Documentation\u0022,\u0022applinks.docs.oauth.security\u0022:\u0022OAuth+security+for+application+links\u0022,\u0022applinks.docs.troubleshoot.application.links\u0022:\u0022Troubleshoot+application+links\u0022,\u0022applinks.docs.diagnostics.troubleshoot.unknownerror\u0022:\u0022Network+and+connectivity+troubleshooting+guide\u0022,\u0022applinks.docs.configuring.auth.trusted.apps\u0022:\u0022Configuring+Trusted+Applications+authentication+for+an+application+link\u0022,\u0022applinks.docs.diagnostics.troubleshoot.authlevelunsupported\u0022:\u0022OAuth+troubleshooting+guide\u0022,\u0022applinks.docs.diagnostics.troubleshoot.ssluntrusted\u0022:\u0022SSL+and+application+link+troubleshooting+guide\u0022,\u0022applinks.docs.diagnostics.troubleshoot.unknownhost\u0022:\u0022Network+and+connectivity+troubleshooting+guide\u0022,\u0022applinks.docs.delete.application.link\u0022:\u0022Link+Atlassian+applications+to+work+together\u0022,\u0022applinks.docs.adding.project.link\u0022:\u0022Configuring+Project+links+across+Applications\u0022,\u0022applinks.docs.link.applications\u0022:\u0022Link+Atlassian+applications+to+work+together\u0022,\u0022applinks.docs.diagnostics.troubleshoot.oauthproblem\u0022:\u0022OAuth+troubleshooting+guide\u0022,\u0022applinks.docs.diagnostics.troubleshoot.migration\u0022:\u0022Update+application+links+to+use+OAuth\u0022,\u0022applinks.docs.relocate.application.link\u0022:\u0022Link+Atlassian+applications+to+work+together\u0022,\u0022applinks.docs.administering.entity.links\u0022:\u0022Create+links+between+projects\u0022,\u0022applinks.docs.upgrade.application.link\u0022:\u0022OAuth+security+for+application+links\u0022,\u0022applinks.docs.diagnostics.troubleshoot.connectionrefused\u0022:\u0022Network+and+connectivity+troubleshooting+guide\u0022,\u0022applinks.docs.configuring.auth.oauth\u0022:\u0022OAuth+security+for+application+links\u0022,\u0022applinks.docs.insufficient.remote.permission\u0022:\u0022OAuth+security+for+application+links\u0022,\u0022applinks.docs.configuring.application.link.auth\u0022:\u0022OAuth+security+for+application+links\u0022,\u0022applinks.docs.diagnostics\u0022:\u0022Application+links+diagnostics\u0022,\u0022applinks.docs.configured.authentication.types\u0022:\u0022OAuth+security+for+application+links\u0022,\u0022applinks.docs.adding.entity.link\u0022:\u0022Create+links+between+projects\u0022,\u0022applinks.docs.diagnostics.troubleshoot.unexpectedresponse\u0022:\u0022Network+and+connectivity+troubleshooting+guide\u0022,\u0022applinks.docs.configuring.auth.basic\u0022:\u0022Configuring+Basic+HTTP+Authentication+for+an+Application+Link\u0022,\u0022applinks.docs.diagnostics.troubleshoot.authlevelmismatch\u0022:\u0022OAuth+troubleshooting+guide\u0022}}";
+WRM._unparsedData["com.atlassian.confluence.plugins.confluence-feature-discovery-plugin:confluence-feature-discovery-plugin-resources.test-mode"]="false";
+if(window.WRM._dataArrived)window.WRM._dataArrived();</script>
+<link rel="stylesheet" href="/s/af4e8f742b64770e1e2925ad38c81990-CDN/s19t7f/8804/xgjkrn/004fea3af171bcbf8e59c62867f092d8/_/download/contextbatch/css/_super,-com.atlassian.plugins.atlassian-plugins-webresource-rest:data-collector-perf-observer/batch.css?enable.legacy.edit.in.office=true" data-wrm-key="_super,-com.atlassian.plugins.atlassian-plugins-webresource-rest:data-collector-perf-observer" data-wrm-batch-type="context" media="all">
+<link rel="stylesheet" href="/s/69ba63ef610357bb73d440f813985a8e-CDN/s19t7f/8804/xgjkrn/ac9ec5a3d8cb55d7eb1a904905e05c78/_/download/contextbatch/css/atl.confluence.plugins.pagetree-desktop,main,page,viewcontent,atl.comments,atl.general,-_super/batch.css?build-number=8804&amp;bvAttachmentHasLicense=true&amp;bvIsPrivacyModeEnabled=false&amp;bvShowOldContentReport=false&amp;bvUserLoggedIn=true&amp;enable.legacy.edit.in.office=true&amp;gatekeeper-ui-v2=true&amp;highlightactions=true&amp;hostenabled=true&amp;scm-display-getting-started=true&amp;user-logged-in=true" data-wrm-key="atl.confluence.plugins.pagetree-desktop,main,page,viewcontent,atl.comments,atl.general,-_super" data-wrm-batch-type="context" media="all">
+<link rel="stylesheet" href="/s/40f2feef8860f8d4b30996e4dcd6d8ca-CDN/s19t7f/8804/xgjkrn/17.19.0/_/download/batch/confluence.extra.livesearch:livesearch-macro-web-resources/confluence.extra.livesearch:livesearch-macro-web-resources.css" data-wrm-key="confluence.extra.livesearch:livesearch-macro-web-resources" data-wrm-batch-type="resource" media="all">
+<link rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e-CDN/s19t7f/8804/xgjkrn/17.19.5/_/download/batch/confluence.macros.advanced:favpages-resources/confluence.macros.advanced:favpages-resources.css" data-wrm-key="confluence.macros.advanced:favpages-resources" data-wrm-batch-type="resource" media="all">
+<link rel="stylesheet" href="/s/s19t7f/8804/xgjkrn/48/_/styles/colors.css?spaceKey=GRBE" media="all">
+<script data-wrm-key="com.atlassian.plugins.atlassian-plugins-webresource-rest:data-collector-perf-observer" data-wrm-batch-type="resource" data-initially-rendered>
+!function(){"use strict";if("PerformanceObserver"in window){const e=[];window.__observedResources=e;const r=e=>"script"===e?"script":"css";new PerformanceObserver((n=>{n.getEntries().filter((({initiatorType:e,name:r})=>{const n="script"===e||((e,r)=>"link"===e&&"css"===new URL(r).pathname.split(".").pop())(e,r),i=new URL(location.href).origin===new URL(r).origin;return n&&i})).forEach((({name:n,transferSize:i,encodedBodySize:s,initiatorType:o})=>{e.push([i,s,n,r(o)])}))})).observe({type:"resource"})}}();
+
+
+</script>
+<script src="/s/71d71319514784eb3bd4c4ba5d848526-CDN/s19t7f/8804/xgjkrn/004fea3af171bcbf8e59c62867f092d8/_/download/contextbatch/js/_super,-com.atlassian.plugins.atlassian-plugins-webresource-rest:data-collector-perf-observer/batch.js?enable.legacy.edit.in.office=true&amp;locale=pt-BR" data-wrm-key="_super,-com.atlassian.plugins.atlassian-plugins-webresource-rest:data-collector-perf-observer" data-wrm-batch-type="context" data-initially-rendered></script>
+<script src="/s/291cdf239c6adfa4a0c0cee501532d11-CDN/s19t7f/8804/xgjkrn/ac9ec5a3d8cb55d7eb1a904905e05c78/_/download/contextbatch/js/atl.confluence.plugins.pagetree-desktop,main,page,viewcontent,atl.comments,atl.general,-_super/batch.js?build-number=8804&amp;bvAttachmentHasLicense=true&amp;bvIsPrivacyModeEnabled=false&amp;bvShowOldContentReport=false&amp;bvUserLoggedIn=true&amp;enable.legacy.edit.in.office=true&amp;gatekeeper-ui-v2=true&amp;highlightactions=true&amp;hostenabled=true&amp;locale=pt-BR&amp;scm-display-getting-started=true&amp;user-logged-in=true" data-wrm-key="atl.confluence.plugins.pagetree-desktop,main,page,viewcontent,atl.comments,atl.general,-_super" data-wrm-batch-type="context" data-initially-rendered></script>
+<script src="/s/1ca4d21a6ca1319c3799c3b2fca4b011-CDN/s19t7f/8804/xgjkrn/17.19.0/_/download/batch/confluence.extra.livesearch:livesearch-macro-web-resources/confluence.extra.livesearch:livesearch-macro-web-resources.js?locale=pt-BR" data-wrm-key="confluence.extra.livesearch:livesearch-macro-web-resources" data-wrm-batch-type="resource" data-initially-rendered></script>
+<script src="/s/d41d8cd98f00b204e9800998ecf8427e-CDN/s19t7f/8804/xgjkrn/17.19.5/_/download/batch/confluence.macros.advanced:favpages-resources/confluence.macros.advanced:favpages-resources.js" data-wrm-key="confluence.macros.advanced:favpages-resources" data-wrm-batch-type="resource" data-initially-rendered></script>
+<script src="/s/d41d8cd98f00b204e9800998ecf8427e-CDN/s19t7f/8804/xgjkrn/8.2.5/_/download/batch/ch.bitvoodoo.confluence.plugins.viewtracker:viewtracker-url-tracking-resource/ch.bitvoodoo.confluence.plugins.viewtracker:viewtracker-url-tracking-resource.js" data-wrm-key="ch.bitvoodoo.confluence.plugins.viewtracker:viewtracker-url-tracking-resource" data-wrm-batch-type="resource" data-initially-rendered></script>
+<script type="module">WRM.requireLazily(["wr!com.atlassian.plugins.atlassian-plugins-webresource-rest:data-collector-async"])</script>
+    
+
+
+        
+    
+
+
+        
+        <meta name="ajs-site-title" content="Confluence Itaú" />
+            
+    <!--Esconde o Botão "CREATE" do Menu Superior-->
+<script type="text/javascript">
+    var key = AJS.Meta.get("space-key");
+    var spaceException = false;
+
+
+console.log(key );
+    if(key == 'SOPCYBER' || key == 'ILATAM' || key == 'ACELERADIG'){
+        spaceException = true;
+    }
+
+
+    AJS.toInit(function(){
+     if (!AJS.params.isConfluenceAdmin && !spaceException)
+        AJS.$('#quick-create-page-button').remove();
+    });
+    
+    //Esconde o Botão "CREATE FROM TEMPLATE" do Menu Superior
+    AJS.toInit(function(){
+     if (!AJS.params.isConfluenceAdmin && !spaceException)
+        AJS.$('#create-page-button').remove();
+    });
+    
+    //Esconde o Botão "ADMIN" do Menu Superior
+    AJS.toInit(function(){
+        AJS.$('#admin-menu-link').remove();
+    });
+    
+    //Esconde o Botão "COPY" do Menu das Páginas
+    AJS.toInit(function(){
+        AJS.$('#action-copy-page-link').remove();
+    });
+</script>
+    
+    
+    <!--<div style="background-color: linen; border: 3px solid darkred; margin: 4px; padding: 2px; text-align: center;">
+    <b>ATENÇÃO:</b> Temporariamente a autenticação via SSO se encontra desabilitada. Acessar com <b>RACF</b> e <b>SENHA</b> até a normalização.</div>-->
+    <div style="background-color: linen; border: 3px solid darkred; margin: 4px; padding: 2px; text-align: center;">
+    <b><a href="https://iconectados.sharepoint.com/sites/padronizacao_docs/SitePages/EventPlanHome.aspx" target="_blank">Saiba tudo sobre a desativação do confluence no guia oficial</a></b>.</div>
+    <div style="background-color: linen; border: 3px solid darkred; margin: 4px; padding: 2px; text-align: center;">
+    Já migrou o seu conteúdo para outra plataforma? Lembre de adicionar a TAG <b>migrado-desativar</b> nas páginas migradas.</div>
+    <div style="background-color: linen; border: 3px solid darkred; margin: 4px; padding: 2px; text-align: center;">
+    <b>ATENÇÃO:</b> A EDIÇÃO de páginas será bloqueada em <b>30 de junho de 2024</b>. A partir dessa data será possível somente adicionar TAG e incluir comentários.</div> 
+
+
+    
+                <link rel="canonical" href="https://confluence-itau.tecnologia.prod.ops.aws.cloud.ihf/pages/viewpage.action?pageId=365035720">
+        <link rel="shortlink" href="https://confluence-itau.tecnologia.prod.ops.aws.cloud.ihf/x/yADCFQ">
+    <meta name="wikilink" content="[GRBE:Função ACD – Acesso à dados]">
+    <meta name="page-version" content="11">
+    <meta name="ajs-page-version" content="11">
+
+
+</head>
+
+
+    
+<body      id="com-atlassian-confluence" class="theme-default  aui-layout aui-theme-default">
+
+
+        
+            <div id='stp-licenseStatus-banner'></div>
+            <script>
+    var spaceConfigElement = document.getElementById('sv-space-config');
+    if (spaceConfigElement) {
+        var cssClasses = spaceConfigElement.getAttribute('content');
+        document.body.className += ' ' + cssClasses;
+    }
+</script>
+    <div id="page">
+<div id="full-height-container">
+    <div id="header-precursor">
+        <div class="cell">
+            <head>
+<style>
+
+
+/*Bloquear o Banner de Expiração de Licença (incluído por Squad Rocket)*/
+#license-banner{ 
+   display:none;
+  }
+
+
+/*Bloquear Popup Atlassian Companion
+#CompanionMainDropdownContentPlaceholder{ 
+   display:none;
+  }
+*/
+</style>
+</head>
+                            </div>
+    </div>
+        
+
+
+
+
+
+
+
+
+
+
+<header id="header" role="banner">
+            <a class="aui-skip-link" href="#nav-sidebar">Ir para a barra lateral</a>
+        <a class="aui-skip-link" href="#main">Ir para o conteúdo principal</a>
+    <nav class="aui-header aui-dropdown2-trigger-group" aria-label="Site"><div class="aui-header-inner"><div class="aui-header-before"><button class=" aui-dropdown2-trigger app-switcher-trigger aui-dropdown2-trigger-arrowless" aria-controls="app-switcher" aria-haspopup="true" role="button" data-aui-trigger href="#app-switcher"><span class="aui-icon aui-icon-small aui-iconfont-appswitcher">Aplicações Vinculadas</span></button><div id="app-switcher" class="aui-dropdown2 aui-style-default" role="menu" hidden data-is-user-admin="false" data-is-switcher="true"><div class="app-switcher-loading">Carregando...</div></div></div><div class="aui-header-primary"><span id="logo" class="aui-header-logo aui-header-logo-custom"><a href="/" aria-label="Ir para a página principal"><img src="/download/attachments/327682/atl.site.logo?version=2&amp;modificationDate=1498060673000&amp;api=v2" alt="Confluence Itaú" /><span class="aui-header-logo-text">Confluence Itaú</span></a></span><ul class="aui-nav">
+                            <li>
+            
+        
+        
+<a  id="space-directory-link" href="/spacedirectory/view.action"  class=" aui-nav-imagelink"   title="Espaços">
+            <span>Espaços</span>
+    </a>
+        </li>
+                    <li>
+            
+    
+        
+<a  id="people-directory-link" href="/browsepeople.action"  class=" aui-nav-imagelink"   title="Usuários">
+            <span>Usuários</span>
+    </a>
+        </li>
+                    <li>
+            
+    
+        
+<a  href="/calendar/mycalendar.action"  class=" aui-nav-imagelink"   title="Calendários">
+            <span>Calendários</span>
+    </a>
+        </li>
+                    <li>
+            
+    
+        
+<a  href="/plugins/confanalytics/analytics.action"  class=" aui-nav-imagelink"   title="Dados analíticos">
+            <span>Dados analíticos</span>
+    </a>
+        </li>
+                                <li class="aui-buttons">
+                                    
+                                        <a href="/pages/createpage.action?spaceKey=GRBE&amp;fromPageId=365035720&amp;src=quick-create" id="quick-create-page-button" class="aui-button aui-button-primary" title = 'Criar página em branco' tabindex="0">Criar</a>
+                                <a href="#" id="create-page-button" class="aui-button aui-button-primary clc-create-dialog-btn" title = 'Criar a partir do modelo' tabindex="0"><span class="aui-icon aui-icon-small aui-iconfont-more">Criar </span></a>
+            </li>
+</ul>
+</div><div class="aui-header-secondary"><ul class="aui-nav">
+                        <li>
+        <div id="search-ui" class="aui-quicksearch dont-default-focus header-quicksearch"><button id="quick-search-query-button" aria-label="Pesquisar" aria-haspopup= "dialog" aria-controls="search_drawer" ></button><input id="quick-search-query" aria-label="Pesquisar" placeholder="Pesquisar" type="text" aria-haspopup= "dialog" aria-controls="search_drawer" /><div id="quick-search-alert" role="alert">Digite enter para pesquisar</div><aui-spinner size="small"></aui-spinner></div>
+    </li>
+        <li>
+            
+        <a id="help-menu-link" class="aui-nav-link aui-dropdown2-trigger aui-dropdown2-trigger-arrowless" href="#" aria-haspopup="true" aria-owns="help-menu-link-content" title="Ajuda">
+        <span class="aui-icon aui-icon-small aui-iconfont-question-filled">Ajuda</span>
+    </a>
+    <nav id="help-menu-link-content" class="aui-dropdown2 aui-style-default">
+                    <div class="aui-dropdown2-section">
+                                <ul  id="help-menu-link-leading" class="aui-list-truncate section-leading first">
+                                            <li>
+        
+            
+<a  id="confluence-help-link" href="https://docs.atlassian.com/confluence/docs-719/" class="    "      title="Veja a documentação do Confluence"  target="_blank"
+>
+        Ajuda on-line
+</a>
+</li>
+                                            <li>
+    
+                
+<a  id="keyboard-shortcuts-link" href="#" class="    "      title="Ver atalhos do teclado disponíveis" >
+        Atalhos de Teclado
+</a>
+</li>
+                                            <li>
+    
+            
+<a  id="feed-builder-link" href="/dashboard/configurerssfeed.action" class="    "      title="Crie o seu RSS Feed personalizado." >
+        Criar Feed
+</a>
+</li>
+                                            <li>
+    
+            
+<a  id="whats-new-menu-link" href="https://confluence.atlassian.com/display/DOC/Confluence+7.19+Release+Notes?a=false" class="    "      title="" >
+        O que há de novo
+</a>
+</li>
+                                            <li>
+    
+                
+<a  id="gadget-directory-link" href="#" class="   user-item administration-link "      title="Navegue pelos gadgets providos pelo Confluence" >
+        Gadgets disponíveis
+</a>
+</li>
+                                            <li>
+    
+            
+<a  id="confluence-about-link" href="/aboutconfluencepage.action" class="    "      title="Mais informações sobre o Confluence" >
+        Sobre o Confluence
+</a>
+</li>
+                                    </ul>
+            </div>
+            </nav>
+    
+    </li>
+        <li>
+                
+    
+    </li>
+        <li>
+                    
+        
+            
+<a  id="notifications-anchor" href="#"  class="mw-anchor read aui-nav-imagelink"   title="">
+            <span></span>
+    </a>
+    
+    </li>
+        <li>
+                                            
+        <a id="user-menu-link" class="aui-dropdown2-trigger aui-dropdown2-trigger-arrowless " aria-haspopup="true" aria-owns="user-menu-link-content" data-username="jvsppnx" href="#" title="Joao Vitor Santos Prado">
+                    <div class="aui-avatar aui-avatar-small">
+                <div class="aui-avatar-inner">
+                                                                                                    <img alt="Foto do perfil de jvsppnx" />
+                </div>
+            </div>
+            <span class="aui-icon-dropdown"></span>
+        </a>
+        <nav id="user-menu-link-content" class="aui-dropdown2 aui-style-default">
+                            <div class="aui-dropdown2-section">
+                    <ul  id="user-menu-link-user-preferences"                        class="aui-list-truncate section-user-preferences first">
+                                                    <li>
+        
+            
+<a  id="view-user-history-link" href="/users/viewuserhistory.action" class="   user-item user-history popup-link "      title="" >
+        Visualizado recentemente
+</a>
+</li>
+                                                    <li>
+    
+            
+<a  id="user-recently-worked-on" href="/dashboard.action#recently-worked" class="   user-item "      title="" >
+        Trabalhado recentemente
+</a>
+</li>
+                                            </ul>
+                </div>
+                            <div class="aui-dropdown2-section">
+                    <ul  id="user-menu-link-user-content"                        class="aui-list-truncate section-user-content">
+                                                    <li>
+    
+            
+<a  id="view-user-profile-link" href="/users/viewmyprofile.action" class="   user-item user-profile "      title="" >
+        Perfil
+</a>
+</li>
+                                                    <li>
+    
+            
+<a  id="view-mytasks-link" href="/plugins/inlinetasks/mytasks.action" class="   user-item list-user-status "      title="" >
+        Tarefas
+</a>
+</li>
+                                                    <li>
+    
+            
+<a  id="user-favourites-link" href="/users/viewmyfavourites.action" class="   user-item "      title="" >
+        Salvo para mais tarde
+</a>
+</li>
+                                                    <li>
+    
+            
+<a  id="user-watches-link" href="/users/viewnotifications.action" class="   user-item "      title="" >
+        Em Observação
+</a>
+</li>
+                                                    <li>
+    
+            
+<a  id="user-drafts-link" href="/users/viewmydrafts.action" class="   user-item "      title="" >
+        Rascunhos
+</a>
+</li>
+                                                    <li>
+    
+            
+<a  id="user-network-link" href="/users/viewfollow.action?username=jvsppnx" class="   follow-link "      title="" >
+        Rede
+</a>
+</li>
+                                                    <li>
+    
+            
+<a  id="user-settings-link" href="/users/viewmysettings.action" class="   user-item "      title="" >
+        Configurações
+</a>
+</li>
+                                                    <li>
+    
+                
+<a  id="sv-globalsettings" href="#" class="    "      title="" >
+        Scroll Settings
+</a>
+</li>
+                                            </ul>
+                </div>
+                            <div class="aui-dropdown2-section">
+                    <ul  id="user-menu-link-user-operations"                        class="aui-list-truncate section-user-operations">
+                                                    <li>
+    
+            
+<a  id="logout-link" href="/logout.action" class="   user-item logout-link "      title="" >
+        Sair do Sistema
+</a>
+</li>
+                                            </ul>
+                </div>
+                    </nav>
+                    
+    </li>
+    </ul>
+</div></div><!-- .aui-header-inner--></nav><!-- .aui-header -->
+    <br class="clear">
+</header>
+    
+
+
+    
+        <div class="ia-splitter">
+            <div class="ia-splitter-left">
+                <div class="ia-fixed-sidebar" role="complementary" aria-label=barra lateral>
+                                            
+                            <div class="acs-side-bar ia-scrollable-section"><div class="acs-side-bar-space-info tipsy-enabled" data-configure-tooltip="Editar detalhes do espaço"><div class="avatar"><div class="space-logo" data-key="GRBE" data-name="GRBE" data-entity-type="confluence.space"><div class="avatar-img-container"><div class="avatar-img-wrapper"><a href="/display/GRBE/Home" title="GRBE"><img class="avatar-img" src="/download/attachments/232393649/GRBE?version=1&amp;modificationDate=1575667988000&amp;api=v2" alt="GRBE"></a></div></div></div></div><div class="space-information-container"><div class="name"><a href="/display/GRBE/Home" title="GRBE">GRBE</a></div><div class="flyout-handle icon aui-icon aui-icon-small aui-iconfont-edit"></div><div class="favourite-space-icon "><button class="space-favourite aui-icon aui-icon-small aui-iconfont-unstar" id="space-favourite-add" title="Adicionar a Meus espaços" aria-pressed="false"></button><button class="space-favourite-hidden space-favourite aui-icon aui-icon-small aui-iconfont-star" id="space-favourite-remove" title="Remover dos meus espaços" aria-pressed="false"></button></div></div></div><div class="acs-side-bar-content"><div class="acs-nav-wrapper"><div class="acs-nav" data-has-create-permission="true" data-quick-links-state="show" data-page-tree-state="hide" data-nav-type="pages"><div class="acs-nav-sections"><div class="main-links-section "><ul class="acs-nav-list"><li class="acs-nav-item com-addonengine-addons-analytics-space-link-adg3" data-collector-key="space-analytics-web-item-adg3"><a class="acs-nav-item-link tipsy-enabled" href="/plugins/confanalytics/analytics.action?key=GRBE#/analytics/space/GRBE" data-collapsed-tooltip="Dados analíticos"><span class="icon"></span><span class="acs-nav-item-label">Dados analíticos</span></a></li></ul></div><div class="quick-links-wrapper"><h2 class="ia-quick-links-header-title">Atalhos</h2><div class="quick-links-section tipsy-enabled "><ul class="acs-nav-list"><li class="acs-nav-item external_link"><a class="acs-nav-item-link tipsy-enabled" href="https://confluencecorp.ctsp.prod.cloud.ihf/display/GRBE/calendars" data-collapsed-tooltip="null"><span class="icon"></span><span class="acs-nav-item-label">Calendários</span></a></li><li class="acs-nav-item pinned_page"><a class="acs-nav-item-link tipsy-enabled" href="/display/GRBE/Suporte" data-collapsed-tooltip="null"><span class="icon"></span><span class="acs-nav-item-label">Canal de Suporte</span></a></li><li class="acs-nav-item external_link"><a class="acs-nav-item-link tipsy-enabled" href="https://mi-coderunner.apps.zcxdev.tech.itau/page/home.html" data-collapsed-tooltip="null"><span class="icon"></span><span class="acs-nav-item-label">Code Runner zCX</span></a></li></ul></div></div><div class="custom-sidebar"><div class="custom-sidebar-content"><div class="content"><p>    
+    
+
+
+
+
+<div class="search-macro search-macro-large">
+    <div class="aui-dd-parent"></div>
+    <form class="aui aui-dd-parent" name="livesearchForm" method="GET" action="/dosearchsite.action" role="search">
+        <fieldset class="search-macro-fields">
+            <div class="search-macro-query">
+                <input class="text" type="text" name="queryString" autocomplete="off" placeholder="Buscar no GRBE" aria-label="Buscar no GRBE">
+                                <span class="aui-icon aui-icon-large aui-iconfont-search">Pesquisa</span>
+                            </div>
+                        <input type="hidden" name="where" value="GRBE">
+            <input type="hidden" name="additional" value="page excerpt">
+            <input type="hidden" name="labels" value="">
+            <input type="hidden" name="contentType" value="pages">
+        </fieldset>
+    </form>
+</div>
+</p>
+<hr />
+
+
+
+
+
+
+<div class="plugin_pagetree">
+
+
+        
+        
+    <div class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </div>
+
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false&amp;expandCurrent=false&amp;placement=">
+        <input type="hidden" name="treePageId" value="365035720">
+
+
+        <input type="hidden" name="noRoot" value="true">
+        <input type="hidden" name="rootPageId" value="0">
+
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="GRBE" >
+
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Carregando...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Não foi possível carregar a árvore de páginas. Parece que você não tem permissão para ver a página raiz.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="Ocorreu algum problema ao buscar a árvore da página. Verifique o arquivo de log do servidor para mais informações.">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fpages%2Fviewpage.action%3FpageId%3D365035720&amp;permissionViolation=true">
+        <input type="hidden" name="mobile" value="false">
+        <input type="hidden" name="placement" value="">
+
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="359596599">
+                                    <input type="hidden" name="ancestorId" value="391621480">
+                                    <input type="hidden" name="ancestorId" value="255954940">
+                                    </fieldset>
+    </fieldset>
+</div>
+
+
+
+
+<hr />
+    
+
+
+<div class="tabletitle"><h2>Páginas Favoritas</h2></div>
+<div class="favpages-container">
+    <div class="hidden favpages-i18n">
+        <input type="hidden" name="favourite.remove.page" value="Remover esta página da sua lista de favoritos">
+        <input type="hidden" name="favourite.add.page" value="Adicione esta página à sua lista de favoritos">
+    </div>
+    <table class="tableview">
+                <tr><td>
+            Actualmente não há páginas em sua lista de favoritos. Pode adicionar páginas a esta lista, selecionando "Favorito" no menu "Ferramentas" na página que estiver a visualizar.
+        </td></tr>
+            </table>
+</div>
+</div></div></div></div></div></div><div class="ia-secondary-container tipsy-enabled" data-tree-type="pages"></div></div><div class="hidden"><a href="/collector/pages.action?key=GRBE" id="space-pages-link"></a><script type="text/x-template" title="logo-config-content"><h2>Detalhes do Espaço</h2><div class="personal-space-logo-hint">A sua foto de perfil é usada como logotipo do seu espaço pessoal. <a href="/users/profile/editmyprofilepicture.action" target="_blank">Alterar a sua foto de perfil</a>.</div></script></div></div><div class="space-tools-section"><div id="space-tools-menu-additional-items" class="hidden"><div data-label="Reordenar páginas" data-class="" data-href="/pages/reorderpages.action?key=GRBE">Reordenar páginas</div><div data-label="Configurar barra lateral" data-class="configure-sidebar" data-href="">Configurar barra lateral</div></div><button id="space-tools-menu-trigger"  class=" aui-dropdown2-trigger aui-button aui-button-subtle tipsy-enabled aui-dropdown2-trigger-arrowless " aria-controls="space-tools-menu" aria-haspopup="true" role="button" data-aui-trigger><span class="aui-icon aui-icon-small aui-iconfont-configure">Configurar</span><span class="aui-button-label">Ferramentas do espaço</span><span class="aui-icon "></span></button><div id="space-tools-menu" class="aui-dropdown2 aui-style-default space-tools-dropdown" role="menu" hidden data-aui-alignment="top left"></div><a href="#" role="button" class="expand-collapse-trigger aui-icon aui-icon-small aui-iconfont-chevron-double-right" aria-expanded="false"></a></div>
+                    
+                                    </div>
+            </div>
+        <!-- \#header -->
+
+
+            
+    
+        <main role="main" id="main" class=" aui-page-panel">
+                    
+        <div id="custom-content-header">
+            <div class="panel" style="border-width: 1px;"><div class="panelContent">
+<p><a href="/display/GRBE/Home" title="Home">Home</a>  |  <a href="/display/GRBE/Nosso+Time" title="Nosso Time">Nosso Time</a>  |  <a href="/pages/createpage.action?spaceKey=GRBE&amp;encodedTitle=U29sdcOnw7Vlcw&amp;linkCreation=true&amp;fromPageId=365035720" class="createlink">Soluções</a>  |  <a href="/display/GRBE/GRBE" title="GRBE">GRBE</a>  |  <a href="/display/GRBE/CICS-Z2" title="CICS-Z2">CICS&#45;Z2</a>  |  <a href="/display/GRBE/Command+Center" title="Command Center">Command Center</a>  |  <a href="/display/GRBE/Treinamentos+e+Trilhas" title="Treinamentos e Trilhas">Treinamentos e Trilhas</a>  |  <a href="/display/GRBE/Suporte" title="Suporte">Suporte</a> </p>
+</div></div>
+        </div>
+    
+                        <div id="main-header">
+                        
+    <div id="navigation" class="content-navigation view" role="region" aria-label="Ferramentas da página">
+                    <ul class="ajs-menu-bar">
+                                                                    <li class="ajs-button normal">
+
+
+        
+        
+    
+                                                        
+    
+    
+            <a  id="editPageLink" href="/pages/editpage.action?pageId=365035720" rel="nofollow" class="aui-button aui-button-subtle edit full-load"  accessKey="e"  title="Editar" >
+                        <span>
+                                    <span class="aui-icon aui-icon-small aui-iconfont-edit"></span>
+                                <u>E</u>ditar
+            </span>        </a>
+    </li>
+                                            <li class="ajs-button normal">
+
+
+        
+            
+    
+                                                        
+    
+    
+            <a  id="page-favourite" href="#" rel="nofollow" class="aui-button aui-button-subtle action-page-favourite"  accessKey="f"  title="Salvar para mais tarde" >
+                        <span>
+                                    <span class="aui-icon aui-icon-small aui-iconfont-unstar"></span>
+                                Salvar <u>p</u>ara mais tarde
+            </span>        </a>
+    </li>
+                                            <li class="ajs-button normal">
+
+
+        
+            
+    
+                                                        
+    
+    
+            <a  id="watch-content-button" href="#" rel="nofollow" class="aui-button aui-button-subtle watch-menu"   title="Acompanhar (w)" >
+                        <span>
+                                    <span class="aui-icon aui-icon-small aui-iconfont-unwatch"></span>
+                                <u>W</u> Acompanhar
+            </span>        </a>
+    </li>
+                                            <li class="ajs-button normal">
+
+
+        
+            
+    
+                                                        
+    
+    
+            <a  id="sv-dropdown-link" href="#" rel="nofollow" class="aui-button aui-button-subtle "   title="" >
+                        <span>
+                                Versions
+            </span>        </a>
+    </li>
+                                            <li class="ajs-button normal">
+
+
+        
+            
+    
+                                                        
+    
+    
+            <a  id="shareContentLink" href="#" rel="nofollow" class="aui-button aui-button-subtle share"   title="Compartilhe esta página com outras pessoas" >
+                        <span>
+                                    <span class="aui-icon aui-icon-small aui-iconfont-share"></span>
+                                <u>P</u>artilhar
+            </span>        </a>
+    </li>
+                    
+        <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action aui-dropdown2-trigger-arrowless aui-button aui-button-subtle ajs-menu-title aui-dropdown2-trigger" href="#" aria-haspopup="true" aria-label="Mais opções" aria-owns="action-menu" data-container="#navigation">
+            <span>
+                                    <span class="aui-icon aui-icon-small aui-iconfont-more" aria-label="Mais opções"></span>
+                                
+            </span>
+        </a>         <div id="action-menu" class="aui-dropdown2 aui-style-default" aria-hidden="true">
+                            <div class="aui-dropdown2-section">
+                    <ul  id="action-menu-primary"                         class="section-primary first">
+                                                    <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="view-attachments-link" href="/pages/viewpageattachments.action?pageId=365035720" rel="nofollow" class="action-view-attachments"  accessKey="t"  title="Mostrar anexos" >
+                        <span>
+                                A<u>n</u>exos (5)
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="action-view-history-link" href="/pages/viewpreviousversions.action?pageId=365035720" rel="nofollow" class="action-view-history"   title="" >
+                        <span>
+                                Histórico da Página
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="action-page-permissions-link" href="/pages/viewinfo.action?pageId=365035720" rel="nofollow" class="action-page-permissions"   title="Editar restrições" >
+                        <span>
+                                Restrições
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+            
+    
+                                                        
+    
+    
+            <a  id="who-can-view-button-ak-button" href="#" rel="nofollow" class="who-can-view-link"   title="" >
+                        <span>
+                                Pessoas que podem visualizar
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  href="/plugins/confanalytics/analytics.action?key=GRBE#/analytics/content/page/365035720" rel="nofollow" class=""   title="Resumo de visualizações e atividade" >
+                        <span>
+                                Dados analíticos
+            </span>        </a>
+    </li>
+                                        </ul>
+                </div>
+                            <div class="aui-dropdown2-section">
+                    <ul  id="action-menu-secondary"                         class="section-secondary">
+                                                    <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="view-page-info-link" href="/pages/viewinfo.action?pageId=365035720" rel="nofollow" class="action-view-info"   title="" >
+                        <span>
+                                Informações da Página
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+            
+    
+                                                        
+    
+    
+            <a  id="view-resolved-comments" href="#" rel="nofollow" class=""   title="" >
+                        <span>
+                                Comentários resolvidos
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="view-in-hierarchy-link" href="/pages/reorderpages.action?key=GRBE&amp;openId=365035720#selectedPageInHierarchy" rel="nofollow" class=""   title="" >
+                        <span>
+                                Exibir em hierarquia
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="action-view-source-link" href="/plugins/viewsource/viewpagesrc.action?pageId=365035720" rel="nofollow" class="action-view-source popup-link"   title="" >
+                        <span>
+                                Ver Fonte
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="action-export-pdf-link" href="/spaces/flyingpdf/pdfpageexport.action?pageId=365035720" rel="nofollow" class=""   title="" >
+                        <span>
+                                Exportar para PDF
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="action-export-word-link" href="/exportword?pageId=365035720" rel="nofollow" class="action-export-word"   title="" >
+                        <span>
+                                Exportar para Word
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="import-word-doc" href="/pages/worddav/uploadimport.action?pageId=365035720" rel="nofollow" class=""   title="" >
+                        <span>
+                                Importar documento do Word
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="viewtracker-content-report-link" href="/spaces/viewtrackerreport.action?key=GRBE" rel="nofollow" class=""   title="" >
+                        <span>
+                                Content Report
+            </span>        </a>
+    </li>
+                                        </ul>
+                </div>
+                            <div class="aui-dropdown2-section">
+                    <ul  id="action-menu-modify"                         class="section-modify">
+                                                    <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="action-copy-page-link" href="/pages/copypage.action?idOfPageToCopy=365035720&amp;spaceKey=GRBE" rel="nofollow" class="action-copy"   title="" >
+                        <span>
+                                Copiar
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="action-move-page-dialog-link" href="/pages/viewpage.action?pageId=365035720" rel="nofollow" class="action-move"   title="" >
+                        <span>
+                                Mover
+            </span>        </a>
+    </li>
+                                                <li>
+
+
+    
+        
+    
+                                                        
+    
+    
+            <a  id="action-remove-content-link" href="/pages/removepage.action?pageId=365035720" rel="nofollow" class="action-remove"   title="" >
+                        <span>
+                                Eliminar
+            </span>        </a>
+    </li>
+                                        </ul>
+                </div>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+
+            
+            <div id="title-heading" class="pagetitle with-breadcrumbs">
+                
+                                    <div id="breadcrumb-section">
+                        
+    
+    
+    <nav aria-label="Trilhas">
+        <ol id="breadcrumbs">
+                                                            
+                                
+            <li class="first" >
+                                
+                                    <span class=""><a href="/collector/pages.action?key=GRBE">Páginas</a></span>
+                                                                                                                                                <li id="ellipsis" title="Mostrar todos os breadcrumbs" aria-expanded="false" aria-label="Mostrar todos os breadcrumbs" tabindex="0" role="button"><span><strong>&#8230;</strong></span></li>
+                                                            
+                                
+            <li class="hidden-crumb" >
+                                
+                                    <span class=""><a href="/display/GRBE/GRBE">GRBE</a></span>
+                                                                                                                                        
+                                
+            <li class="hidden-crumb" >
+                                
+                                    <span class=""><a href="/display/GRBE/Aplicativos+Online">Aplicativos Online</a></span>
+                                                                                                                    
+                                
+            <li>
+                                
+                                    <span class=""><a href="/display/GRBE/Ponte+Monitor">Ponte Monitor</a></span>
+                                                                                                    </ol>
+    </nav>
+
+
+
+
+                    </div>
+                
+                
+                
+            <div id="page-metadata-banner"><ul class="banner"><li id="system-content-items" class="noprint"><a href="" title="Sem restrições" id="content-metadata-page-restrictions" class="aui-icon aui-icon-small aui-iconfont-unlocked system-metadata-restrictions"></a><a href="/pages/viewpageattachments.action?pageId=365035720&amp;metadataLink=true" title="5 anexos" id="content-metadata-attachments" class="aui-icon aui-icon-small aui-iconfont-attachment"></a></li><li class="page-metadata-item noprinthas-button"  id="content-metadata-jira-wrapper"><a href="" title="" id="content-metadata-jira" class="aui-button aui-button-subtle content-metadata-jira tipsy-disabled hidden"><span>Links do JIRA</span></a></li><li class="page-metadata-item noprint"  id="content-status-indicator-wrapper"><a href="" title="" id="content-status-indicator" class="aui-icon aui-icon-wait"><span></span></a></li><li class="page-metadata-item noprint"  id="reporting-single-content-link-wrapper"><a href="/spaces/viewtrackerreport.action?key=GRBE" title="" id="reporting-single-content-link" class="auto-track-icon"><span>Viewtracker</span></a></li><li class="page-metadata-item noprint"  id="k15t-page-labels-include-info-wrapper"><a href="" title="Page content is included on other pages" id="k15t-page-labels-include-info" class="aui-label sv-page-labels-status"><span>Include info</span></a></li><li class="page-metadata-item noprint" ><a href="/plugins/confanalytics/analytics.action?key=GRBE#/analytics/content/page/365035720" title="Resumo de visualizações e atividade"  class="analytics-metadata-button-test"><img class="page-banner-item-icon" src="/s/s19t7f/8804/xgjkrn/_/download/resources/com.addonengine.analytics:analytics-resources/images/icons/analytics-content-byline-icon-adg3@2x.png" style="height: 16px; width: 16px;"/><span>Dados analíticos</span></a></li></ul></div>
+        
+
+
+                <h1 id="title-text" class="with-breadcrumbs">
+                                                <a href="/pages/viewpage.action?pageId=365035720">Função ACD – Acesso à dados</a>
+                                    </h1>
+            </div>
+        </div><!-- \#main-header -->
+        
+        
+
+
+        <div id="sidebar-container">
+                                                </div><!-- \#sidebar-container -->
+
+
+        
+    
+
+
+        
+
+
+
+
+
+
+
+
+            
+    
+
+
+                                
+    
+
+
+    
+    
+        
+    
+    
+                    
+    
+
+
+    
+
+
+    
+            
+        
+
+
+    
+    
+
+
+    
+            
+        
+
+
+    
+
+
+    
+
+
+    
+<div id="content" class="page view">
+    
+
+
+
+
+<div id="action-messages">
+                        </div>
+
+
+
+
+
+
+            <script type="text/x-template" title="searchResultsGrid">
+    <table class="aui">
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Título da Página</th>
+                <th class="search-result-space">Espaço</th>
+                <th class="search-result-date">Atualizado</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <td class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></td>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script>
+        
+    
+            
+
+
+        
+                            
+    
+
+
+                    
+
+
+        
+        <div class="page-metadata">
+    <ul>
+        <li class="page-metadata-modification-info">
+            
+        
+    
+    
+        
+    
+        
+            
+            Criado por <span class='author'>     <a href="    /display/~cruzlai
+"
+            aria-label="criado por Lais Cruz Moreira"                       class="url fn confluence-userlink" data-username="cruzlai"
+                            >Lais Cruz Moreira</a></span>, última alteração por <span class='editor'>     <a href="    /display/~mcsrvjj
+"
+            aria-label="modificada por Magno Carvalho Sousa"                       class="url fn confluence-userlink" data-username="mcsrvjj"
+                            >Magno Carvalho Sousa</a></span> em <a class='last-modified' aria-label='modificado em ago 20, 2021, selecione para exibir as mudanças' title='Mostrar alterações' href='/pages/diffpagesbyversion.action?pageId=365035720&amp;selectedPageVersions=10&amp;selectedPageVersions=11'>ago 20, 2021</a>
+            </li>
+    </ul>
+</div>
+        
+                                            
+        <div id="main-content" class="wiki-content">
+                           
+        <p></p><p><div class="toc-macro client-side-toc-macro  conf-macro output-block" data-headerelements="H1,H2,H3,H4,H5,H6,H7" data-hasbody="false" data-macro-name="toc"> </div></p><h1 id="FunçãoACD–Acessoàdados-1-DescriçãoeConceitos">1 - Descrição e Conceitos</h1><p style="margin-left: 30.0px;">O SIAD - Sistema Itaú de Acesso a Dados é um subsistema integrado ao GRBE, que tem por função disponibilizar o acesso dos programas aplicativos aos dados<br/>armazenados em arquivos, tanto em ambientes online como em batch. Sua utilização permite a uma aplicação a não dependência de seus programas quanto a organizações<br/>de arquivos, desvinculando-os da manipulação de métodos de acesso.</p><p style="margin-left: 30.0px;">O SIAD, além de centralizar todas as operações de acesso a arquivos aplicativos, proporcionando independência em relação a sua organização, controla e garante a<br/>integridade dos dados acessados concorrentemente em ambientes online. Através de processos de recuperação, o SIAD garante a consistência dos dados em casos de<br/>interrupções imprevistas do processamento, de danos em periféricos ou de solicitação do próprio GRBE ou do aplicativo.</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-1.1AcessoaDadosOnline">1.1 Acesso a Dados Online</h2><p style="margin-left: 30.0px;">Caracteriza-se pelo acesso a dados para leitura e atualização de informações de maneira rápida e direta, durante o processamento online, através de uma chave que<br/>identifica um dado ou um conjunto de dados. O controle de acessos concorrentes a um mesmo dado mantém a integridade das informações, através de eficientes rotinas de<br/>enfileiramento de recursos independentes das do sistema operacional</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-1.2AcessoaDadosBatch">1.2 Acesso a Dados Batch</h2><p style="margin-left: 30.0px;">Caracteriza-se pelo acesso a dados para leitura, atualização e carga de informações, geralmente em grandes volumes, como preparação ao processamento<br/>online. O acesso a dados em batch permite a tomada periódica de informações de controle, que possibilita o eventual processamento a partir de um ponto de sincronismo,<br/>após uma interrupção não prevista, sem perda da integridade dos dados.</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-1.3UtilizaçãodaPonteMonitor">1.3 Utilização da Ponte Monitor</h2><p style="margin-left: 30.0px;">A PONTE MONITOR através da função de acesso a dados “ACD” faz a interface entre o programa de aplicação e o SIAD. Através de suas diversas funções e parâmetros<br/>permite a execução de todas as operações de I/O disponíveis de maneira uniforme, independente do tipo e organização do arquivo.</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-1.4RecuperaçãodeDados">1.4 Recuperação de Dados</h2><p style="margin-left: 30.0px;">Processo que garante a recuperação automática dos arquivos alterados num ciclo de I/O não completado com sucesso. Pode ser acionado após o término anormal de uma<br/>transação individual, ou após um término anormal do GRBE.</p><p style="margin-left: 30.0px;">Os dados para recuperação são tomados a cada alteração efetuada nos arquivos de aplicativos e gravados em um arquivo de recuperação, isto é, as imagens antes da alteração são gravadas no arquivo de recuperação. O arquivo de recuperação, em nível 5 de transação online, contém dados que dizem respeito somente às transações sendo processadas em determinado momento.</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-1.5AlocaçãoeDesalocaçãoDinâmicadeArquivos">1.5 Alocação e Desalocação Dinâmica de Arquivos</h2><p style="margin-left: 30.0px;">Essa facilidade permite que arquivos de aplicativos sejam alocados ou desalocados durante o processamento online, sem que seja necessário desativar o monitor. Esse<br/>recurso permite, por exemplo, que certas informações ainda não disponíveis para o processamento online não impactem a rede, retardando a sua inicialização, já que é<br/>possível agregá-las mais tarde, com a rede em operação.</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-1.6ArquivoVSAM-KSDScomAlternateIndex">1.6 Arquivo VSAM-KSDS com Alternate Index</h2><p style="margin-left: 30.0px;">O SIAD permite o uso de AIX somente para leitura. Toda e qualquer alteração<br/>deve ser feita acessando o índice principal. Para que essas alterações sejam refletidas<br/>nos alternate index, é necessário codificar os parâmetros UPGRADE na criação do AIX e<br/>UPDATE na criação do PATH.</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-1.7Tiposdearquivos">1.7 Tipos de arquivos</h2><p style="margin-left: 30.0px;">O SIAD permite acesso aos seguintes tipos de arquivos:</p><ul><li>VSAM KSDS(KS)</li><li>VSAM RRDS (RR)</li><li>Acesso Direto (DA)</li><li>Sequencial (PS)</li><li>Sysout (SY)</li></ul><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-1.6UsodetabeladeDDNAMEalternativo">1.6 Uso de tabela de DDNAME alternativo</h2><p style="margin-left: 30.0px;">É possível distribuir o conteúdo de um arquivo em vários arquivos menores, com base em um número (de agência, por exemplo) e em uma tabela associando este<br/>número ao sufixo do ddname do arquivo a ser acessado.<br/>Para isto ao executar a função ACD para acessar o arquivo, aplicação deve acrescentar no final do 2º parâmetro passado 2 campos: o nome da tabela<br/>alternativa MTDAssxx (com 8 caracteres alfanuméricos) e o número a ser utilizado para pesquisa na tabela (com caracteres alfanuméricos ).<br/>Antes de acessar o arquivo o SIAD vai pesquisar a tabela para obter o sufixo a ser acrescentado ao DDNAME.<br/>A tabela deve ser montada com chamadas das macros MTGHTBvv e MTBALTvv</p><h1 id="FunçãoACD–Acessoàdados-2-OperaçõesdeI/ODisponíveis">2 - Operações de I/O Disponíveis </h1><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-2.1FunçõesdeLeitura">2.1 Funções de Leitura</h2><p style="margin-left: 60.0px;">Um dos requisitos para que as solicitações de leitura sejam atendidas é que o aplicativo forneça uma área cujo tamanho seja compatível com o do registro a ser lido<br/>(maior ou igual ao tamanho máximo do registro).</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.1FunçãodeLeituracomumcomChave(“LC“)">2.1.1 Função de Leitura comum com Chave (“LC “)</h2><p style="margin-left: 90.0px;">Essa função devolve, na área fornecida pelo programa chamador, o registro com a chave fornecida. Se um registro com a chave solicitada não for encontrado é<br/>posicionado o código de retorno apropriado.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.2FunçãodeLeituraprendendooRegistro(comHold-“LCH“)">2.1.2 Função de Leitura prendendo o Registro (com Hold - “LCH“)</h2><p style="margin-left: 60.0px;">Essa função é similar à leitura comum com chave (função “LC “), com a diferença de que ela prende a chave antes da leitura, fazendo com que o registro lido fique preso<br/>para a task até o final do ciclo de I/O. Os registro presos desta forma podem depois serem atualizados ou excluídos com a execução de outras funções. Ocorrendo erro na<br/>leitura, é retornado o código de retorno correspondente, porém a chave do registro permanecerá presa para a task até o final do ciclo de I/O.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.3FunçãodeLeituracomumcomChaveMaiorouigual(“LCM“)">2.1.3 Função de Leitura comum com Chave Maior ou igual (“LCM“)</h2><p style="margin-left: 60.0px;">Essa função é similar à leitura comum com chave (função “LC “), com a diferença de que ela busca o registro com chave igual ou maior que a fornecida pelo programa<br/>chamador.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.4FunçãodeLeituraporchaveParcial(“LP“)">2.1.4 Função de Leitura por chave Parcial (“LP “)</h2><p style="margin-left: 60.0px;">Essa função devolve, na área fornecida pelo programa chamador, o primeiro registro do arquivo com chave parcial igual à fornecida.</p><p style="margin-left: 60.0px;">O tamanho da chave parcial deve ser, obrigatoriamente, menor que o tamanho da chave completa. Essa função pode ser seguida da função “LS “ para ler os demais registros sequenciais. Se nenhum registro com a chave solicitada não for encontrado é posicionado o código de retorno apropriado.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.5FunçãodeLeituradeIníciodesequência(“LI“)">2.1.5 Função de Leitura de Início de sequência (“LI “)</h2><p style="margin-left: 60.0px;">Esse tipo de leitura tem a função de informar ao método de acesso que essa é a primeira de uma série de leituras sequenciais ao arquivo. Essa função faz com que o<br/>arquivo seja posicionado no registro com a chave fornecida além de ser lido. As leituras sequenciais seguintes devem ser feitas através da função “LS “.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.6FunçãodeLeituradeIníciodesequênciaporchaveAnterior(“LIA“)">2.1.6 Função de Leitura de Início de sequência por chave Anterior (“LIA“)</h2><p style="margin-left: 60.0px;">Essa função é similar à leitura de início de sequência (função “LI “), com a diferença de que as próximas leituras sequenciais serão para trás (pegarão chaves anteriores à<br/>última chave lida). As leituras sequenciais seguintes devem ser feitas através da função “LA “.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.7FunçãoLeituradeIníciodesequênciacomchaveMaiorouigual(“LIM“)">2.1.7 Função Leitura de Início de sequência com chave Maior ou igual (“LIM“)</h2><p style="margin-left: 60.0px;">Essa função é similar à leitura de início de sequência (função “LI “), com a diferença de que ela faz com que o arquivo seja posicionado no registro com a chave maior ou<br/>igual à fornecida. As leituras sequenciais seguintes devem ser feitas através da função “LS “.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.8FunçãodeLeituraSequencial(“LS“)">2.1.8 Função de Leitura Sequencial (“LS “)</h2><p style="margin-left: 60.0px;">Para arquivos VSAM, essa função devolve, na área fornecida pelo programa chamador, o registro sequencial ao obtido numa chamada anterior de início de<br/>sequência, de leitura por chave parcial ou de leitura sequencial no mesmo arquivo. A sequência deve, obrigatoriamente, ter sido iniciada através de uma leitura de início de<br/>sequência para frente (função “LI “ ou “LIM”) ou de leitura por chave parcial (função “LP“).</p><p style="margin-left: 60.0px;">Para arquivos PS, essa função devolve, na área fornecida pelo programa chamador, o primeiro registro do arquivo (caso seja a primeira leitura) ou o registro<br/>sequencial ao obtido numa chamada anterior de leitura sequencial no mesmo arquivo.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.9FunçãodeLeiturasequencialdechaveAnterior(“LA“)">2.1.9 Função de Leitura sequencial de chave Anterior (“LA “)</h2><p style="margin-left: 60.0px;">Essa função é similar à leitura sequencial (função “LS “) para arquivos VSAM, com a diferença de que ela devolve o registro sequencial com chave anterior. A sequência<br/>deve, obrigatoriamente, ter sido iniciada através de uma leitura de início de sequência para trás (função “LIA“). Se o último registro lido já era o primeiro registro do arquivo, é<br/>posicionado o código de retorno apropriado.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.10FunçãodeLeiturasKipsequencial(“LK“)">2.1.10 Função de Leitura sKip sequencial (“LK “)</h2><p style="margin-left: 60.0px;">Essa função devolve, na área fornecida pelo programa chamador, o registro de chave igual à fornecida. Esse tipo de leitura posiciona o arquivo na chave requisitada<br/>fazendo com que a busca por uma chave seguinte seja feita a partir dessa posição. Caso o arquivo esteja posicionado após a chave requisitada, será devolvido código de retorno<br/>indicando erro de I/O.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.1.11FunçãodeLeiturasKipsequencialcomchaveMaiorouigual(“LKM“)">2.1.11 Função  de Leitura sKip sequencial com chave Maior ou igual (“LKM“)</h2><p style="margin-left: 60.0px;">Essa função é similar à leitura skip sequencial (função “LK “), com a diferença de que ela devolve, na área fornecida pelo programa chamador, o registro de chave maior<br/>ou igual à fornecida.</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-2.2FunçãodeAtualizaçãocomchave,comousemrecuperação(“A”ou“AF“)">2.2 Função de Atualização com chave, com ou sem recuperação (“A” ou “AF“)</h2><p style="margin-left: 30.0px;">A chamada a essa função deve ter sido precedida por uma chamada de leitura prendendo o registro (função “LCH”). O registro é alterado e permanece preso até o final<br/>do ciclo de I/O.</p><p style="margin-left: 30.0px;">A chave fornecida deve ser idêntica à chave dentro do registro. A função AF é similar a função A, com a diferença de que ela não grava SYSREC o<br/>que invalida a utilização das funções de finalização do ciclo de I/O (REC e LIB).</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-2.3FunçãodeExclusãocomchave,comousemrecuperação(“E”ou“EF”)">2.3 Função de Exclusão com chave, com ou sem recuperação (“E” ou “EF”)</h2><p style="margin-left: 30.0px;">A operação de exclusão de um registro pode ou não ser precedida por uma leitura prendendo a chave (função “LCH”). Caso o registro não tenha sido preso anteriormente,<br/>ele é preso durante a chamada dessa função. O registro permanece preso para a task até o final do ciclo de I/O, independentemente da exclusão ser ou não bem sucedida.<br/>A função EF é similar a função E, com a diferença de que ela não grava SYSREC o que invalida a utilização das funções de finalização do ciclo de I/O (REC e LIB).</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-2.4FunçõesdeInclusão">2.4 Funções de Inclusão</h2><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.4.1FunçãodeInclusãocomchave,comousemrecuperação(“I”ou“IF”)">2.4.1 Função de Inclusão com chave, com ou sem recuperação (“I”ou “IF”)</h2><p style="margin-left: 60.0px;">A operação de inclusão de um registro com chave pode ou não ser precedida por uma leitura prendendo a chave (função “LCH”). Caso o registro não tenha sido preso<br/>anteriormente, ele é preso durante a chamada dessa função. O registro permanece preso para a task até o final do ciclo de I/O, independentemente da inclusão ser ou não<br/>bem sucedida.<br/>A função IF é similar a função I, com a diferença de que ela não grava SYSREC o que invalida a utilização das funções de finalização do ciclo de I/O (REC e LIB).</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.4.2FunçãodeInclusãosequencialcomousemrecuperação(“IS”ou“ISF”)">2.4.2 Função de Inclusão sequencial com ou sem recuperação (“IS” ou “ISF”)</h2><p style="margin-left: 60.0px;">O SIAD determina qual a próxima chave disponível no arquivo para fazer a Inclusão, e move a mesma para a posição correta na área do registro fornecida pela<br/>aplicação antes de incluí-lo. A chave permanecerá presa para a task até o final do ciclo de I/O, independentemente da inclusão ter sido ou não bem sucedida.<br/>Para inclusão sequencial de registro em arquivos SYSOUT, o primeiro byte do registro fornecido deve conter um caractere de controle de impressão válido.<br/>A função IS é similar a função ISF, com a diferença de que ela não grava SYSREC o que invalida a utilização das funções de finalização do ciclo de I/O (REC e LIB).</p><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-2.5FunçõesdeFinalização"><br/>2.5 Funções de Finalização</h2><p style="margin-left: 30.0px;">As funções de finalização permitem que a aplicação encerre um ciclo de I/O antes do final de uma transação. Com a finalização de um ciclo, é iniciado um novo ciclo que<br/>permanecerá até o fim da transação ou outra chamada da uma função de finalização. Se a aplicação não chamar nenhuma função de finalização, o ciclo de I/O termina<br/>apenas no final da transação.<br/>Obs.: Quando a aplicação peda a geração de uma nova transação com “K”, o ciclo de I/o não é encerrado.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.5.1FinalizaciclodeI/OLIBerando(“LIB“)">2.5.1 Finaliza ciclo de I/O LIBerando (“LIB“ )</h2><p style="margin-left: 60.0px;">Esta operação efetiva todos os I/Os de registros alterados, incluídos ou excluidos, emite commit para efetivar leituras e gravações em filas MQ e emite commit no DB2, se<br/>os mesmos foram acessados. A partir desse momento, é iniciado um novo ciclo de I/O que será encerrado ao fim da transação, ou em nova chamada da função LIB ou REC.</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-2.5.2FinalizaciclodeI/ORECuperando(“REC“)">2.5.2 Finaliza ciclo de I/O RECuperando (“REC“ )</h2><p style="margin-left: 60.0px;">Esta operação desfaz todos os I/Os de registros alterados, incluídos ou excluídos, e emite rollback no DB2 e/ou MQ se eles foram utilizados. A partir desse momento, é<br/>iniciado um novo ciclo de I/O que será encerrado ao fim da transação, ou em nova chamada da função LIB ou REC.</p><h1 id="FunçãoACD–Acessoàdados-3-OperaçõesdeI/OPermitidas">3 - Operações de I/O Permitidas </h1><p>As operações de I/O aceitas e tratadas pelo SIAD dependem da organização e do atributo do arquivo, conforme segue:</p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: auto;margin-right: auto;width: 35.6974%;"><colgroup><col style="width: 15.2655%;"/><col style="width: 8.40708%;"/><col style="width: 16.3717%;"/><col style="width: 14.1593%;"/><col style="width: 23.0088%;"/><col style="width: 22.7876%;"/></colgroup><tbody><tr><th class="confluenceTh">Código Função</th><th class="confluenceTh">PS</th><th colspan="1" class="confluenceTh">SYSOUT</th><th colspan="1" class="confluenceTh">BDAM</th><th colspan="1" class="confluenceTh">VSAM-RRDS</th><th colspan="1" class="confluenceTh">VSAM-KSDS</th></tr><tr><th class="confluenceTh">A</th><td class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td></tr><tr><th colspan="1" class="confluenceTh">AF</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td></tr><tr><th colspan="1" class="confluenceTh">E</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td></tr><tr><th colspan="1" class="confluenceTh">EF</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td></tr><tr><th colspan="1" class="confluenceTh">I</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td></tr><tr><th colspan="1" class="confluenceTh">IF</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td></tr><tr><th colspan="1" class="confluenceTh">IS</th><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">OK</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd"><br/></td></tr><tr><th colspan="1" class="confluenceTh">ISF</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd"><br/></td></tr><tr><th colspan="1" class="confluenceTh">LA</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LC</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td><td colspan="1" class="confluenceTd">OK</td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LCH</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td><td colspan="1" class="confluenceTd">UPD</td></tr><tr><th colspan="1" class="confluenceTh">LCM</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LI</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LIA</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LIM</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LK</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LKM</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LP</th><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td></tr><tr><th colspan="1" class="confluenceTh">LS</th><td colspan="1" class="confluenceTd">RO</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">OK</td><td colspan="1" class="confluenceTd">OK</td></tr></tbody></table></div><p><span style="letter-spacing: 0.0px;">RO: Função válida para arquivo com atributo Read-Only (LEITURA).</span></p><p><span style="letter-spacing: 0.0px;">UPD: Função válida para arquivo com atributo UPDATE (ATUALIZAÇÃO).</span></p><p><span style="letter-spacing: 0.0px;">OK: Função válida para o arquivo, independentemente do atributo.</span></p><h1 id="FunçãoACD–Acessoàdados-4-DescriçãodosParâmetros">4 - Descrição dos Parâmetros</h1><p>Todas as funções de acesso a arquivos devem ter um primeiro parâmetro da Ponte MONITOR especificando a função “ACD”</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">3 Bytes</th><td class="confluenceTd">Código da função da Ponte MONITOR.<br/>ACD - Acesso a Dados</td></tr><tr><th class="confluenceTh">1 Byte</th><td class="confluenceTd">Código de Retorno da Ponte MONITOR</td></tr><tr><th class="confluenceTh">8 Bytes</th><td class="confluenceTd">Recurso. Deve ser preenchido com “SIAD “.</td></tr></tbody></table></div><p>A seguir descrevemos os demais parâmetro necessários, conforme a função solicitada:</p><h2 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-4.1FunçõesdeLeitura">4.1 Funções de Leitura</h2><h3 style="margin-left: 60.0px;" id="FunçãoACD–Acessoàdados-SegundoParâmetro"><strong>Segundo Parâmetro</strong></h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 62.569%;"><colgroup><col style="width: 14.1236%;"/><col style="width: 85.8764%;"/></colgroup><tbody><tr><th class="confluenceTh"><p><br/></p><p><br/></p><p><br/></p><p>3 Bytes</p></th><td class="confluenceTd">Código da função.<br/>LA Leitura sequencial de chave Anterior<br/>LC Leitura Comum com chave<br/>LCH Leitura Comum com chave e com Hold<br/>LCM Leitura Comum com chave Maior ou igual<br/>LI Leitura de Início de sequência<br/>LIA Leitura de Início de sequência por chave Anterior<br/>LIM Leitura de Início de sequência com chave Maior ou igual<br/>LK Leitura sKip-sequencial<br/>LKM Leitura sKip-sequencial com chave Maior ou igual<br/>LP Leitura por chave Pa</td></tr><tr><th class="confluenceTh">1 byte</th><td class="confluenceTd">Código de Retorno.</td></tr><tr><th class="confluenceTh">8 bytes</th><td class="confluenceTd">DDname; deve ser preenchido com brancos à direita.</td></tr><tr><th class="confluenceTh"><p><br/></p><p><br/></p><p>2 Bytes</p></th><td class="confluenceTd">No caso de arquivos VSAM este campo é usado para retornar o tamanho do<br/>registro lido:<br/>Se arquivo VSAM Read Only: SIAD retorna o LRECL.<br/>Se arquivo VSAM não Read Only: SIAD retorna o LRECL-10.<br/>Nos demais casos, o programa de aplicação deve informar o tamanho da<br/>área de dados para conter o registro.</td></tr><tr><th class="confluenceTh">2 Bytes</th><td class="confluenceTd">Tamanho da Chave Parcial em bytes. É utilizado apenas em Funções de leitura por chave parcial (LP).</td></tr></tbody></table></div><h3 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-TerceiroParâmetro">Terceiro Parâmetro</h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh"><p><br/></p><p><br/></p><p>&quot;n&quot; Bytes</p></th><td class="confluenceTd">Chave para de pesquisa do registro em questão, ou a chave parcial (completada<br/>com zeros binários) para leitura por chave parcial (LP). N é o tamanho da chave<br/>em bytes, que pode ter até 255 bytes.<br/>Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado,<br/>com tamanho de até 8 bytes.<br/>Nas funções LS e LA este parâmetro é desprezado.</td></tr></tbody></table></div><h3 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-QuartoParâmetro">Quarto Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 33.7273%;"><colgroup><col style="width: 34.192%;"/><col style="width: 65.808%;"/></colgroup><tbody><tr><th class="highlight-yellow confluenceTh" style="text-align: center;" title="Cor de fundo: Amarelo" colspan="2" data-highlight-colour="yellow">Área de Dados</th></tr><tr><th class="confluenceTh">Tamanho</th><th style="text-align: center;" class="confluenceTh">Tipo de arquivo</th></tr><tr><td class="confluenceTd">N&gt;=LRECL</td><td class="confluenceTd">Para arquivos VSAM Read Only.</td></tr><tr><td class="confluenceTd">N&gt;=LRECL-10</td><td class="confluenceTd">Para arquivos VSAM não Read Only.</td></tr><tr><td class="confluenceTd">N=BLKSIZE-10</td><td class="confluenceTd">Para arquivos de organização direta (DA).</td></tr><tr><td colspan="1" class="confluenceTd">N=LRECL</td><td colspan="1" class="confluenceTd">Para arquivos sequenciasi (PS).</td></tr></tbody></table></div><h2 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-4.2FunçõesdeInclusão"><br/>4.2  Funções de Inclusão</h2><h3 id="FunçãoACD–Acessoàdados-SegundoParâmetro.1">Segundo Parâmetro</h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh"><p><br/></p><p>3 Bytes</p></th><td class="confluenceTd">Código da função.<br/>I Inclusão com chave<br/>IF Inclusão com chave (SEM SYSREC)<br/>IS Inclusão Sequencial<br/>ISF Inclusão Sequencial (SEM SYSREC)</td></tr><tr><th class="confluenceTh">1 Byte</th><td class="confluenceTd">Código de Retorno.</td></tr><tr><th class="confluenceTh">8 bytes</th><td class="confluenceTd">DDname; deve ser preenchido com brancos à direita.</td></tr><tr><th class="confluenceTh">2 Bytes</th><td class="confluenceTd">Tamanho da área que contem o registro a ser incluído.<br/>Para arquivos PS: N = LRECL<br/>Para arquivos DA: N = BLKSIZE-10<br/>Para arquivos VSAM: (RKP+KEYLEN-10) &lt;= N &lt;= LRECL-10</td></tr><tr><th class="confluenceTh">2 Bytes</th><td class="confluenceTd">Tamanho da chave parcial. Este campo não é utilizado nesta função</td></tr></tbody></table></div><h3 id="FunçãoACD–Acessoàdados-TerceiroParâmetro.1">Terceiro Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 68.7155%;"><colgroup><col style="width: 15.8439%;"/><col style="width: 84.1561%;"/></colgroup><tbody><tr><th class="confluenceTh"><p><br/></p><p>&quot;n&quot; Bytes</p></th><td class="confluenceTd">Chave do registro a ser incluido. N é o tamanho da chave em bytes, que pode ter até 255 bytes.<br/>Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado, com tamanho de até 8 bytes.<br/>Na função IS, o SIAD retorna, nesse campo, a chave que ele atribuiu ao<br/>registro (se arquivo DA ou RRDS, retorna no formato compactado).</td></tr></tbody></table></div><div class="confluence-information-macro confluence-information-macro-tip conf-macro output-block" data-hasbody="true" data-macro-name="tip"><p class="title conf-macro-render">Observação</p><span class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon"> </span><div class="confluence-information-macro-body"><p>1) Na Inclusão Seqüencial o SIAD devolve neste campo a chave que ele forneceu ao registro.<br />2) Para Inclusão Seqüencial o campo chave do arquivo deve sempre estar no formato compactado e ter 4 bytes de tamanho.</p></div></div><h3 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-QuartoParâmetro.1">Quarto Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 44.2868%;"><colgroup><col style="width: 50.0891%;"/><col style="width: 49.9109%;"/></colgroup><tbody><tr><th class="highlight-yellow confluenceTh" style="text-align: center;" colspan="2" data-highlight-colour="yellow">Área de Dados</th></tr><tr><th class="confluenceTh">Tamanho</th><th style="text-align: center;" class="confluenceTh">Tipo de arquivo</th></tr><tr><td class="confluenceTd">(RKP+KEYLEN-10) &lt;= N &lt;= LRECL-10</td><td class="confluenceTd">Para arquivos VSAM.</td></tr><tr><td class="confluenceTd">N=BLKSIZE-10</td><td class="confluenceTd">Para arquivos de organização direta (DA).</td></tr><tr><td colspan="1" class="confluenceTd">N=LRECL</td><td colspan="1" class="confluenceTd">Para arquivos sequenciasi (PS).</td></tr></tbody></table></div><div class="confluence-information-macro confluence-information-macro-tip conf-macro output-block" data-hasbody="true" data-macro-name="tip"><p class="title conf-macro-render">Observação</p><span class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon"> </span><div class="confluence-information-macro-body"><p style="margin-left: 30.0px;">1)) Quando o arquivo for SYSOUT (DSORG=SY), o primeiro byte deve ser o controle de carro para a impressão: Pode ser:</p><p style="margin-left: 60.0px;"><br />&quot; &quot; = grava o registro na sysout<br />&quot;0&quot; = pula 1 linha e grava o registro na sysout<br />&quot;1&quot; = pula 1 página e grava o registro na sysout</p></div></div><h2 id="FunçãoACD–Acessoàdados-4.3FunçãodeExclusão">4.3 Função de Exclusão</h2><h3 id="FunçãoACD–Acessoàdados-SegundoParâmetro.2">Segundo Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 39.1647%;"><colgroup><col style="width: 17.3387%;"/><col style="width: 82.6613%;"/></colgroup><tbody><tr><th class="confluenceTh">3 Bytes</th><td class="confluenceTd">Código da função.<br/>E Exclusão<br/>EF Exclusão (SEM SYSREC)</td></tr><tr><th class="confluenceTh">1 Byte</th><td class="confluenceTd">Código de Retorno.</td></tr><tr><th class="confluenceTh">8 bytes</th><td class="confluenceTd">DDname; deve ser preenchido com brancos à direita.</td></tr><tr><th class="confluenceTh">2 Bytes</th><td class="confluenceTd">Este campo não é utilizado nesta função.</td></tr><tr><th class="confluenceTh">2 Bytes</th><td class="confluenceTd">Este campo não é utilizado nesta função.</td></tr></tbody></table></div><h3 id="FunçãoACD–Acessoàdados-TerceiroParâmetro.2">Terceiro Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 68.7155%;"><colgroup><col style="width: 15.8439%;"/><col style="width: 84.1561%;"/></colgroup><tbody><tr><th class="confluenceTh"><p>&quot;n&quot; Bytes</p></th><td class="confluenceTd">Chave do registro a ser incluido. N é o tamanho da chave em bytes, que pode ter até 255 bytes.<br/>Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado, com tamanho de até 8 bytes.</td></tr></tbody></table></div><h2 id="FunçãoACD–Acessoàdados-4.4FunçãodeAlteração">4.4 Função de Alteração</h2><h3 id="FunçãoACD–Acessoàdados-SegundoParâmetro.3">Segundo Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 43.2624%;"><colgroup><col style="width: 21.1679%;"/><col style="width: 78.8321%;"/></colgroup><tbody><tr><th class="confluenceTh"><p>3 Bytes</p></th><td class="confluenceTd">Código da função.<br/>A Alteração<br/>AF Alteração (SEM SYSREC)</td></tr><tr><th class="confluenceTh">1 Byte</th><td class="confluenceTd">Código de Retorno.</td></tr><tr><th class="confluenceTh">8 bytes</th><td class="confluenceTd">DDname; deve ser preenchido com brancos à direita.</td></tr><tr><th class="confluenceTh">2 Bytes</th><td class="confluenceTd">Tamanho da área que contem o registro a ser alterado.<br/>Para arquivos DA: N = BLKSIZE-10<br/>Para arquivos VSAM: (RKP+KEYLEN-10) &lt;= N &lt;= LRECL-10</td></tr><tr><th class="confluenceTh">2 Bytes</th><td class="confluenceTd">Este campo não é utilizado nesta função.</td></tr></tbody></table></div><h3 id="FunçãoACD–Acessoàdados-TerceiroParâmetro.3">Terceiro Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 68.7155%;"><colgroup><col style="width: 15.8439%;"/><col style="width: 84.1561%;"/></colgroup><tbody><tr><th class="confluenceTh"><p>&quot;n&quot; Bytes</p></th><td class="confluenceTd">Chave do registro a ser incluido. N é o tamanho da chave em bytes, que pode ter até 255 bytes.<br/>Para arquivos DA ou VSAM RRDS, a chave deve estar em formato compactado, com tamanho de até 8 bytes.</td></tr></tbody></table></div><h3 style="margin-left: 30.0px;" id="FunçãoACD–Acessoàdados-QuartoParâmetro.2">Quarto Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 44.2868%;"><colgroup><col style="width: 50.0891%;"/><col style="width: 49.9109%;"/></colgroup><tbody><tr><th class="highlight-yellow confluenceTh" style="text-align: center;" colspan="2" data-highlight-colour="yellow">Área de Dados</th></tr><tr><th class="confluenceTh">Tamanho</th><th style="text-align: center;" class="confluenceTh">Tipo de arquivo</th></tr><tr><td class="confluenceTd">(RKP+KEYLEN-10) &lt;= N &lt;= LRECL-10</td><td class="confluenceTd">Para arquivos VSAM.</td></tr><tr><td class="confluenceTd">N=BLKSIZE-10</td><td class="confluenceTd">Para arquivos de organização direta (DA).</td></tr></tbody></table></div><h2 id="FunçãoACD–Acessoàdados-4.5FunçõesdeFinalização">4.5 Funções de Finalização</h2><h3 id="FunçãoACD–Acessoàdados-SegundoParâmetro.4">Segundo Parâmetro</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 26.9504%;"><colgroup><col style="width: 26.9795%;"/><col style="width: 73.0205%;"/></colgroup><tbody><tr><th class="confluenceTh"><p><br/></p><p>3 Bytes</p></th><td class="confluenceTd">Código da função.<br/>LIB Final Liberar<br/>REC Final Recuparação ( ou Desfazer)</td></tr><tr><th class="confluenceTh">1 Byte</th><td class="confluenceTd">Código de Retorno.</td></tr></tbody></table></div><h2 id="FunçãoACD–Acessoàdados-5CódigosdeRetorno">5 Códigos de Retorno</h2><p>O código de retorno da função vem no quarto byte do segundo parâmetro. Este pode conter os seguintes valores:</p><p><br/></p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 72.0px;"/><col style="width: 516.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Cód. retorno</th><th style="text-align: center;" class="confluenceTh">Descrição</th></tr><tr><td class="confluenceTd"><strong>A</strong></td><td class="confluenceTd">Término normal</td></tr><tr><td class="confluenceTd"><strong>B</strong></td><td class="confluenceTd">Função inválida</td></tr><tr><td class="confluenceTd"><strong>C</strong></td><td class="confluenceTd">Arquivo não foi aberto ou incosistente</td></tr><tr><td colspan="1" class="confluenceTd"><strong>D</strong></td><td colspan="1" class="confluenceTd">Id-registro (DDNAME) incorreto</td></tr><tr><td colspan="1" class="confluenceTd"><strong>E</strong></td><td colspan="1" class="confluenceTd">Arquivo está fechado</td></tr><tr><td colspan="1" class="confluenceTd"><strong>F</strong></td><td colspan="1" class="confluenceTd">Não existe registro com a chave fornecida</td></tr><tr><td colspan="1" class="confluenceTd"><strong>G</strong></td><td colspan="1" class="confluenceTd">Já existe registro com a chave fornecida</td></tr><tr><td colspan="1" class="confluenceTd"><strong>H</strong></td><td colspan="1" class="confluenceTd">Tamanho da área fornecida incompatível com LRECL do arquivo</td></tr><tr><td colspan="1" class="confluenceTd"><strong>I</strong></td><td colspan="1" class="confluenceTd">Erro irrecuperável de I/O</td></tr><tr><td colspan="1" class="confluenceTd"><strong>J</strong></td><td colspan="1" class="confluenceTd">Erro no processamento da tabela de DDNAMEs alternativos</td></tr><tr><td colspan="1" class="confluenceTd"><strong>K</strong></td><td colspan="1" class="confluenceTd">Controle de carro inválido (SYSOUT)</td></tr><tr><td colspan="1" class="confluenceTd"><strong>L</strong></td><td colspan="1" class="confluenceTd">Arquivos do sistema de aplicação não foram gravados, transação não completada e arquivos recuperados</td></tr><tr><td colspan="1" class="confluenceTd"><strong>N</strong></td><td colspan="1" class="confluenceTd">Chave passada não está no formato decimal compactado</td></tr><tr><td colspan="1" class="confluenceTd"><strong>O</strong></td><td colspan="1" class="confluenceTd">Chave fornecida diferente da chave na área de dados</td></tr><tr><td colspan="1" class="confluenceTd"><strong>P</strong></td><td colspan="1" class="confluenceTd">Registro fora do arquivo</td></tr><tr><td colspan="1" class="confluenceTd"><strong>Q</strong></td><td colspan="1" class="confluenceTd">SIAD em inicialização. Arquivos ainda fechados</td></tr><tr><td colspan="1" class="confluenceTd"><strong>R</strong></td><td colspan="1" class="confluenceTd">Possível deadlock envolvendo o registro com a chave fornecida</td></tr><tr><td colspan="1" class="confluenceTd"><strong>S</strong></td><td colspan="1" class="confluenceTd">Falta de espaço correspondente à task no arquivo de recuperação para efetuar a gravação solicitada</td></tr><tr><td colspan="1" class="confluenceTd"><strong>T</strong></td><td colspan="1" class="confluenceTd">Falta de memória virtual para processar esta chamada</td></tr><tr><td colspan="1" class="confluenceTd"><strong>U</strong></td><td colspan="1" class="confluenceTd">Tamanho da chave parcial incorreto (menor que 1 ou maior ou igual a keylen)</td></tr><tr><td colspan="1" class="confluenceTd"><strong>V</strong></td><td colspan="1" class="confluenceTd">Falta de espaço no arquivo de recuperação para processar o número de tasks concorrentes especificado</td></tr><tr><td colspan="1" class="confluenceTd"><strong>W</strong></td><td colspan="1" class="confluenceTd">Fim de arquivo durante uma leitura (arquivo VSAM)</td></tr><tr><td colspan="1" class="confluenceTd"><strong>X</strong></td><td colspan="1" class="confluenceTd">Transação deverá sofrer abend</td></tr><tr><td colspan="1" class="confluenceTd"><strong>Y</strong></td><td colspan="1" class="confluenceTd">Registro tem chave múltipla</td></tr><tr><td colspan="1" class="confluenceTd"><strong>1</strong></td><td colspan="1" class="confluenceTd">Fim de arquivo durante uma leitura (arquivo PS)</td></tr><tr><td colspan="1" class="confluenceTd"><strong>3</strong></td><td colspan="1" class="confluenceTd">Chamada não autorizada, arquivo protegido por RACF e acesso feito por programa ou subprograma não autorizado </td></tr><tr><td colspan="1" class="confluenceTd"><strong>4</strong></td><td colspan="1" class="confluenceTd">Memória indisponível para arquivo BDAM em memória</td></tr><tr><td colspan="1" class="confluenceTd"><strong>5</strong></td><td colspan="1" class="confluenceTd">Tabela de arquivos (MTDD) em &quot;reset&quot;</td></tr><tr><td colspan="1" class="confluenceTd"><strong>6</strong></td><td colspan="1" class="confluenceTd">Atingido limite de leituras com hold por recovery unit para arquivos TVS</td></tr><tr><td colspan="1" class="confluenceTd"><strong>7</strong></td><td colspan="1" class="confluenceTd">Atingido limite de atualizações por recovery unit para arquivos TVS</td></tr><tr><td colspan="1" class="confluenceTd"><strong>8</strong></td><td colspan="1" class="confluenceTd">Erro grave no notepad</td></tr></tbody></table></div><div class="confluence-information-macro confluence-information-macro-information conf-macro output-block" data-hasbody="true" data-macro-name="info"><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"> </span><div class="confluence-information-macro-body"><p>(1) Alguns arquivos críticos cadastrados na Classe $DSNCRIT do RACF só podem ser acessados por subprogramas autorizados.</p><p>Para o cadastro de novos profiles (arquivos ou subprogramas) favor entrar em contato com o grupo de suporte aos monitores Banco Eletrônico.</p></div></div><p><br/></p><p>Relação dos códigos de retorno possíveis para cada Função:</p><div class="table-wrap"><table class="confluenceTable"><colgroup><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Cód.</strong></p><p><strong>Função</strong></p></th><th class="confluenceTh"><p><strong>A</strong></p></th><th class="confluenceTh"><p><strong>B</strong></p></th><th class="confluenceTh"><p><strong>C</strong></p></th><th class="confluenceTh"><p><strong>D</strong></p></th><th class="confluenceTh"><p><strong>E</strong></p></th><th class="confluenceTh"><p><strong>F</strong></p></th><th class="confluenceTh"><p><strong>G</strong></p></th><th class="confluenceTh"><p><strong>H</strong></p></th><th class="confluenceTh"><p><strong>I</strong></p></th><th class="confluenceTh"><p><strong>J</strong></p></th><th class="confluenceTh"><p><strong>K</strong></p></th><th class="confluenceTh"><p><strong>L</strong></p></th><th class="confluenceTh"><p><strong>M</strong></p></th><th class="confluenceTh"><p><strong>N</strong></p></th><th class="confluenceTh"><p><strong>O</strong></p></th><th class="confluenceTh"><p><strong>P</strong></p></th><th class="confluenceTh"><p><strong>Q</strong></p></th><th class="confluenceTh"><p><strong>R</strong></p></th><th class="confluenceTh"><p><strong>S</strong></p></th><th class="confluenceTh"><p><strong>T</strong></p></th><th class="confluenceTh"><p><strong>U</strong></p></th><th class="confluenceTh"><p><strong>V</strong></p></th><th class="confluenceTh"><p><strong>W</strong></p></th><th class="confluenceTh"><p><strong>X</strong></p></th><th class="confluenceTh"><p><strong>Y</strong></p></th><th class="confluenceTh"><p><strong>Z</strong></p></th><th class="confluenceTh"><p><strong>1</strong></p></th><th class="confluenceTh"><p><strong>2</strong></p></th><th class="confluenceTh"><p><strong>3</strong></p></th><th class="confluenceTh"><p><strong>4</strong></p></th><th class="confluenceTh"><p><strong>5</strong></p></th><th class="confluenceTh"><p><strong>6</strong></p></th><th class="confluenceTh"><p><strong>7</strong></p></th><th class="confluenceTh"><p><strong>8</strong></p></th></tr><tr><th class="confluenceTh"><p><strong>LA</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>W</p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p>Y</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LC</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>N</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>P</p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p>4</p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LCH</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>N</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>P</p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p>R</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p>4</p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p>6</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LCM</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LI</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>N</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p>Y</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LIA</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p>Y</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LIM</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>N</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>W</p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p>Y</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LK</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p>Y</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LKM</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>W</p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p>Y</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LP</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p>U</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p>Y</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LS</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>W</p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p>Y</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>1</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>I</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>G</p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>N</p></td><td class="confluenceTd"><p>O</p></td><td class="confluenceTd"><p>P</p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p>R</p></td><td class="confluenceTd"><p>S</p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p>4</p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p>6</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>IS</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p>K</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>N</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p>R</p></td><td class="confluenceTd"><p>S</p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p>6</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>8</p></td></tr><tr><th class="confluenceTh"><p><strong>E</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>N</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>P</p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p>R</p></td><td class="confluenceTd"><p>S</p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p>4</p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p>6</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>A</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p>B</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>D</p></td><td class="confluenceTd"><p>E</p></td><td class="confluenceTd"><p>F</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>H</p></td><td class="confluenceTd"><p>I</p></td><td class="confluenceTd"><p>J</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>N</p></td><td class="confluenceTd"><p>O</p></td><td class="confluenceTd"><p>P</p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p>R</p></td><td class="confluenceTd"><p>S</p></td><td class="confluenceTd"><p>T</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p>4</p></td><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p>6</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>LIB</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>C</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>L</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr><tr><th class="confluenceTh"><p><strong>REC</strong></p></th><td class="confluenceTd"><p>A</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>C</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>Q</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p>X</p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td><td class="confluenceTd"><p><br/></p></td></tr></tbody></table></div><div class="confluence-information-macro confluence-information-macro-information conf-macro output-block" data-hasbody="true" data-macro-name="info"><p class="title conf-macro-render">Exemplo de utilização da função XXX</p><span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"> </span><div class="confluence-information-macro-body"><h2 id="FunçãoACD–Acessoàdados-6Exemplos">6 Exemplos</h2><p>Seguem 2 exemplos de utilização da ponte MONITOR para acesso a arquivos. O primeiro na linguagem COBOL e o segundo em ASSEMBLER /370.</p><h2 id="FunçãoACD–Acessoàdados-6.1Cobol">6.1 Cobol</h2><p>O exemplo faz chamadas à ponte MONITOR para efetuar operações de I/O num arquivo de aplicação, conforme dados passados por outro programa.</p><p><br /></p><div class="code panel pdl conf-macro output-block" style="border-width: 1px;" data-hasbody="true" data-macro-name="code"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: RDark" data-theme="RDark">DATA DIVISION
+WORKING-STORAGE SECTION.
+77 WA PIC XXX VALUE 'A '.
+77 WI PIC XXX VALUE 'I '.
+77 WE PIC XXX VALUE 'E '.
+77 WLCH PIC XXX VALUE 'LCH'.
+01 WDADOS.
+03 WCONTA PIC 9(10).
+03 WVALOR PIC 9(08).
+03 WRESTO PIC 9(10).
+01 WXCONTA PIC 9(08).
+01 WPONTE.
+03 P_FUNCAO PIC X(03) VALUE 'ACD'.
+03 P_CODIGO-RETORNO PIC X.
+03 P_ENTIDADE PIC X(08) VALUE 'SIAD '.
+01 WCONTROLE.
+03 FUNCAO PIC X(03).
+03 CODIGO-RETORNO PIC X.
+03 IDENT-ARQUIVO PIC X(08) VALUE 'SYS001 '.
+03 TAMANHO-DADOS PIC S99 COMP VALUE 28.
+03 TAM-CHAVE-PARC PIC S99 COMP VALUE 0.
+LINKAGE SECTION.
+01 LINK-COD-RETORNO PIC X.
+01 DADOS.
+03 CONTA PIC 9(10).
+03 VALOR PIC 9(08).
+03 RESTO PIC 9(10).
+PROCEDURE DIVISION USING DADOS.
+LER.
+ MOVE WLCH TO FUNCAO.
+ CALL 'MONITOR' USING WPONTE WCONTROLE CONTA WDADOS.
+ IF CODIGO-RETORNO = 'F'
+ THEN GO TO INCLUIR.
+ IF CODIGO-RETORNO NOT = 'A'
+ THEN DISPLAY '+PROG.001I ERRO DE LEITURA CHAVE' CONTA
+ MOVE 1 TO LINK-COD-RETORNO
+ GOBACK.
+ATUALIZAR.
+ IF VALOR = 0 THEN GO TO EXCLUIR.
+ ADD VALOR TO WVALOR.
+ MOVE WA TO FUNCAO.
+ CALL 'MONITOR' USING WPONTE WCONTROLE WCONTA WDADOS.
+ IF CODIGO-RETORNO NOT = 'A'
+ THEN DISPLAY '+PROG.001I ERRO DE ATUALIZACAO CHAVE' CONTA
+ MOVE 2 TO LINK-COD-RETORNO
+ GOBACK.
+ GO TO FIM.
+INCLUIR.
+ MOVE CONTA TO WXCONTA.
+ MOVE WI TO FUNCAO.
+ CALL 'MONITOR' USING WPONTE WCONTROLE WXCONTA DADOS.
+ IF CODIGO-RETORNO NOT = 'A'
+ THEN DISPLAY '=PROG.001I ERRO DE INCLUSAO CHAVE' CONTA
+ MOVE 3 TO LINK-COD-RETORNO
+ GOBACK.
+ GO TO FIM.
+EXCLUIR.
+ MOVE WE TO FUNCAO.
+ CALL 'MONITOR' USING WPONTE WCONTROLE CONTA.
+ IF CODIGO-RETORNO NOT = 'A'
+ THEN DISPLAY '=PROG.001I ERRO DE EXCLUSAO CHAVE' CONTA
+ MOVE 4 TO LINK-COD-RETORNO
+ GOBACK.
+FIM.
+ MOVE 0 TO LINK-COD-RETORNO.
+ DISPLAY '=PROG.001I FIM NORMAL DE PROGRAMA'.
+
+
+</pre>
+</div></div><h2 id="FunçãoACD–Acessoàdados-6.2Assembler">6.2 Assembler</h2><p>O exemplo faz chamadas à ponte MONITOR para efetuar operações de I/O num arquivo de aplicação,  conforme dados contidos num outro arquivo.</p><div class="code panel pdl conf-macro output-block" style="border-width: 1px;" data-hasbody="true" data-macro-name="code"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: java; gutter: false; theme: RDark" data-theme="RDark">EXEMPLO START 0
+ XENTRY
+ OPEN (ENTRADA,,SAIDA,(OUTPUT))
+* LEITURA DE DADOS DE ENTRADA
+LEDADOS EQU *
+ GET ENTRADA,AREAENT
+ MVC FUNCAO,AREAENT
+ MVC ARQUIVO,AREAENT+3
+ MVC CHAVE,AREAENT+11
+ PACK TAMAUX,AREAENT+17(02)
+ CVB R2,TAMAUX
+ STH R2,TAMAREA
+ BCTR R2,0
+ EX R2,MVCDADOS
+*
+ PACK TAMAUX,AREAENT=19(02)
+ CVB R2,TAMAUX
+ STH R2,TAMCHAVP
+*
+ CALL MONITOR,(PONTE,CONTROLE,CHAVE,AREA)
+ SNAP DCB=SAIDA,STORAGE=(AREAENT,MVCDADOS)
+ B LEDADOS
+FIM EQU *
+ CLOSE (ENTRADA,,SAIDA)
+ XRETURN
+* AREAS UTILIZADAS PELO PROGRAMA EXEMPLO
+ DS OF
+AREAENT DS CL80
+AREA DS CL100
+CHAVE DS CL6
+PONTE DS OF
+PFUNCAO DC CL3’ACD’
+PCODRET DC CL1
+PENTIDD DC CL8’SIAD’
+CONTROLE DS OF
+FUNCAO DS CL3
+CODRETRN DS CL1
+ARQUIVO DS CL8
+TAMAREA DS H
+TAMCHAVP DS H
+TAMAUX DS CL8
+MVCDADOS MVC AREA(0),AREAENT+21
+* DEFINICAO DE ARQUIVOS
+ENTRADA DCB ...
+SAIDA DCB EODAD=FIM...
+ END EXEMPLO</pre>
+</div></div></div></div>
+
+
+                
+        
+    
+        </div>
+
+
+                        
+    
+
+
+
+
+
+
+<div id="labels-section" class="pageSection group">
+    <div class="labels-section-content content-column" entityid="365035720" entitytype="page">
+    <div class="labels-content">
+        
+    <ul class="label-list label-list-right  has-pen">
+                    
+        <li class="aui-label " data-label-id="360906753"><a class="aui-label-split-main" href="/label/GRBE/grbe_ponte_monitor" rel="tag">grbe_ponte_monitor</a></li><li class="aui-label " data-label-id="105021451"><a class="aui-label-split-main" href="/label/GRBE/grbe" rel="tag">grbe</a></li>
+                <li class="labels-edit-container">
+            <a href="#" class="show-labels-editor" title="Editar rótulos">
+                <span class="aui-icon aui-icon-small aui-iconfont-devtools-tag-small">Editar rótulos</span>
+            </a>
+        </li>
+        </ul>
+
+
+    </div>
+</div>
+</div>
+        
+        
+            
+
+
+
+
+
+
+
+
+            
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        
+    
+<div id="comments-section" class="pageSection group">
+        
+    
+
+
+
+
+    <div class="bottom-comment-panels comment-panels">
+                
+                    
+    
+
+
+
+
+        
+        
+    
+    <div class="quick-comment-container comment add"><p class="comment-user-logo"><a class="userLogoLink" data-username="jvsppnx" href="/display/~jvsppnx"><img class="userLogo logo" src="/download/attachments/551175315/user-avatar" alt="Ícone de usuário: jvsppnx" title="jvsppnx"></a></p><div class="quick-comment-body"><div class="quick-comment-loading-container" style="display:none;"></div><div id="editor-messages"></div><div id="any-messages"></div><form style="display:block;" class="quick-comment-form aui" method="post" name="inlinecommentform" action="/pages/doaddcomment.action?pageId=365035720" ><div title="Adicionar um Comentário" role="button" tabindex="0" aria-label="Adicionar um Comentário" class="quick-comment-prompt"><span>Escreva um comentário...</span></div></form></div></div>
+
+
+            </div>
+
+
+            <div id="comments-actions" class="aui-toolbar noprint">
+            <p class="toolbar-group">
+                <span class="toolbar-item"><a href="/pages/viewpage.action?pageId=365035720&showComments=true&amp;showCommentArea=true#addcomment" id="add-comment-rte" accesskey="m" class="toolbar-trigger full-load">Adicionar Comentário</a></span>
+            </p>
+        </div>
+    </div>
+        
+
+
+
+
+                
+    
+            
+</div>
+
+
+    
+
+
+    
+
+
+
+
+
+
+
+
+    
+    
+
+
+    
+    
+    
+
+
+
+
+    
+<div id="space-tools-web-items" class="hidden">
+                <div data-label="Visão Geral" data-href="/spaces/viewspacesummary.action?key=GRBE">Visão Geral</div>
+            <div data-label="Permissões" data-href="/spaces/spacepermissions.action?key=GRBE">Permissões</div>
+            <div data-label="Forms for Confluence" data-href="/space/admin/forms/configuration.action?key=GRBE">Forms for Confluence</div>
+            <div data-label="Conteúdo das Ferramentas" data-href="/pages/templates2/listpagetemplates.action?key=GRBE">Conteúdo das Ferramentas</div>
+            <div data-label="Aparência" data-href="/spaces/choosetheme.action?key=GRBE">Aparência</div>
+            <div data-label="Log de auditoria" data-href="/plugins/servlet/audit/resource/Space,233897986">Log de auditoria</div>
+            <div data-label="Integrações" data-href="/spaces/listentitylinks.action?typeId=com.atlassian.applinks.api.application.confluence.ConfluenceSpaceEntityType&amp;key=GRBE">Integrações</div>
+            <div data-label="Content Archiving" data-href="/archiving/statistics.action?key=GRBE">Content Archiving</div>
+            <div data-label="Apps" data-href="/spaces/scroll-runtime/scroll-app-settings.action?key=GRBE">Apps</div>
+            <div data-label="Analytics Cockpit" data-href="/spaces/viewtrackerreport.action?key=GRBE">Analytics Cockpit</div>
+            <div data-label="Scroll Add-ons" data-href="/plugins/scroll-platform/scroll-addons.action?key=GRBE">Scroll Add-ons</div>
+    </div>
+        
+
+
+
+
+
+
+                    
+        <div id="custom-content-footer">
+            <div class="panel" style="border-width: 1px;"><div class="panelContent">
+<p>Sentiu falta de algo? Faça uma <strong><a href="/pages/viewpage.action?pageId=551377904" title="Sugestão de Conteúdo">Sugestão de Conteúdo</a></strong> <br class="atl-forced-newline" /> <br class="atl-forced-newline" /> Por favor, não esqueça de acessar nossa <strong><a href="/pages/viewpage.action?pageId=433448908" title="Pesquisa de Satisfação Confluence GRBE">Pesquisa de Satisfação Confluence GRBE</a></strong> <img class="emoticon" src="/images/icons/emoticons/wink.png" height="16" width="16" align="absmiddle" alt="" border="0"/> <br class="atl-forced-newline" /> <br class="atl-forced-newline" /> Precisa de ajuda? Entre em contato com o nosso <strong><a href="/display/GRBE/Canal+de+Suporte+DES" title="Canal de Suporte DES">Canal de Suporte DES</a></strong>     
+    
+
+
+
+
+<div class="search-macro search-macro-large">
+    <div class="aui-dd-parent"></div>
+    <form class="aui aui-dd-parent" name="livesearchForm" method="GET" action="/dosearchsite.action" role="search">
+        <fieldset class="search-macro-fields">
+            <div class="search-macro-query">
+                <input class="text" type="text" name="queryString" autocomplete="off" placeholder="ainda não encontrou o que precisava? procure aqui" aria-label="ainda não encontrou o que precisava? procure aqui">
+                                <span class="aui-icon aui-icon-large aui-iconfont-search">Pesquisa</span>
+                            </div>
+                        <input type="hidden" name="where" value="GRBE">
+            <input type="hidden" name="additional" value="page excerpt">
+            <input type="hidden" name="labels" value="">
+            <input type="hidden" name="contentType" value="pages">
+        </fieldset>
+    </form>
+</div>
+</p>
+</div></div>
+        </div>
+    
+            </main><!-- \#main -->
+            
+    
+    
+        
+            
+            
+
+
+<div id="footer" role="contentinfo">
+    <section class="footer-body">
+
+
+                                                    
+        
+
+
+        <ul id="poweredby">
+            <li class="noprint">Desenvolvido por <a href="https://www.atlassian.com/software/confluence" class="hover-footer-link" rel="nofollow">Confluence da Atlassian</a> <span id='footer-build-information'>7.19.17</span> <span id='footer-cluster-node'>(nod249: 408acb91)</span></li>
+            <li class="print-only">Impresso pelo Confluence da Atlassian 7.19.17</li>
+            <li class="noprint"><a href="https://support.atlassian.com/confluence-server/" class="hover-footer-link" rel="nofollow">Reportar um problema</a></li>
+            <li class="noprint"><a href="https://www.atlassian.com/company" class="hover-footer-link" rel="nofollow">Notícias da Atlassian</a></li>
+        </ul>
+
+
+        
+
+
+        <div id="footer-logo"><a href="https://www.atlassian.com/" rel="nofollow">Atlassian</a></div>
+
+
+                    
+        
+    </section>
+</div>
+
+
+    
+</div>
+
+
+</div><!-- \#full-height-container -->
+</div><!-- \#page -->
+
+
+    <span style="display:none;" id="confluence-server-performance">{"serverDuration": 287, "requestCorrelationId": "95b741231b446b7c"}</span>
+</body>
+</html>
