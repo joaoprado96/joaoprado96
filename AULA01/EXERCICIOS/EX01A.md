@@ -107,7 +107,7 @@ Abra o navegador web e vá para `http://localhost:8080`. Você deverá ver a pá
 
 ### 1. Acessar o container MySQL
 ```bash
-docker exec -it mysql-container mysql -uuser -p
+docker exec -it mysql-container mysql -u user -p
 ```
 Digite a senha `user_password` quando solicitado. Agora você deve estar no prompt do MySQL.
 
