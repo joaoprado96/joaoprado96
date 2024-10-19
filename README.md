@@ -1,30 +1,10 @@
-  # João Prado &nbsp;&nbsp;[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue)](https://www.linkedin.com/in/joaoprado96/) [![GitHub](https://img.shields.io/badge/GitHub-Profile-black)](https://github.com/joaoprado96)
-
+  # João Prado &nbsp;&nbsp;
   **IT Engineer Specializing in Mainframe Modernization and Cloud Solutions**
 
   Passionate and results-driven IT Engineer with over 5 years of experience bridging the gap between legacy mainframe systems and modern cloud technologies. Expertise in mainframe development (Assembler and COBOL), cloud infrastructure provisioning, DevOps practices, and full-stack development. Proven ability to lead digital transformation projects, automate complex processes, and implement scalable solutions in large enterprise environments.
 
   ---
-
-  ## 🛠️ Technical Skills
-
-  - **Programming Languages:** Python, COBOL, Assembler, Java, JavaScript, TypeScript, Node.js, REXX
-  - **Cloud Platforms:** AWS (EC2, Lambda, S3, RDS, Neptune, ECS, API Gateway), Terraform, OpenShift, Azure Cloud Shell
-  - **DevOps Tools:** CI/CD Pipelines, Git, GitHub Actions, GitLab, Jenkins, Docker, Kubernetes
-  - **Databases:** PostgreSQL, Amazon RDS, Amazon Neptune (Gremlin), MongoDB, DB2 on z/OS
-  - **Web Development:** Node.js, Express.js, React.js, Django, Flask, RESTful APIs
-  - **Automation & Scripting:** JCL, REXX, zOSMF, Shell Scripting
-  - **Data Processing:** ETL Processes, Pandas, Spark, Hadoop, Snowflake, psycopg2, gremlinpython
-  - **Mainframe Technologies:** IBM Mainframe, z/OS, TSO/ISPF, IBM MQ, Mainframe Transaction Monitors
-  - **Performance Testing:** Load Testing Tools, JMeter, Performance Optimization, Monitoring & Logging
-  - **Security & Authentication:** IAM, STS, Vault, SSL/TLS Certificates, PrivateLink, Azure Authentication
-  - **Other Technologies:** VMware, SAP ERP, Open Policy Agent, Linux
-  - **Soft Skills:** Problem-Solving, Team Collaboration, Communication, Project Management, Leadership, Code Review, Continuous Integration/Delivery
-  - **Languages:** Portuguese (Native), English (Professional Proficiency)
-
-  ---
-
-  ## 📚 Experience
+  ##  Experience
 
   ### **IT Engineering Analyst (Mid-Level) | Itaú Unibanco**
   *Jul 2022 – Present | São Paulo, Brazil*
@@ -111,7 +91,7 @@
 
   ---
 
-  ## 🎓 Education
+  ##  Education
 
   ### **Bachelor of Engineering in Electrical and Electronic Engineering**
   *State University of Campinas (Universidade Estadual de Campinas - UNICAMP) | 2016 – 2020*
@@ -124,7 +104,7 @@
 
   ---
 
-  ## 📜 Certifications
+  ##  Certifications
 
   - **AWS Certified Cloud Practitioner** – *Amazon Web Services (AWS)* | **Issued:** Nov 2022 | **Expires:** Nov 2025
   - **Building Cloud Computing Solutions at Scale Specialization** – *Duke University* | **Issued:** Jul 2024
@@ -147,7 +127,7 @@
 
   ---
 
-  ## 🛠️ Technical Skills
+  ##  Technical Skills
 
   - **Programming Languages:** Python, COBOL, Assembler, Java, JavaScript, TypeScript, Node.js, REXX
   - **Cloud Platforms:** AWS (EC2, Lambda, S3, RDS, Neptune, ECS, API Gateway), Terraform, OpenShift, Azure Cloud Shell
@@ -165,7 +145,7 @@
 
   ---
 
-  ## 📞 Contact
+  ##  Contact
 
   - **Email:** [joaoprado@outlook.com.br](mailto:joaoprado@outlook.com.br)
   - **LinkedIn:** [linkedin.com/in/joaoprado96](https://www.linkedin.com/in/joaoprado96/)
@@ -174,21 +154,21 @@
 
   ---
 
-  ## 📝 Recent Projects
+  ##  Recent Projects
 
-  ### [Mainframe to AWS Data Offloading](https://github.com/joaoprado96/mainframe-aws-offloading)
+  ### Mainframe to AWS Data Offloading
   *Python tools for automating data extraction from mainframe to AWS S3 via PrivateLink.*
 
   - **Technologies Used:** Python, AWS S3, PrivateLink, z/OS, JCL, REXX
   - **Key Features:** Secure data transfer, automation scripts, large-scale data migration.
 
-  ### [Full-Stack Application for Commercial Data Management](https://github.com/joaoprado96/commercial-data-app)
+  ### Full-Stack Application for Commercial Data Management
   *Node.js application with MongoDB to manage and display commercial establishment data.*
 
   - **Technologies Used:** Node.js, Express.js, MongoDB, React.js, Google Maps API
   - **Key Features:** User authentication, dynamic filtering, geolocation features.
 
-  ### [Load Testing Tools for Mainframe Environments](https://github.com/joaoprado96/mainframe-load-testing)
+  ### Load Testing Tools for Mainframe Environments
   *Python and Node.js tools for performance testing of mainframe transactional systems.*
 
   - **Technologies Used:** Python, Node.js, Express.js, TCP/IP, z/OS
@@ -196,7 +176,7 @@
 
   ---
 
-  ## 🌱 Currently Learning
+  ##  Currently Learning
 
   - Advanced Machine Learning techniques
   - Container orchestration with Kubernetes
@@ -205,7 +185,7 @@
 
   ---
 
-  ## 🤝 Let's Connect
+  ##  Let's Connect
 
   I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Let's connect and make something amazing together!
 
