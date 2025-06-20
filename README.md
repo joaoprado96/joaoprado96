@@ -1,194 +1,141 @@
   # João Prado &nbsp;&nbsp;
-  **IT Engineer Specializing in Mainframe Modernization and Cloud Solutions**
 
-  Passionate and results-driven IT Engineer with over 5 years of experience bridging the gap between legacy mainframe systems and modern cloud technologies. Expertise in mainframe development (Assembler and COBOL), cloud infrastructure provisioning, DevOps practices, and full-stack development. Proven ability to lead digital transformation projects, automate complex processes, and implement scalable solutions in large enterprise environments.
+Rua Dr. Julio de Ribeiro Menezes, 286 - Parque Beatriz, Campinas - São Paulo  
+📞 (+55) 19993606538  
+📧 joaoprado@outlook.com.br  
+🌐 [GitHub](https://github.com/joaoprado96) | [LinkedIn](https://www.linkedin.com/in/joaoprado96)
 
-  ---
-  ##  Experience
+---
 
-  ### **IT Engineering Analyst (Mid-Level) | Itaú Unibanco**
-  *Jul 2022 – Present | São Paulo, Brazil*
+## Summary
 
-  - **Cloud Infrastructure Provisioning:**
-    - Provisioned complete AWS infrastructure including EC2, Lambda, S3, RDS, Neptune, Security Groups, IAM roles/policies, and S3 bucket notifications.
-    - Automated deployments using CI/CD pipelines via GitHub Actions and managed with Terraform for consistency and scalability.
-  - **Mainframe Data Offloading:**
-    - Developed Python tools to automate data extraction and offloading from mainframe to AWS.
-    - Implemented secure integration between mainframe and AWS S3 via PrivateLink, optimizing large-scale data migration.
-  - **Data Processing & Ingestion Pipelines:**
-    - Built robust Python applications for data processing and ingestion in AWS, supporting PostgreSQL and Amazon Neptune.
-    - Utilized `psycopg2` and `gremlinpython` libraries for complex database operations and Gremlin queries.
-    - Orchestrated ETL processes using AWS Lambda and managed data flow with S3 for high performance.
-  - **Mainframe Modernization:**
-    - Developed advanced Assembler modules and COBOL programs enabling direct calls to AWS APIs using Web Client Toolkit.
-    - Facilitated integration of legacy systems with modern cloud services without rewriting COBOL programs.
-    - Modeled mainframe transactional data to create hierarchical visualizations, optimizing transaction flows.
-  - **Full-Stack Development:**
-    - Created a full-stack Node.js application with MongoDB to manage structured commercial data, including images and menus.
-    - Implemented responsive interfaces with dynamic filtering and integrated Google Maps and Places APIs.
-    - Developed authentication systems with secure encryption and validation.
-  - **Performance Testing & Optimization:**
-    - Developed Python and Node.js tools for load testing mainframe transactional environments, handling up to 1,000 TPS.
-    - Analyzed performance metrics to optimize system resilience under high-load conditions.
-  - **DevOps & Monitoring:**
-    - Implemented CI/CD pipelines using Terraform and AWS for ECS Cluster provisioning.
-    - Configured load balancers and horizontal scaling with auto-scaling groups based on CPU and memory usage.
-    - Developed Java applications following MVC patterns, integrating with Amazon Neptune and implementing real-time monitoring.
-  - **Automation & Scripting:**
-    - Automated critical mainframe processes using Python and zOSMF, improving operational efficiency and SRE indicators.
-    - Developed graphical interfaces using Panels and REXX for automated log analysis.
-  - **Application Development with OpenShift:**
-    - Developed an interactive application in OpenShift for hosting and executing user-submitted Python code.
-    - Integrated Azure authentication and generative AI to assist users in script creation and optimization.
-    - Implemented versioning and audit logging for transparency and security.
-  - **API Gateway & Custom Domains:**
-    - Developed AWS API Gateway with custom domains and SSL/TLS certificates for development, staging, and production environments.
-    - Automated API contract deployment and linked API Gateway with ECS Cluster using VPC Link.
+Results-driven IT Engineer and Tech Lead with over 4 years of experience solving large-scale engineering challenges for critical financial systems. Specializes in building cloud-native solutions, exposing high-performance APIs, modernizing legacy architectures, and delivering data pipelines on AWS. Proven track record in reducing operational costs, increasing system resilience, and accelerating time-to-market for business-critical applications. Expert in Kotlin, Python, AWS, Glue, Terraform, CI/CD, SRE practices, Kubernetes and observability with DataDog and OpenTelemetry.
 
-  ---
+---
 
-  ### **IT Engineering Analyst (Junior) | Itaú Unibanco**
-  *Oct 2021 – Jul 2022 | São Paulo, Brazil*
+## Work Experience
 
-  - **Application Development:**
-    - Developed and maintained mainframe applications using Assembler and COBOL.
-    - Ensured high-quality code for critical transaction processing and data management.
-  - **IBM MQ Integration:**
-    - Developed Assembler modules for IBM MQ communication, handling connection, put/get messages, and data exchange.
-    - Enhanced transaction reliability and performance between systems.
-  - **HTTP Request Simulation:**
-    - Developed advanced COBOL programs to simulate and validate HTTP requests.
-    - Tested all HTTP verbs and analyzed response metrics like status codes, latency, and response sizes.
-    - Validated communication flows between mainframe and cloud systems.
-  - **Load Testing Tools:**
-    - Developed web applications using Express.js for load testing mainframe functionalities.
-    - Simulated high-volume transaction scenarios to evaluate mainframe performance under stress.
-    - Provided detailed reports for infrastructure optimizations.
-  - **Automation & Scripting:**
-    - Created REXX scripts and graphical interfaces for automated administrative tasks and log analysis.
-    - Increased productivity by 20% and maintained system integrity through proactive issue resolution.
-  - **System Integration:**
-    - Integrated legacy systems with modern platforms via APIs, MQ, and FTP.
-    - Improved data flow efficiency and enabled secure data exchange between different environments.
-  - **Support & Maintenance:**
-    - Provided continuous support in a "Build and Run" environment.
-    - Ensured systems met specifications and adapted to new requirements.
+### Itaú Unibanco — São Paulo, Brazil
 
-  ---
+**IT ENGINEERING ANALYST (SENIOR) / TECH LEAD**  
+*Jan 2025 – Present*
 
-  ### **Project and Automation Engineer | Pirelli**
-  *Feb 2021 – Oct 2021 | Campinas, São Paulo, Brazil*
+- **API Modernization & External Partner Enablement:** Led the design and rollout of API exposure strategies for external partners, solving long-standing business demand for secure, scalable, and observable API consumption.
+- **Data Pipeline Modernization with AWS Glue:** Architected Glue-based ETL pipelines to solve latency and data consistency issues in batch and near-real-time data ingestion from mainframe and internal sources.
+- **Cloud-Native Microservices in Kotlin:** Developed scalable backend services using Kotlin and Spring Boot WebFlux, solving performance bottlenecks and supporting high TPS scenarios with low latency.
+- **SRE & Observability Initiatives:** Introduced SRE practices with SLOs, SLIs, and error budgets. Reduced Mean Time to Recovery (MTTR) by 40% by implementing OpenTelemetry, DataDog APM, and CloudWatch monitoring with custom dashboards and alerts.
+- **Deployment Automation & IaC:** Designed Terraform modules and GitHub Actions pipelines to solve environment drift and reduce deployment time by 70%, ensuring consistent multi-environment releases.
+- **AWS Cost Optimization:** Reduced Lambda cold starts and S3 storage costs by 25%, solving budget overrun issues in cloud infrastructure.
+- **Incident Response Leadership:** Acted as lead in major production incidents, conducting RCA and implementing permanent fixes for systemic issues affecting uptime and availability.
+- **Kubernetes Exposure:** Contributed to container orchestration initiatives using AWS ECS with initial exposure to Kubernetes (EKS), participating in discussions on workload migration and container scaling strategies.
+- **Agile & Stakeholder Management:** Worked closely with Product Owners, Business Analysts, and cross-functional teams in Agile/Scrum environments to prioritize backlog, refine requirements, and align technical deliveries with business goals.
+- **Mentoring & Technical Leadership:** Coached engineers in Kotlin, Python, AWS architecture, distributed systems, observability, and SRE mindset. Led design reviews and architecture boards.
 
-  - **Automation and Electrical Architecture Design:**
-    - Designed and implemented automation and electrical systems for industrial and commercial applications.
-    - Engineered electrical panels and performed circuit sizing, ensuring safety, efficiency, and compliance with technical standards.
-  - **Industrial Machine Programming and Equipment Commissioning:**
-    - Programmed industrial machinery and commissioned modern equipment, ensuring high precision and operational efficiency.
-    - Integrated automated systems to optimize processes and increase productivity.
-  - **Project Management and Coordination:**
-    - Managed and coordinated automation projects, ensuring functionality and synergy among all system components.
-    - Adopted efficient management strategies, resulting in more reliable and productive operations.
+**IT ENGINEERING ANALYST (MID-LEVEL)**  
+*Jul 2022 – Dec 2024*
 
-  ---
+- **Mainframe Data Offloading:** Designed Python tools to automate extraction and offloading of mainframe data to AWS S3 via PrivateLink, eliminating manual intervention and reducing processing time.
+- **Infrastructure as Code (IaC):** Provisioned scalable AWS infrastructure (EC2, Lambda, S3, RDS, Neptune) using Terraform and CI/CD pipelines, solving infrastructure provisioning bottlenecks.
+- **Real-Time Data Processing:** Built Python services for ingesting and transforming streaming and batch data into PostgreSQL and Amazon Neptune, solving data freshness issues for analytics teams.
+- **Cloud-to-Mainframe Integration:** Modeled transactional data and built visualization layers using Neptune and D3.js, enabling technical teams to analyze transaction flow and reduce debugging time.
+- **API Management:** Developed and deployed AWS API Gateway with custom domains and SSL/TLS certificates across dev, staging, and production, solving API governance and partner access control challenges.
+- **Performance Testing:** Built Python and Node.js load-testing tools for mainframe transaction simulation, helping infrastructure teams identify and fix capacity issues.
+- **CI/CD & Observability for Data Pipelines:** Improved reliability of data flows with automated deployments, custom monitoring scripts, and alerting on failed ETL jobs.
 
-  ##  Education
+**IT ENGINEERING ANALYST (JUNIOR)**  
+*Oct 2021 – Jul 2022*
 
-  ### **Bachelor of Engineering in Electrical and Electronic Engineering**
-  *State University of Campinas (Universidade Estadual de Campinas - UNICAMP) | 2016 – 2020*
+- **Automation of Mainframe Operations:** Automated Db2 loads and VSAM cleanups using Python and zOSMF, improving batch job efficiency and reliability.
+- **HTTP Mainframe Simulators:** Built COBOL-based HTTP request simulators to validate end-to-end integrations between mainframe and AWS APIs.
+- **Monitoring Dashboards for Legacy Systems:** Created REXX and Panels-based dashboards for faster error detection and log analysis, reducing manual monitoring efforts.
+- **Internal Developer Platform:** Delivered an Openshift-based web platform for developers to run Python scripts securely with Azure Authentication and versioning.
 
-  - **Core Studies:**
-    - **Fundamentals:** Mathematics, Physics, Chemistry, Mechanics, Computer Science, Electricity, Material Resistance, Transport Phenomena.
-    - **General Studies:** Administration, Humanities, Social Sciences, Law, Ethics, Economics, Environmental Sciences.
-    - **Professional Formation:** Electric Circuits, Electrical Measurements, Electromagnetism, Electronics, Electrical Materials, Energy Conversion, Control Systems.
-    - **Specializations:** Telecommunications, Telematics, Electric Power, Microelectronics, Optoelectronics, Computer Engineering, Automation and Control, Biomedical Engineering.
+---
 
-  ---
+### Pirelli — Campinas, São Paulo, Brazil
 
-  ##  Certifications
+**PROJECT AND AUTOMATION ENGINEER**  
+*Feb 2021 – Oct 2021*
 
-  - **AWS Certified Cloud Practitioner** – *Amazon Web Services (AWS)* | **Issued:** Nov 2022 | **Expires:** Nov 2025
-  - **Building Cloud Computing Solutions at Scale Specialization** – *Duke University* | **Issued:** Jul 2024
-  - **Cloud Machine Learning Engineering and MLOps** – *Duke University* | **Issued:** Jul 2024
-  - **Cloud Data Engineering** – *Duke University* | **Issued:** Jun 2024
-  - **Cloud Virtualization, Containers, and APIs** – *Duke University* | **Issued:** Jun 2024
-  - **Spark, Hadoop, and Snowflake for Data Engineering** – *Duke University* | **Issued:** Jun 2024
-  - **Object-Oriented Programming in Python** – *Duke University* | **Issued:** May 2024
-  - **Generative AI with Large Language Models** – *Coursera* | **Issued:** Apr 2024 | **Expires:** Apr 2026
-  - **Interskill Mainframe Specialist Certifications** – *Interskill Learning*
-    - Mainframe Environment Fundamentals
-    - Mainframe Performance Fundamentals
-    - File Transfers Foundations
-    - REXX Programming
-    - Parallel Sysplex Foundations
-    - TSO and ISPF Expert
-    - Cloud Fundamentals
-    - DevOps Fundamentals
-    - And others (Total of 28 certifications)
+- **Factory Automation:** Reduced production downtime by programming PLCs (Siemens, Allen-Bradley) and designing safe electrical panels using AutoCAD Electrical.
+- **Process Optimization:** Improved production efficiency by automating critical industrial processes.
+- **Project Coordination:** Managed automation projects from design to commissioning, solving coordination gaps between engineering and operations teams.
 
-  ---
+**ELECTRICAL ENGINEERING INTERN**  
+*Jan 2019 – Dec 2020*
 
-  ##  Technical Skills
+- **Automation Support:** Supported PLC programming and system testing, contributing to reducing failure rates on production lines.
+- **Electrical Design:** Assisted in drawing electrical diagrams and performing component sizing for automation projects.
 
-  - **Programming Languages:** Python, COBOL, Assembler, Java, JavaScript, TypeScript, Node.js, REXX
-  - **Cloud Platforms:** AWS (EC2, Lambda, S3, RDS, Neptune, ECS, API Gateway), Terraform, OpenShift, Azure Cloud Shell
-  - **DevOps Tools:** CI/CD Pipelines, Git, GitHub Actions, GitLab, Jenkins, Docker, Kubernetes
-  - **Databases:** PostgreSQL, Amazon RDS, Amazon Neptune (Gremlin), MongoDB, DB2 on z/OS
-  - **Web Development:** Node.js, Express.js, React.js, Django, Flask, RESTful APIs
-  - **Automation & Scripting:** JCL, REXX, zOSMF, Shell Scripting
-  - **Data Processing:** ETL Processes, Pandas, Spark, Hadoop, Snowflake, psycopg2, gremlinpython
-  - **Mainframe Technologies:** IBM Mainframe, z/OS, TSO/ISPF, IBM MQ, Mainframe Transaction Monitors
-  - **Performance Testing:** Load Testing Tools, JMeter, Performance Optimization, Monitoring & Logging
-  - **Security & Authentication:** IAM, STS, Vault, SSL/TLS Certificates, PrivateLink, Azure Authentication
-  - **Other Technologies:** VMware, SAP ERP, Open Policy Agent, Linux
-  - **Soft Skills:** Problem-Solving, Team Collaboration, Communication, Project Management, Leadership, Code Review, Continuous Integration/Delivery
-  - **Languages:** Portuguese (Native), English (Professional Proficiency)
+---
 
-  ---
+## Certifications
 
-  ##  Contact
+- **2024** - Building Cloud Computing Solutions at Scale Specialization, Duke University *(Remote)*
+- **2024** - Cloud Machine Learning Engineering and MLOps, Duke University *(Remote)*
+- **2024** - Cloud Data Engineering, Duke University *(Remote)*
+- **2024** - Cloud Virtualization, Containers, and APIs, Duke University *(Remote)*
+- **2024** - Spark, Hadoop, and Snowflake for Data Engineering, Duke University *(Remote)*
+- **2024** - Object-Oriented Programming in Python, Duke University *(Remote)*
+- **2024** - Generative AI with Large Language Models, Coursera *(Remote)*
+- **2023** - AWS Certified Cloud Practitioner, Amazon Web Services *(Remote)*
+- **2022** - Mainframe Specialist Certifications, Interskill Learning *(Remote)*
 
-  - **Email:** [joaoprado@outlook.com.br](mailto:joaoprado@outlook.com.br)
-  - **LinkedIn:** [linkedin.com/in/joaoprado96](https://www.linkedin.com/in/joaoprado96/)
-  - **GitHub:** [github.com/joaoprado96](https://github.com/joaoprado96)
-  - **Location:** São Paulo, Brazil
+---
 
-  ---
+## Technical Skills
 
-  ##  Recent Projects
+**Programming Languages:** Kotlin, Python, Java, JavaScript, TypeScript, Node.js, REXX  
+**Cloud Platforms & Services:** AWS (Lambda, Glue, S3, RDS, Neptune, Athena, EC2, ECS, API Gateway, VPC, PrivateLink), Openshift  
+**DevOps & Automation:** CI/CD Pipelines, Docker, Kubernetes (EKS - Basic Exposure), GitHub Actions, Terraform, Infrastructure as Code (IaC)  
+**Data & Databases:** PostgreSQL, Amazon RDS, Amazon Neptune, MongoDB, DB2 on z/OS, Data Modeling, ETL Pipelines  
+**Web & Application Development:** Kotlin Spring Boot, RESTful APIs, Node.js, Express, React, Django, Flask, Microservices Architecture  
+**Scripting & Automation:** Shell Scripting, JCL, zOSMF, Python Automation, REXX, Terraform Scripting  
+**Big Data & Analytics:** AWS Glue, Spark, Hadoop, Snowflake, Pandas, psycopg2, gremlinpython, Data Processing & Transformation  
+**Performance & Monitoring:** DataDog, CloudWatch, OpenTelemetry, JMeter, Load Testing, Performance Tuning, Real-Time Monitoring  
+**Security & Compliance:** IAM, Azure Authentication, SSL/TLS, Secure Data Transfer, Network Security, PrivateLink  
+**Other Technologies:** Azure DevOps, VMware, SAP ERP, AWS CDK, Open Policy Agent (OPA), Linux  
+**Soft Skills:** Leadership, Ownership, Stakeholder Management, Problem Solving, Team Collaboration, Communication, Agile Development, Mentorship  
+**Languages:** Portuguese (Native), English (Professional Proficiency)
 
-  ### Mainframe to AWS Data Offloading
-  *Python tools for automating data extraction from mainframe to AWS S3 via PrivateLink.*
+---
 
-  - **Technologies Used:** Python, AWS S3, PrivateLink, z/OS, JCL, REXX
-  - **Key Features:** Secure data transfer, automation scripts, large-scale data migration.
+## Agile & Collaboration
 
-  ### Full-Stack Application for Commercial Data Management
-  *Node.js application with MongoDB to manage and display commercial establishment data.*
+- Strong experience working in Agile (Scrum/Kanban) environments, participating in sprint ceremonies like backlog grooming, planning, retrospectives, and daily stand-ups.
+- Regularly collaborates with Product Owners, Business Analysts, Architects, and QA teams to align technical solutions with business goals.
+- Comfortable leading cross-functional discussions and presenting technical designs to both technical and non-technical stakeholders.
 
-  - **Technologies Used:** Node.js, Express.js, MongoDB, React.js, Google Maps API
-  - **Key Features:** User authentication, dynamic filtering, geolocation features.
+---
 
-  ### Load Testing Tools for Mainframe Environments
-  *Python and Node.js tools for performance testing of mainframe transactional systems.*
+## Education
 
-  - **Technologies Used:** Python, Node.js, Express.js, TCP/IP, z/OS
-  - **Key Features:** High TPS support, performance metrics, stress testing.
+**State University of Campinas — Campinas, São Paulo, Brazil**  
+*Bachelor of Engineering in Electrical and Electronic Engineering*  
+*2016 – 2020*
 
-  ---
+- **Core Studies:** Mathematics, Physics, Chemistry, Mechanics, Computer Science, Electricity, Material Resistance, Transport Phenomena.
+- **General Studies:** Administration, Humanities, Social Sciences, Law, Ethics, Economics, Environmental Sciences.
+- **Professional Formation:** Electric Circuits, Electrical Measurements, Electromagnetism, Electronics, Electrical Materials, Energy Conversion, Control Systems.
+- **Specializations:** Telecommunications, Electric Power, Microelectronics, Optoelectronics, Computer Engineering, Automation and Control, Biomedical Engineering.
 
-  ##  Currently Learning
+---
 
-  - Advanced Machine Learning techniques
-  - Container orchestration with Kubernetes
-  - Exploring DevSecOps practices
-  - Integration of AI and Machine Learning in mainframe environments
+## Key Highlights
 
-  ---
+### BUSINESS IMPACT & PROBLEM SOLVER
+- Solves complex engineering problems with high business impact, from reducing AWS costs to improving API SLAs and modernizing legacy systems.
 
-  ##  Let's Connect
+### TECH LEADERSHIP
+- Leads squads through architecture decisions, technical reviews, mentorship, and stakeholder management.
 
-  I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Let's connect and make something amazing together!
+### CLOUD ARCHITECTURE & COST OPTIMIZATION
+- Designs AWS-based architectures focused on scalability, resilience, and cost-efficiency.
 
-  ---
+### SRE & OBSERVABILITY
+- Champions SRE culture through SLA enforcement, MTTR reduction, error budget tracking, and DataDog-driven observability.
 
-  *This resume was created to summarize my professional experience and skills. For more details, please visit my [LinkedIn profile](https://www.linkedin.com/in/joaoprado96/) or check out my [GitHub repositories](https://github.com/joaoprado96).*
+### API-FIRST & DATA-DRIVEN ENGINEERING
+- Specializes in exposing scalable APIs and building event-driven, data-intensive cloud pipelines.
+
+---
