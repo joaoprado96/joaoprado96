@@ -1542,7 +1542,7 @@ class KtParser(Parser):
                     self.syms[-1]["vis"] = p["vis"]
                 if p["default"]:
                     pass
-            sym["params"]: list[ParamInfo] = [[p["name"], p["type"], p["annots"]] for p in params]
+            sym["params"] = [[p["name"], p["type"], p["annots"]] for p in params]
             i = close + 1
         # supertipos
         if i < end and T[i][0] == "sym" and T[i][1] == ":":
@@ -1998,7 +1998,7 @@ class JavaParser(KtParser):
             close = self.match_pair(i)
             params = self.jparams(i + 1, close)
             sym["sig"] = "(" + ", ".join(p["text"] for p in params) + ")"
-            sym["params"]: list[ParamInfo] = [[p["name"], p["type"], p["annots"]] for p in params]
+            sym["params"] = [[p["name"], p["type"], p["annots"]] for p in params]
             for p in params:
                 r = dotted_refs(p["toks"], tp)
                 sym["inject"] += r
@@ -2617,7 +2617,7 @@ CLASSLIKE = TYPE_KINDS - {"interface", "typealias", "annotation"}
 STRONG = ("extends", "implements", "injects")
 CALL_KINDS = ("calls", "instantiates")
 FOLLOW_KINDS = ("calls", "instantiates", "implemented_by")
-DEP_KINDS = ("calls", "instantiates", "uses", "injects", "extends", "implements", "overrides", "reads", "writes", "throws")
+DEP_KINDS = ("calls", "instantiates", "uses", "injects", "extends", "implements", "overrides", "reads", "writes", "throws", "references", "consumes_from")
 ACCESS_KINDS = ("reads", "writes")
 EXCL_DEAD_ANN = {"Deprecated", "Suppress", "JvmStatic", "JvmOverloads", "JvmName", "JvmField", "Test", "ParameterizedTest",
                  "BeforeEach", "AfterEach", "BeforeAll", "AfterAll", "Composable", "Preview", "Override", "PostConstruct",
@@ -2635,6 +2635,7 @@ PARAM_ROLE_ANN = {  # Spring e JAX-RS (mesmo conceito, nomes diferentes)
     "RequestBody": "body",
     "CookieValue": "cookie", "CookieParam": "cookie",
 }
+AUTH_ANN = {"PreAuthorize", "PostAuthorize", "Secured", "RolesAllowed", "PermitAll", "DenyAll"}
 
 
 def first_type_name(text: str) -> str:
@@ -2665,12 +2666,23 @@ def detect_layer(name: str, annots: list, pkg: str, cfg: dict) -> str:
     return "other"
 
 
+DEFAULT_ENTRY_INTERFACES = [
+    # AWS Lambda handlers -- reconhecidos por padrao (sem exigir config), mesmo tratamento
+    # ja dado a HTTP/Kafka/SQS/@Scheduled. Kind "listener": reaproveita a exibicao/agrupamento
+    # ja existente (o label "implements RequestHandler" ja deixa claro que e Lambda).
+    {"iface": "RequestHandler", "kind": "listener"},
+    {"iface": "RequestStreamHandler", "kind": "listener"},
+]
+
+
 def entry_iface_kinds(cfg: dict) -> dict[str, str]:
     """entry_interfaces aceita tanto ["Iface", ...] (retrocompatibilidade, tudo vira kind
     'listener') quanto [{"iface": "Iface", "kind": "..."}] para projetos que precisam
-    distinguir papeis (ex.: consumidor vs. produtor de mensageria)."""
+    distinguir papeis (ex.: consumidor vs. produtor de mensageria). DEFAULT_ENTRY_INTERFACES
+    sempre entra primeiro; a config do projeto e aditiva (pode sobrescrever o kind de um
+    default reaproveitando o mesmo nome de interface)."""
     out: dict[str, str] = {}
-    for item in cfg.get("entry_interfaces", []):
+    for item in DEFAULT_ENTRY_INTERFACES + cfg.get("entry_interfaces", []):
         if isinstance(item, str):
             out[item] = "listener"
         elif isinstance(item, dict) and item.get("iface"):
@@ -3230,6 +3242,7 @@ class Graph:
         ifaces = set(iface_kinds)
         E = self.entries
         prefix: dict[int, str] = {}
+        class_auth: dict[int, str] = {}
         iface_types = {s["id"] for s in self.syms if s["is_type"] and ifaces & set(s.get("ext_supers", []))} if ifaces else set()
         for s in self.syms:
             if s["is_type"]:
@@ -3239,6 +3252,8 @@ class Graph:
                         prefix[s["id"]] = m.group(1) if m else ""
                     if ann_name(a) == "SpringBootApplication":
                         E.append({"kind": "app", "label": "SpringBootApplication", "sym": s["id"]})
+                    if ann_name(a) in AUTH_ANN:
+                        class_auth[s["id"]] = a
         ktor_files = {p for p, fi in self.files.items() if any(i[0].startswith("io.ktor") for i in fi["raw_imports"])}
         for s in self.syms:
             if s["test"]:
@@ -3267,11 +3282,22 @@ class Graph:
                                 request = ptype
                             elif role:
                                 roles[role].append(pname)
+                        status = None
+                        auth = None
+                        for a2 in s["annots"]:
+                            an2 = ann_name(a2)
+                            if an2 == "ResponseStatus" and status is None:
+                                m2 = re.search(r"HttpStatus\.(\w+)", ann_args(a2))
+                                status = m2.group(1) if m2 else (ann_args(a2) or None)
+                            elif an2 in AUTH_ANN and auth is None:
+                                auth = a2
+                        auth = auth or class_auth.get(s["owner"])
                         for p in paths[:3]:
                             full = ("/" + (pre.strip("/") + "/" + p.strip("/")).strip("/")).replace("//", "/")
                             E.append({"kind": "http", "label": f"{meth} {full}", "sym": s["id"],
                                       "request": request, "response": s["ret"] or None,
-                                      "params": {k: v for k, v in roles.items() if v}})
+                                      "params": {k: v for k, v in roles.items() if v},
+                                      "status": status, "auth": auth})
                     elif an in LISTENER_ANN:
                         E.append({"kind": "listener", "label": f"@{an}({ann_args(a)[:80]})", "sym": s["id"]})
                     elif an == "Scheduled":
@@ -3588,7 +3614,9 @@ def emit_store(G: "Graph", A: dict, w: "Writer", D: dict | None = None) -> dict:
          "file": e["file"], "line": e["line"], "module": P["mods"][S[e["sym"]]["module"]]["id"],
          **({"request": e["request"]} if e.get("request") else {}),
          **({"response": e["response"]} if e.get("response") else {}),
-         **({"params": e["params"]} if e.get("params") else {})} for e in G.entries))
+         **({"params": e["params"]} if e.get("params") else {}),
+         **({"status": e["status"]} if e.get("status") else {}),
+         **({"auth": e["auth"]} if e.get("auth") else {})} for e in G.entries))
     man = manifest(G, A, mods, D)
     w.write(f"{sd}/manifest.json", json.dumps(man, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
     return man
@@ -4129,8 +4157,9 @@ def emit_endpoints(G: "Graph", w: "Writer") -> None:
                 params_txt = "; ".join(f"{k}: {', '.join(v)}" for k, v in params.items()) or "-"
                 rows.append([f"`{e['label']}`", code_cell(s['fqn'] + (s['sig'] if s['kind'] == 'fun' else ''), 80),
                              code_cell(e["request"], 50) if e.get("request") else "-",
-                             code_cell(e["response"], 50) if e.get("response") else "-", params_txt, loc_(s)])
-            L += md_table(["Entrada", "Handler", "Request", "Response", "Parametros", "Local"], rows) + [""]
+                             code_cell(e["response"], 50) if e.get("response") else "-", params_txt,
+                             e.get("status") or "-", code_cell(e["auth"], 40) if e.get("auth") else "-", loc_(s)])
+            L += md_table(["Entrada", "Handler", "Request", "Response", "Parametros", "Status", "Auth", "Local"], rows) + [""]
         else:
             for e in items:
                 s = S[e["sym"]]
@@ -5010,6 +5039,10 @@ def cmd_endpoints(st: Store, a) -> None:
             print(f"      response: {e['response']}")
         if e.get("params"):
             print("      params: " + "; ".join(f"{k}: {', '.join(v)}" for k, v in e["params"].items()))
+        if e.get("status"):
+            print(f"      status: {e['status']}")
+        if e.get("auth"):
+            print(f"      auth: @{e['auth']}")
     print(f"\n{len(items)} entrypoint(s).")
 
 
@@ -5326,6 +5359,29 @@ def bean_edges(G: "Graph", wiring: dict) -> None:
                 G.add_edge(G.types[iface[0]]["id"], G.types[r[0]]["id"], "provided_by", s["line"], 0.9)
 
 
+def topic_edges(G: "Graph", facts: list[dict]) -> None:
+    """Liga quem consome um topico/fila a quem publica no MESMO topico como aresta de verdade
+    (mesmo padrao de bean_edges/jpa_edges: pos-processamento sobre dado ja extraido, sem
+    parsing novo). Direcao proposital "consumidor -> publicador" (nao o contrario): no resto
+    do arquivo uma aresta (A, B, k) sempre significa "A depende de B" (e' assim que
+    query impact/query path caminham, via DEP_KINDS + walk_edges direcao 'in') — quem consome
+    depende de quem publica (se o publicador muda o formato da mensagem, o consumidor quebra),
+    entao 'query impact <publicador>' precisa listar o consumidor como impactado.
+    Confianca baixa (0.5, mesmo nivel de '_uniq' em G.rt): a correlacao e pelo NOME do topico
+    como string — perfis/variaveis de ambiente podem fazer duas strings identicas apontarem
+    pra filas diferentes em ambientes diferentes, mesma aproximacao ja aceita no resto do
+    arquivo (SEND_CALLS/TOPIC_ANN tambem so correlacionam por string)."""
+    by_topic: dict[str, dict[str, set]] = defaultdict(lambda: {"publica": set(), "consome": set()})
+    for f in facts:
+        if f["kind"] == "topic" and f["role"] in ("publica", "consome"):
+            by_topic[f["value"]][f["role"]].add(f["sym"])
+    for roles in by_topic.values():
+        for c in roles["consome"]:
+            for p in roles["publica"]:
+                if p != c:
+                    G.add_edge(c, p, "consumes_from", G.syms[c]["line"], 0.5)
+
+
 # =========================================================================== #
 # Persistencia: JPA, MyBatis XML, Liquibase XML/YAML
 # =========================================================================== #
@@ -5357,11 +5413,33 @@ def jpa_model(G: "Graph", res: dict) -> list[dict]:
                 cols.append({"campo": c["name"], "coluna": cm.group(1) if cm else c["name"],
                              "id": "Id" in ca, "tipo": c["ptype"]})
         out.append({"tipo": s["fqn"], "tabela": table, "at": f"{s['file']}:{s['line']}",
-                    "colunas": cols[:60], "relacoes": rels})
+                    "colunas": cols[:60], "relacoes": rels, "sym": s["id"]})
         e = res["tables"].setdefault(table, {"name": table, "ddl": [], "columns": [], "used_by": [], "ops": set()})
         e["columns"] = list(dict.fromkeys(e["columns"] + [c["coluna"] for c in cols]))[:60]
         e.setdefault("entity", s["fqn"])
     return out
+
+
+def jpa_edges(G: "Graph", jpa: list[dict]) -> None:
+    """Liga entidade -> entidade alvo de cada relacao JPA (@OneToMany/@ManyToOne/@OneToOne/
+    @ManyToMany) como aresta de verdade no grafo -- mesmo padrao de bean_edges (resolucao de
+    tipo ciente de import via G.rt, mesma aresta por par com confianca por resolucao). Sem
+    isso, a relacao so aparecia como texto solto em 'query entity'; com isso, 'query path'/
+    'query impact' passam a atravessar entidades relacionadas."""
+    S = G.syms
+    for e in jpa:
+        s = S[e["sym"]]
+        fi = G.files.get(s["file"])
+        if fi is None:
+            continue
+        ch = G.chain[s["id"]]
+        for rel in e["relacoes"]:
+            alvo = rel.get("alvo")
+            if not alvo:
+                continue
+            r = G.rt(alvo, fi, ch)
+            if r and r[0] in G.types and r[0] != s["fqn"]:
+                G.add_edge(s["id"], G.types[r[0]]["id"], "references", s["line"], r[1])
 
 
 _XML_TAG = re.compile(r"<(\w+)([^>]*)>", re.S)
@@ -5453,6 +5531,26 @@ SPEL = re.compile(r"\$\{([\w.\-]+)(?::[^}]*)?\}")
 TOPIC_ANN = {"KafkaListener": "consome", "RabbitListener": "consome", "JmsListener": "consome",
              "SqsListener": "consome", "StreamListener": "consome", "TransactionalEventListener": "consome"}
 SEND_CALLS = {"send", "publish", "convertAndSend", "sendDefault", "emit", "produce"}
+# Tipos de "infraestrutura" de mensageria (nao sao o payload de negocio) -- pulados na hora de
+# achar o parametro que carrega o evento em si (ver _consumer_payload_type).
+MSG_INFRA_TYPES = {"Acknowledgment", "ConsumerRecord", "MessageHeaders", "Headers", "Message", "Exchange"}
+
+
+def _consumer_payload_type(s: dict) -> str:
+    """Tipo do payload de um metodo consumidor (@KafkaListener/@SqsListener/...): primeiro
+    parametro que nao e anotado @Header nem e um tipo de infraestrutura do framework (
+    Acknowledgment, ConsumerRecord cru, etc.) -- mesma pegada lexica/sem resolucao de tipo do
+    resto dos "facts" (ver scan_code_facts)."""
+    for p in s.get("params", []):
+        ptype = p[1] if len(p) > 1 else ""
+        pannots = p[2] if len(p) > 2 else []
+        if any(ann_name_lite(pa) == "Header" for pa in pannots):
+            continue
+        if first_type_name(ptype) in MSG_INFRA_TYPES:
+            continue
+        if ptype:
+            return ptype
+    return ""
 HTTP_CLIENT_CALLS = {"getForObject", "getForEntity", "postForObject", "postForEntity", "exchange", "execute",
                      "retrieve", "newCall", "submit", "request", "call"}
 TEST_ANN = {"Test", "ParameterizedTest", "RepeatedTest", "TestFactory", "Property"}
@@ -5581,9 +5679,11 @@ def scan_code_facts(G: "Graph", res: dict) -> dict:
     facts: list[dict] = []
     tables, cfg = res["tables"], res["config"]
 
-    def fact(kind: str, value: str, sym: dict, role: str = "", line: int = 0) -> None:
-        facts.append({"kind": kind, "value": value[:160], "role": role, "sym": sym["id"], "fqn": sym["fqn"],
-                      "file": sym["file"], "line": line or sym["line"], "module": sym["module"], "test": sym["test"]})
+    def fact(kind: str, value: str, sym: dict, role: str = "", line: int = 0, **extra) -> None:
+        d = {"kind": kind, "value": value[:160], "role": role, "sym": sym["id"], "fqn": sym["fqn"],
+             "file": sym["file"], "line": line or sym["line"], "module": sym["module"], "test": sym["test"]}
+        d.update({k: v for k, v in extra.items() if v})
+        facts.append(d)
 
     for s in S:
         annots = {ann_name(a): ann_args(a) for a in s["annots"]}
@@ -5617,9 +5717,10 @@ def scan_code_facts(G: "Graph", res: dict) -> dict:
         # --- mensageria ---
         for an, role in TOPIC_ANN.items():
             if an in annots:
+                payload = _consumer_payload_type(s) if role == "consome" else ""
                 for t in re.findall(r'"([^"]+)"', annots[an]):
                     if not t.startswith("$") or True:
-                        fact("topic", SPEL.sub(r"${\1}", t), s, role)
+                        fact("topic", SPEL.sub(r"${\1}", t), s, role, payload=payload)
         for name, recv, ln in s["calls"]:
             if name in SEND_CALLS:
                 for raw, sl in s["strs"]:
@@ -5901,9 +6002,11 @@ def emit_integrations(G: "Graph", D: dict, w: "Writer") -> None:
         for t, fs in sorted(topics.items()):
             cons = [f for f in fs if f["role"] == "consome"]
             prod = [f for f in fs if f["role"] == "publica"]
+            payloads = dict.fromkeys(f["payload"] for f in cons if f.get("payload"))
             rows.append([f"`{t}`", ", ".join(f"`{x['fqn']}`" for x in cons[:3]) or "-",
-                         ", ".join(f"`{x['fqn']}`" for x in prod[:3]) or "-"])
-        L += md_table(["Topico", "Consumido por", "Publicado por"], rows) + [""]
+                         ", ".join(f"`{x['fqn']}`" for x in prod[:3]) or "-",
+                         ", ".join(f"`{p}`" for p in list(payloads)[:3]) or "-"])
+        L += md_table(["Topico", "Consumido por", "Publicado por", "Payload"], rows) + [""]
     if svcs:
         L += ["## Clientes de servicos (Feign e afins)", ""]
         L += [f"- `{k}` — " + ", ".join(f"`{f['fqn']}` (`{f['file']}:{f['line']}`)" for f in v[:3]) for k, v in sorted(svcs.items())] + [""]
@@ -6086,9 +6189,11 @@ def safe(label: str, fn, default):
 def discover(G: "Graph", A: dict, quiet: bool = False) -> dict:
     res = safe("recursos", lambda: scan_resources(G.P, G), {"tables": {}, "config": {}, "profiles": []})
     facts = safe("fatos do codigo", lambda: scan_code_facts(G, res)["facts"], [])
+    safe("arestas de topico", lambda: topic_edges(G, facts), None)
     wiring = safe("wiring spring", lambda: spring_wiring(G), {"beans": [], "conditions": [], "transactions": [], "caches": [], "resilience": []})
     safe("arestas de bean", lambda: bean_edges(G, wiring), None)
     jpa = safe("modelo jpa", lambda: jpa_model(G, res), [])
+    safe("arestas jpa", lambda: jpa_edges(G, jpa), None)
     xml = safe("xml (mybatis/liquibase)", lambda: scan_xml_resources(G.P, res, G), {"mybatis": [], "liquibase": []})
     android = safe("android", lambda: scan_android(G.P, G), [])
     for t in res["tables"].values():
@@ -6219,7 +6324,8 @@ def cmd_topic(st: "Store", a) -> None:
         kind, val = k.split(":", 1)
         print(f"\n[{kind}] {val}")
         for f in v[:8]:
-            print(f"    {f['role']}: {f['fqn']}  {f['file']}:{f['line']}")
+            print(f"    {f['role']}: {f['fqn']}  {f['file']}:{f['line']}" +
+                  (f"  (payload: {f['payload']})" if f.get("payload") else ""))
     if not rows:
         print("Nenhuma integracao encontrada.")
 
