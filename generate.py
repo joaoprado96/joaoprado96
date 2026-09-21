@@ -98,5 +98,7 @@ def convert_markdown_to_modern_pdf(input_md_path, output_pdf_path):
     HTML(string=html_template).write_pdf(output_pdf_path)
     print(f"✅ PDF generated at: {output_pdf_path}")
 
-# Exemplo de uso:
-convert_markdown_to_modern_pdf('PTBR.md', 'Joao Prado - PTBR.pdf')
+# Gera os currículos em PT-BR e EN
+if __name__ == '__main__':
+    convert_markdown_to_modern_pdf('PTBR.md', 'Joao Prado - PTBR.pdf')
+    convert_markdown_to_modern_pdf('README.md', 'Joao Prado.pdf')

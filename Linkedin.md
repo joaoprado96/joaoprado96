@@ -1,9 +1,14 @@
-IT Engineer | Mainframe Modernization & Cloud Solutions Specialist | AWS Certified | Python | Terraform | DevOps
+IT Engineering Specialist | Credit Card Ecosystem @ Itaú Unibanco | Payments & Cards Domain | Mainframe-to-Cloud Migration | AWS Certified | Python | Terraform
 
-
-Passionate and results-driven IT Engineer with over 3 years of experience bridging the gap between legacy mainframe systems and modern cloud technologies. Expertise in mainframe development (Assembler and COBOL), cloud infrastructure provisioning, DevOps practices, and full-stack development. Proven ability to lead digital transformation projects, automate complex processes, and implement scalable solutions in large enterprise environments.
+Results-driven IT Engineering Specialist with over 4 years of experience in Itaú Unibanco's credit card ecosystem, working cross-functionally across the SME (PJ) client segment — from card-network reconciliation to the modernization of mission-critical platforms. Deep knowledge of customer payment journeys, debt-related financial products, onboarding/contracting, credit limits, and transaction authorization. Currently leads technical workstreams building a migration engine that moves customers from a legacy mainframe platform to a new modernized credit card platform. Combines financial-ecosystem business knowledge with hands-on backend engineering, distributed systems, integrations, DevOps, and cloud infrastructure.
 
 Key Highlights:
+
+Credit Card Ecosystem & Payments Domain:
+ • Works cross-functionally across the PJ (SME) Cards community, connecting journeys, products, and teams — from reconciliation and onboarding to payment, limits, and authorization.
+ • Leads technical workstreams on a customer migration engine from a legacy mainframe platform to a new modernized credit card platform, covering account data, cards, PCI, tokens, statements, transactions, installments, charges, and interest.
+ • Deep experience across payment journeys (statement, direct debit, boleto, Pix, minimum payment, debt portability, DDC) and debt-related financial products (renegotiation, installments).
+ • Investigates and resolves credit limit discrepancies and transaction authorization issues across distributed systems.
 
 Mainframe Modernization:
  • Developed advanced Assembler modules and COBOL programs enabling direct interaction between mainframe systems and AWS APIs, facilitating seamless integration without rewriting legacy code.
@@ -39,9 +44,44 @@ Emerging Technologies:
 I can leverage my expertise in modernizing legacy systems, optimizing cloud infrastructure, and driving technological innovation.
 
 
+IT Engineering Specialist | Itaú Unibanco
+
+Feb 2026 – Present | São Paulo, Brazil
+
+Cross-Functional Role Across the PJ Cards Community:
+ • Works cross-functionally across multiple demands and journeys within the SME (PJ) Cards community, supporting technical decisions, complex problem resolution, evolution of critical systems, and integration across domains.
+Payment Journeys:
+ • Works across the customer payment lifecycle — statement, payments, direct debit, boleto, Pix, minimum payment, debt portability, and DDC — supporting and building solutions with the teams that own each journey.
+Debt-Related Financial Products:
+ • Contributes to the evolution of financial products tied to debt repayment, such as renegotiation and installment plans, for customers in delinquency scenarios.
+Card Onboarding & Contracting:
+ • Works across the customer's entry journey into the credit card ecosystem — onboarding, proposal, product showcase, card creation and contracting, plastic issuance, embossing, and virtual card — identifying issues, defining solutions, and stabilizing journeys with direct impact on the customer's first experience.
+Credit Limits & Transaction Authorization:
+ • Works intensively on the authorization layer, investigating credit limit discrepancies, cross-system inconsistencies, and improperly approved transactions through analysis of transactional flows in distributed systems.
+Mainframe → Modern Card Platform Migration Engine:
+ • Contributes to building a migration engine that moves customers from a legacy mainframe platform to a new modernized credit card platform, covering account and registration data, cards, PCI data, tokens, statements, historical transactions, installment plans, charges, and interest.
+
+
+IT Engineering Analyst (Senior) / Tech Lead | Itaú Unibanco
+
+Feb 2025 – Jan 2026 | São Paulo, Brazil
+
+Entry into PJ Cards – Reconciliation & Settlement:
+ • Worked on card reconciliation and settlement for card network systems (Mastercard and Visa), generating and processing reconciliation files used in integrations and settlement reporting.
+ • Built deep insight into the transactional, financial, and operational processes underlying the card ecosystem.
+SRE & Observability:
+ • Introduced SLOs, SLIs, and error budgets; reduced MTTR by 40% with OpenTelemetry, DataDog APM, and CloudWatch.
+Deployment Automation & IaC:
+ • Designed Terraform modules and GitHub Actions pipelines, reducing deployment time by 70%.
+AWS Cost Optimization:
+ • Reduced Lambda cold starts and S3 storage costs by 25%.
+Incident Response:
+ • Led major production incidents, conducting RCA and implementing permanent fixes.
+
+
 IT Engineering Analyst (Mid-Level) | Itaú Unibanco
 
-Jul 2022 – Present | São Paulo, Brazil
+Jul 2022 – Jan 2025 | São Paulo, Brazil
 
 Cloud Infrastructure Provisioning:
  • Provisioned complete AWS infrastructure, including EC2 instances, Lambda functions, S3 buckets, RDS and Neptune databases, Security Groups, IAM roles and policies, and S3 bucket notifications.
@@ -188,4 +228,4 @@ Soft Skills:
  • Problem-solving, Team collaboration, Communication, Project management, Leadership, Code Review, Continuous Integration/Delivery
 
 Languages:
- • Portuguese (Native), English (Professional Proficiency)
+ • Portuguese (Native), English (advanced reading/writing/listening comprehension; intermediate spoken fluency, actively improving)
