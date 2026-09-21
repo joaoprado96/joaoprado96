@@ -46,7 +46,7 @@ VERSION = "2.0"
 # Incrementar sempre que extract_refs, resolve_call, resolve_field ou o formato de
 # syms/calls/fields mudar (invalida o cache.json). NAO e necessario para mudancas em LAYERS,
 # entry_interfaces ou qualquer heuristica que rode em cima do "data" ja cacheado.
-PARSER_VERSION = 13
+PARSER_VERSION = 14
 
 # =========================================================================== #
 # Constantes
@@ -162,7 +162,7 @@ TECH_BY_IMPORT = {
 }
 DEFAULT_CONFIG = {
     "ignore": [], "docs_dir": DOCS_DIR, "state_dir": STATE_DIR, "project_name": "",
-    "god_class_loc": 500, "god_class_members": 40, "cc_threshold": 15, "long_fun_loc": 80,
+    "god_class_loc": 500, "god_class_members": 40, "cc_threshold": 15, "cognitive_threshold": 15, "long_fun_loc": 80,
     "many_params": 7, "tree_max_files_per_dir": 300, "flow_depth": 5, "max_flows": 80,
     "flow_fanout": 10, "forbid": DEFAULT_FORBID, "layers": [], "entry_annotations": [], "entry_interfaces": [],
     "reactive_wrappers": [],
@@ -340,6 +340,7 @@ def lex(src: str) -> list:
                 continue
         if c.isdigit():
             m = _NUM.match(src, i)
+            assert m is not None  # c.isdigit() ja garante que \d bate na posicao i
             append(("num", m.group(), line, doc))
             doc = None
             i = m.end()
@@ -469,6 +470,10 @@ class _FlowBuilder:
         self.capped = False
         self.loop_stack: list[int] = []          # id do no do loop mais proximo (p/ continue)
         self.pending_breaks: list[list[tuple[int, str]]] = []  # saidas de 'break' por nivel de loop
+        self.cognitive = 0   # complexidade cognitiva (Sonar-like): pondera aninhamento, ao
+                              # contrario da ciclomatica achatada -- ver Parser.flow_graph()
+        self.nesting = 0     # nivel de aninhamento atual, sobe/desce ao entrar/sair do CORPO
+                              # de if/else/for/while/do/catch/braco de when
 
     def _node(self, kind: str, line: int, label: str = "") -> int:
         nid = self.next_id
@@ -479,6 +484,13 @@ class _FlowBuilder:
     def _edge(self, src: int | None, dst: int | None, label: str) -> None:
         if src is not None and dst is not None:
             self.edges.append({"src": src, "dst": dst, "label": label})
+
+    def _count_logic_ops(self, a: int, b: int) -> int:
+        """+1 de complexidade cognitiva por operador logico ('&&'/'||') dentro de uma condicao
+        (if/while/subject de when). Simplificacao: a regra completa da Sonar nao conta
+        operadores repetidos do MESMO tipo em sequencia ('a && b && c') separadamente; aqui
+        conta cada ocorrencia — leve super-contagem em cadeias longas do mesmo operador."""
+        return sum(1 for t in self.T[a:b] if t[0] == "sym" and t[1] in ("&&", "||"))
 
     def build(self, a: int, b: int) -> FlowGraph | None:
         if a >= b:
@@ -572,7 +584,9 @@ class _FlowBuilder:
                 break
             k, s = self.T[j][0], self.T[j][1]
             if k == "id" and s in ("if", "when"):
-                j, cur = self._branch_stmt(j, b, cur, terminal=False)
+                branch = self._branch_stmt(j, b, cur, terminal=False)
+                assert branch is not None  # s in ("if","when") ja garante retorno nao-None
+                j, cur = branch
                 continue
             if k == "id" and s == "while":
                 j, cur = self._while(j, b, cur)
@@ -605,7 +619,9 @@ class _FlowBuilder:
             if k == "id" and s in ("return", "throw"):
                 nxt = self.T[j + 1] if j + 1 < b else None
                 if nxt and nxt[0] == "id" and nxt[1] in ("if", "when"):
-                    j, cur = self._branch_stmt(j + 1, b, cur, terminal=True)
+                    branch = self._branch_stmt(j + 1, b, cur, terminal=True)
+                    assert branch is not None  # nxt[1] in ("if","when") ja garante nao-None
+                    j, cur = branch
                     continue
                 end = self._skip_stmt(j, b)
                 marker = self._lexical_marker(j + 1, end)  # ex.: 'return withContext(...) { ... }'
@@ -682,8 +698,10 @@ class _FlowBuilder:
         if k < b and T[k][0] == "sym" and T[k][1] == "(":
             close = self.p.match_pair(k)
             cond = ttext(T[k + 1:close])
+            self.cognitive += self._count_logic_ops(k + 1, close)
             k = close + 1
         node = self._node("if", ln, cond)
+        self.cognitive += 1 + self.nesting
         for src, lbl in preds:
             self._edge(src, node, lbl)
         if k < b and T[k][0] == "sym" and T[k][1] == "{":
@@ -693,10 +711,19 @@ class _FlowBuilder:
             then_a = k
             after_then = self._then_end(k, b)
             then_b = after_then
+        self.nesting += 1
         then_exits = self._block(then_a, then_b, [(node, "true")])
+        self.nesting -= 1
         k = after_then
         if k < b and T[k][0] == "id" and T[k][1] == "else":
             k += 1
+            # 'else if': continuacao flat da mesma decisao (regra Sonar) -- NAO ganha bonus de
+            # aninhamento (o if aninhado soma sua propria base+aninhamento ATUAL, nao +1).
+            # So conta como flat quando 'else' e seguido DIRETO de 'if' (sem chaves no meio) --
+            # 'else { if (...) {} }' com chaves e um bloco de verdade, ganha aninhamento normal.
+            is_else_if = k < b and T[k][0] == "id" and T[k][1] == "if"
+            if not is_else_if:
+                self.cognitive += 1  # else bare: base sem bonus de aninhamento
             if k < b and T[k][0] == "sym" and T[k][1] == "{":
                 close = self.p.match_pair(k)
                 else_a, else_b, after_else = k + 1, close, close + 1
@@ -704,7 +731,12 @@ class _FlowBuilder:
                 else_a = k
                 after_else = self._skip_stmt(k, b)
                 else_b = after_else
-            else_exits = self._block(else_a, else_b, [(node, "false")])
+            if is_else_if:
+                else_exits = self._block(else_a, else_b, [(node, "false")])
+            else:
+                self.nesting += 1
+                else_exits = self._block(else_a, else_b, [(node, "false")])
+                self.nesting -= 1
             return after_else, then_exits + else_exits
         return k, then_exits + [(node, "false")]
 
@@ -736,14 +768,18 @@ class _FlowBuilder:
         if k < b and T[k][0] == "sym" and T[k][1] == "(":
             close = self.p.match_pair(k)
             cond = ttext(T[k + 1:close])
+            self.cognitive += self._count_logic_ops(k + 1, close)
             k = close + 1
         node = self._node("while", ln, cond)
+        self.cognitive += 1 + self.nesting
         for src, lbl in preds:
             self._edge(src, node, lbl)
         body_a, body_b, after = self._loop_body_range(k, b)
         self.loop_stack.append(node)
         self.pending_breaks.append([])
+        self.nesting += 1
         body_exits = self._block(body_a, body_b, [(node, "true")])
+        self.nesting -= 1
         for src, lbl in body_exits:
             self._edge(src, node, "next")  # back-edge: fim do corpo reavalia a condicao
         breaks = self.pending_breaks.pop()
@@ -755,12 +791,15 @@ class _FlowBuilder:
         ln = T[j][2]
         body_a, body_b, after_body = self._loop_body_range(j + 1, b)
         node = self._node("do_while", ln, "")
-        for src, lbl in preds:
+        self.cognitive += 1 + self.nesting
+        for src, _lbl in preds:
             self._edge(src, node, "next")
         self.loop_stack.append(node)
         self.pending_breaks.append([])
+        self.nesting += 1
         body_exits = self._block(body_a, body_b, [(node, "next")])
-        for src, lbl in body_exits:
+        self.nesting -= 1
+        for src, _lbl in body_exits:
             self._edge(src, node, "next")  # back-edge: fim do corpo reavalia a condicao
         breaks = self.pending_breaks.pop()
         self.loop_stack.pop()
@@ -770,6 +809,7 @@ class _FlowBuilder:
             if k < b and T[k][0] == "sym" and T[k][1] == "(":
                 close = self.p.match_pair(k)
                 cond = ttext(T[k + 1:close])
+                self.cognitive += self._count_logic_ops(k + 1, close)
                 k = close + 1
             if k < b and T[k][0] == "sym" and T[k][1] == ";":
                 k += 1
@@ -787,12 +827,15 @@ class _FlowBuilder:
             clause = ttext(T[k + 1:close])
             k = close + 1
         node = self._node("for", ln, clause)
+        self.cognitive += 1 + self.nesting
         for src, lbl in preds:
             self._edge(src, node, lbl)
         body_a, body_b, after = self._loop_body_range(k, b)
         self.loop_stack.append(node)
         self.pending_breaks.append([])
+        self.nesting += 1
         body_exits = self._block(body_a, body_b, [(node, "true")])
+        self.nesting -= 1
         for src, lbl in body_exits:
             self._edge(src, node, "next")  # back-edge: proxima iteracao
         breaks = self.pending_breaks.pop()
@@ -831,10 +874,13 @@ class _FlowBuilder:
                 ctype = ttext(T[k + 1:cclose])
                 k = cclose + 1
             cnode = self._node("catch", T[k][2] if k < b else ln, ctype)
+            self.cognitive += 1 + self.nesting
             self._edge(node, cnode, "catch")
             if k < b and T[k][0] == "sym" and T[k][1] == "{":
                 cbclose = self.p.match_pair(k)
+                self.nesting += 1
                 exits.extend(self._block(k + 1, cbclose, [(cnode, "next")]))
+                self.nesting -= 1
                 k = cbclose + 1
             else:
                 exits.append((cnode, "next"))
@@ -857,11 +903,13 @@ class _FlowBuilder:
         if m < b and T[m][0] == "sym" and T[m][1] == "(":
             close = self.p.match_pair(m)
             subject = ttext(T[m + 1:close])
+            self.cognitive += self._count_logic_ops(m + 1, close)
             m = close + 1
         if not (m < b and T[m][0] == "sym" and T[m][1] == "{"):
             return self._skip_stmt(j, b), preds
         wclose = self.p.match_pair(m)
         node = self._node("when", ln, subject)
+        self.cognitive += 1 + self.nesting  # uma vez pelo construto inteiro, nao por braco
         for src, lbl in preds:
             self._edge(src, node, lbl)
         exits: list[tuple[int, str]] = []
@@ -874,6 +922,7 @@ class _FlowBuilder:
                 depth -= 1
             elif kk == "sym" and ss == "->" and depth == 0:
                 cond_txt = ttext(T[arm_start:k])
+                self.cognitive += self._count_logic_ops(arm_start, k)
                 arm_node = self._node("when_arm", T[k][2], cond_txt)
                 self._edge(node, arm_node, "arm")
                 if k + 1 < wclose and T[k + 1][0] == "sym" and T[k + 1][1] == "{":
@@ -884,7 +933,9 @@ class _FlowBuilder:
                     body_a = k + 1
                     after_body = self._arm_body_end(body_a, wclose)
                     body_b = after_body
+                self.nesting += 1
                 exits.extend(self._block(body_a, body_b, [(arm_node, "next")]))
+                self.nesting -= 1
                 k = arm_start = after_body
                 continue
             k += 1
@@ -922,6 +973,10 @@ class _FlowBuilder:
 # Parser base + Kotlin
 # =========================================================================== #
 class Parser:
+    is_java = False  # JavaParser sobrescreve -- ver extract_refs, distingue declaracao de metodo/
+                      # construtor local de chamada (Java nao tem lambda trailing, entao
+                      # 'nome(...) {' fora de 'new' so pode ser declaracao, nunca chamada)
+
     def __init__(self, src: str, rel: str):
         self.src, self.rel = src, rel
         self.T = lex(src)
@@ -1197,6 +1252,10 @@ class Parser:
                 if k == "str" and "${" in s and len(calls) < 400:
                     for m in _INTERP_CALL.finditer(s):
                         chain = m.group(1).replace("?.", ".").split(".")
+                        # ${if (...) ...}/${when {...}} batem no mesmo padrao "identificador
+                        # seguido de '('" -- 'if'/'when' nao sao chamada nenhuma.
+                        if chain[-1] in KEYWORDS:
+                            continue
                         calls.append([chain[-1], chain[-2] if len(chain) > 1 else "", ln])
                 j += 1
                 continue
@@ -1215,6 +1274,24 @@ class Parser:
                         if T[m2][0] == "id" and T[m2][1][:1].isupper():
                             catches.append([T[m2][1], ln])
                             break
+                elif s in ("fun", "class", "object", "interface"):
+                    # declaracao local (fun/class local dentro de outra funcao, ou metodo de um
+                    # object/class usado como expressao -- ver _chain_recv): sem isso, 'fun
+                    # nome(...)' ou 'class Nome(...)' com construtor primario e lido como uma
+                    # FALSA chamada a 'nome'/'Nome' -- o padrao "identificador seguido de '('" e
+                    # identico ao de uma chamada de verdade. So pula ate o nome (e os type
+                    # params genericos, se houver); parametros/corpo continuam sendo escaneados
+                    # normalmente pela mesma malha (chamadas reais la dentro continuam
+                    # capturadas, e o USO de verdade em outro lugar do codigo tambem).
+                    k2 = j + 1
+                    if k2 < b and T[k2][0] == "sym" and T[k2][1] == "<":
+                        ta_end = self._type_args_end(k2, b)
+                        if ta_end is not None:
+                            k2 = ta_end + 1
+                    if k2 < b and T[k2][0] == "id":
+                        k2 += 1
+                    j = k2
+                    continue
                 j += 1
                 continue
             prev = T[j - 1] if j > a else None
@@ -1226,6 +1303,14 @@ class Parser:
             if nxt is not None and nxt[0] == "sym":
                 if nxt[1] == "(":
                     is_call = True
+                    if self.is_java and not (prev and prev[0] == "id" and prev[1] == "new"):
+                        # Java nao tem lambda trailing: 'nome(...) {' fora de um 'new' so pode
+                        # ser declaracao de metodo/construtor local (dentro de classe anonima
+                        # ou classe local), nunca uma chamada de verdade -- sem isso, 'public
+                        # void onEvent(int x) {' virava uma falsa chamada a 'onEvent'.
+                        c = self.match_pair(j + 1)
+                        if c + 1 < b and T[c + 1][1] == "{":
+                            is_call = False
                 elif nxt[1] == "{" and not up and not (prev and prev[1] in ("class", "object", "interface")):
                     is_call = True
                 elif nxt[1] == "<":
@@ -1234,6 +1319,7 @@ class Parser:
                         is_call = True
                         types.update(dotted_refs(T[j + 2:ta_end], tp))
             if is_call:
+                assert nxt is not None  # is_call so fica True dentro do bloco "nxt is not None"
                 bare = not (pdot or pref)
                 recv = ""
                 if pdot or pref:
@@ -1335,20 +1421,24 @@ class Parser:
     def line_of(self, j: int) -> int:
         return self.T[max(0, min(j, len(self.T) - 1))][2]
 
-    def flow_graph(self, a: int, b: int) -> FlowGraph | None:
-        """Grafo de fluxo de execucao (if/when/loop/try) do corpo [a,b). None se nao houver
-        nada digno de grafo (a maioria das funcoes: so instrucoes lineares, sem ramo/loop) ou
-        se o corpo estourar MAX_FLOW_NODES (funcao patologica — melhor nao ter grafo do que ter
-        um grafo gigante e inutil). Nunca levanta: um bug aqui nao pode derrubar o parse do
-        resto do arquivo."""
+    def flow_graph(self, a: int, b: int) -> tuple[FlowGraph | None, int]:
+        """(grafo de fluxo, complexidade cognitiva) do corpo [a,b). Grafo None se nao houver
+        nada digno de desenhar (a maioria das funcoes: so instrucoes lineares, sem ramo/loop)
+        ou se o corpo estourar MAX_FLOW_NODES (funcao patologica — melhor nao ter grafo do que
+        ter um grafo gigante e inutil). A cognitiva e sempre valida (>= 0), mesmo quando o
+        grafo em si e None — uma funcao trivial ainda tem uma complexidade cognitiva certa (0
+        ou baixa), so nao tem estrutura suficiente pra valer a pena desenhar um grafo. Nunca
+        levanta: um bug aqui nao pode derrubar o parse do resto do arquivo."""
         try:
-            g = _FlowBuilder(self).build(a, b)
+            fb = _FlowBuilder(self)
+            g = fb.build(a, b)
+            cog = fb.cognitive
         except Exception:  # noqa: BLE001 - construtor de grafo novo, ainda sem historico de robustez
-            return None
+            return None, 0
         # so entry/return/throw/exit -> nenhum ramo, loop ou marcador de verdade, nao vale grafo
         if g and any(n["kind"] not in ("entry", "return", "throw", "exit") for n in g["nodes"]):
-            return g
-        return None
+            return g, cog
+        return None, cog
 
 
 class KtParser(Parser):
@@ -1410,7 +1500,7 @@ class KtParser(Parser):
     def members(self, i: int, end: int, owner: int, enum_body: bool = False, otp=frozenset()) -> None:
         T = self.T
         if enum_body:
-            i = self.enum_entries(i, end, owner)
+            i = self.enum_entries(i, end, owner, otp=otp)
         last_prop = -1
         while i < end:
             t = T[i]
@@ -1467,7 +1557,7 @@ class KtParser(Parser):
             else:
                 i += 1
 
-    def enum_entries(self, i: int, end: int, owner: int) -> int:
+    def enum_entries(self, i: int, end: int, owner: int, otp=frozenset()) -> int:
         T = self.T
         while i < end:
             t = T[i]
@@ -1479,9 +1569,14 @@ class KtParser(Parser):
             j = i + 1
             if j < end and T[j][1] == "(":
                 j = self.match_pair(j) + 1
+            entry_idx = self.new_sym(kind="enum_entry", name=t[1], line=t[2], end=self.line_of(j - 1), owner=owner)
             if j < end and T[j][1] == "{":
-                j = self.match_pair(j) + 1
-            self.new_sym(kind="enum_entry", name=t[1], line=t[2], end=self.line_of(j - 1), owner=owner)
+                # entrada com corpo proprio (subclasse anonima do enum): sem isso, overrides
+                # e propriedades declaradas so pra essa entrada ficavam invisiveis pro indice.
+                close = self.match_pair(j)
+                self.members(j + 1, close, entry_idx, otp=otp)
+                self.syms[entry_idx]["end"] = self.line_of(close)
+                j = close + 1
             i = j
             if i < end and T[i][1] == ",":
                 i += 1
@@ -1777,9 +1872,10 @@ class KtParser(Parser):
             self.extract_refs(body[0], body[1], tp, sym)
             sym["cc"] = self.complexity(body[0], body[1])
             sym["fp"], sym["ntok"] = self.fingerprint(body[0], body[1])
-            fg = self.flow_graph(body[0], body[1])
+            fg, cog = self.flow_graph(body[0], body[1])
             if fg:
                 sym["flow"] = fg
+            sym["cog_cc"] = cog
         return k
 
     def ctor_decl(self, i: int, end: int, mods, annots, doc, owner: int, otp) -> int:
@@ -1880,6 +1976,8 @@ class KtParser(Parser):
 # Parser Java (nivel de tipos/membros; suficiente para o grafo em projetos mistos)
 # =========================================================================== #
 class JavaParser(KtParser):
+    is_java = True
+
     def parse(self) -> dict:
         T = self.T
         n = len(T)
@@ -2097,9 +2195,10 @@ class JavaParser(KtParser):
                 self.extract_refs(k + 1, c, tps, sym)
                 sym["cc"] = self.complexity(k + 1, c)
                 sym["fp"], sym["ntok"] = self.fingerprint(k + 1, c)
-                fg = self.flow_graph(k + 1, c)
+                fg, cog = self.flow_graph(k + 1, c)
                 if fg:
                     sym["flow"] = fg
+                sym["cog_cc"] = cog
                 sym["end"] = T[c][2]
                 return c + 1
             sym["end"] = self.line_of(k)
@@ -2732,8 +2831,14 @@ def _reconstruct_pipeline(calls) -> list[str] | None:
 
 
 class Graph:
+    _tfin: dict[int, set]  # setado por analyze() apos build(); ver tfin_get()
+    syms_by_module: dict[str, list]     # setados por _module_index(), chamado no fim de build()
+    files_by_module: dict[str, list]
+    entries_by_module: dict[str, list]
+
     def __init__(self, P: dict):
         self.P, self.cfg = P, P["cfg"]
+        self._module_stats_cache: dict[str, dict] = {}
         self.syms: list[dict] = []
         self.files: dict[str, dict] = {}
         self.edges: dict[tuple, list] = {}
@@ -2763,7 +2868,24 @@ class Graph:
         self._overrides()
         self._imports()
         self._entries()
+        self._module_index()
         return self
+
+    def _module_index(self) -> None:
+        """Agrupa simbolos/arquivos/entrypoints por modulo uma unica vez. Sem isso,
+        module_stats()/gen_module_block() (chamados por modulo, varias vezes cada, ver
+        module_stats) reescaneavam G.syms/G.files/G.entries INTEIROS por modulo — em
+        monorepos com muitos modulos e muitos simbolos isso e o gargalo real da indexacao
+        (visto na pratica: O(modulos x simbolos))."""
+        self.syms_by_module: dict[str, list] = defaultdict(list)
+        for s in self.syms:
+            self.syms_by_module[s["module"]].append(s)
+        self.files_by_module: dict[str, list] = defaultdict(list)
+        for f in self.files.values():
+            self.files_by_module[f["module"]].append(f)
+        self.entries_by_module: dict[str, list] = defaultdict(list)
+        for e in self.entries:
+            self.entries_by_module[self.syms[e["sym"]]["module"]].append(e)
 
     def _symbols(self) -> None:
         cfg = self.cfg
@@ -2944,7 +3066,7 @@ class Graph:
         t = s["locals"].get(recv)
         if t and t.startswith("@call:") and depth < 3:
             inner, _, meth = t[6:].rpartition(".")
-            ids, kind, conf = self.resolve_call(s, meth, inner, fi, depth + 1)
+            ids, _kind, _conf = self.resolve_call(s, meth, inner, fi, depth + 1)
             for i in ids:
                 ret = first_type_name(self.syms[i]["ret"] or self.syms[i]["ptype"])
                 if ret:
@@ -3215,7 +3337,7 @@ class Graph:
     def _imports(self) -> None:
         self.file_edges: Counter = Counter()
         for path, fi in self.files.items():
-            for fq, alias, wild in fi["raw_imports"]:
+            for fq, _alias, wild in fi["raw_imports"]:
                 dst = None
                 if fq in self.types:
                     dst = self.types[fq]["file"]
@@ -3437,6 +3559,7 @@ def analyze(G: Graph) -> dict:
                        and (type_loc[i] >= cfg["god_class_loc"] or members_n[i] >= cfg["god_class_members"])), reverse=True)[:20]
     funs = [s for s in S if s["kind"] in ("fun", "constructor") and not s["test"]]
     A["complex"] = sorted(((s["cc"], s["id"]) for s in funs if s["cc"] >= cfg["cc_threshold"]), reverse=True)[:25]
+    A["cognitive_complex"] = sorted(((s.get("cog_cc", 0), s["id"]) for s in funs if s.get("cog_cc", 0) >= cfg["cognitive_threshold"]), reverse=True)[:25]
     A["long_funs"] = sorted(((s["loc"], s["id"]) for s in funs if s["loc"] >= cfg["long_fun_loc"]), reverse=True)[:15]
     A["many_params"] = sorted(((len(s["params"]), s["id"]) for s in funs if len(s["params"]) >= cfg["many_params"]), reverse=True)[:15]
     # --- codigo morto (candidatos) ---
@@ -3495,7 +3618,7 @@ def flows(G: Graph, A: dict) -> list[tuple[dict, list[str]]]:
     cfg, S = G.cfg, G.syms
     adj = defaultdict(list)
     impls = defaultdict(list)
-    for (src, dst, kind), (line, conf) in sorted(G.edges.items()):
+    for (src, dst, kind), (_line, conf) in sorted(G.edges.items()):
         if kind in CALL_KINDS and conf >= 0.6:
             adj[src].append((dst, kind, conf))
         elif kind == "overrides":
@@ -3554,7 +3677,7 @@ def flows(G: Graph, A: dict) -> list[tuple[dict, list[str]]]:
 # =========================================================================== #
 SYM_FIELDS = ("id", "fqn", "name", "kind", "layer", "vis", "mods", "annots", "sig", "params", "ret", "recv", "is_type",
               "ptype", "doc", "file", "line", "end", "loc", "cc", "module", "pkg", "owner", "test",
-              "supers_fq", "ext_supers", "tparams", "async", "coroutine_ops", "flow", "pipeline")
+              "supers_fq", "ext_supers", "tparams", "async", "coroutine_ops", "flow", "pipeline", "strs", "cog_cc")
 
 
 def sym_record(G: "Graph", s: dict, fan_in: dict | None = None, fan_out: dict | None = None) -> dict:
@@ -3592,7 +3715,7 @@ def emit_store(G: "Graph", A: dict, w: "Writer", D: dict | None = None) -> dict:
             row["lines"] = extra
         rows.append(row)
     rows += [{"s": b, "d": a, "k": "implemented_by", "l": S[a]["line"], "c": round(c, 2)}
-             for (a, b, k), (ln, c) in sorted(G.edges.items()) if k == "overrides"]
+             for (a, b, k), (_ln, c) in sorted(G.edges.items()) if k == "overrides"]
     write_jsonl(w, f"{sd}/edges.jsonl", rows)
     write_jsonl(w, f"{sd}/files.jsonl", (
         {"path": p, "module": G.P["mods"][f["module"]]["id"], "dir": f["module"], "pkg": f["pkg"], "loc": f["loc"],
@@ -3623,14 +3746,23 @@ def emit_store(G: "Graph", A: dict, w: "Writer", D: dict | None = None) -> dict:
 
 
 def module_stats(G: "Graph", d: str) -> dict:
-    files = [f for f in G.files.values() if f["module"] == d]
+    """Cacheado em G: chamado por varios pontos (emit_store, CLAUDE.md por modulo, filtros de
+    'tem algum arquivo') pro MESMO modulo — sem cache, cada chamada re-escaneava G.files/G.syms
+    inteiros, o que em projetos com muitos modulos (dezenas/centenas, comum em monorepo grande)
+    virava o gargalo real da indexacao (O(modulos x chamadas x arquivos totais))."""
+    cache = G._module_stats_cache
+    if d in cache:
+        return cache[d]
+    files = G.files_by_module.get(d, ())
     src = [f for f in files if not f["test"]]
     tst = [f for f in files if f["test"]]
-    syms = [s for s in G.syms if s["module"] == d and s["is_type"] and not s["test"]]
-    return {"files": len(src), "test_files": len(tst), "loc": sum(f["loc"] for f in src),
-            "test_loc": sum(f["loc"] for f in tst), "types": len(syms),
-            "layers": dict(Counter(s["layer"] for s in syms).most_common()),
-            "packages": sorted({f["pkg"] for f in src if f["pkg"]})[:40]}
+    syms = [s for s in G.syms_by_module.get(d, ()) if s["is_type"] and not s["test"]]
+    r = {"files": len(src), "test_files": len(tst), "loc": sum(f["loc"] for f in src),
+         "test_loc": sum(f["loc"] for f in tst), "types": len(syms),
+         "layers": dict(Counter(s["layer"] for s in syms).most_common()),
+         "packages": sorted({f["pkg"] for f in src if f["pkg"]})[:40]}
+    cache[d] = r
+    return r
 
 
 def manifest(G: "Graph", A: dict, mods: list, D: dict | None = None) -> dict:
@@ -3894,7 +4026,7 @@ def emit_api(G: "Graph", w: "Writer") -> None:
             meta.append(ann_str(s))
         meta.append(loc_(s))
         if s["kind"] in ("fun", "constructor") and s["cc"] > 1:
-            meta.append(f"cc={s['cc']}")
+            meta.append(f"cc={s['cc']}" + (f"/cog={s['cog_cc']}" if s.get("cog_cc", 0) > 1 else ""))
         if s["is_type"]:
             sup = sorted(G.sup.get(s["fqn"], [])) + s.get("ext_supers", [])
             if sup:
@@ -3920,8 +4052,9 @@ def emit_api(G: "Graph", w: "Writer") -> None:
         by_file: dict[str, list] = defaultdict(list)
         for s in syms:
             by_file[s["file"]].append(s)
-        pubs = sum(1 for s in G.syms if s["module"] == d and s["vis"] == "public" and s["kind"] == "fun")
-        privs = sum(1 for s in G.syms if s["module"] == d and s["vis"] == "private" and s["kind"] == "fun")
+        mod_syms = G.syms_by_module.get(d, ())
+        pubs = sum(1 for s in mod_syms if s["vis"] == "public" and s["kind"] == "fun")
+        privs = sum(1 for s in mod_syms if s["vis"] == "private" and s["kind"] == "fun")
         out += [f"Funcoes: {pubs} publicas, {privs} privadas.", ""]
         cur_pkg = None
         for path in sorted(by_file):
@@ -4039,9 +4172,10 @@ def emit_index(G: "Graph", A: dict, man: dict, w: "Writer") -> None:
                      f"[api]({dd}/api/{slug(m['id'])}.md)"])
     L += md_table(["Modulo", "Caminho", "Arquivos", "Linhas", "Tipos", "Camadas", "Depende de", "API"], rows, "llrrrlll")
     if A["mcount"]:
+        id_to_dir = {m["id"]: d for d, m in P["mods"].items()}
         L += ["", "## Dependencias entre modulos (uso real)", ""]
         L += md_table(["De", "Para", "Referencias", "Declarada"],
-                      [[f"`{a}`", f"`{b}`", n, "sim" if b in P["mods"][{m['id']: d for d, m in P['mods'].items()}[a]]["deps"] else "**NAO**"]
+                      [[f"`{a}`", f"`{b}`", n, "sim" if b in P["mods"][id_to_dir[a]]["deps"] else "**NAO**"]
                        for (a, b), n in A["mcount"].most_common(30)], "llrl")
     if G.entries:
         kinds = Counter(e["kind"] for e in G.entries)
@@ -4082,7 +4216,7 @@ def emit_index(G: "Graph", A: dict, man: dict, w: "Writer") -> None:
 
 
 def emit_analysis(G: "Graph", A: dict, w: "Writer") -> None:
-    P, cfg, S = G.P, G.cfg, G.syms
+    cfg, S = G.cfg, G.syms
     dd = cfg["docs_dir"]
     L = ["# Analise do codigo", "", GEN_MARK, "",
          "Heuristicas do indexador: pontos para revisar, nao vereditos.", ""]
@@ -4110,6 +4244,12 @@ def emit_analysis(G: "Graph", A: dict, w: "Writer") -> None:
         L += ["## Funcoes complexas (complexidade ciclomatica)", ""]
         L += md_table(["Funcao", "CC", "Linhas", "Local"],
                       [[code_cell(S[i]['fqn'] + S[i]['sig']), cc, S[i]["loc"], loc_(S[i])] for cc, i in A["complex"][:20]], "lrrl") + [""]
+    if A["cognitive_complex"]:
+        L += ["## Funcoes cognitivamente complexas", "",
+              "Diferente da ciclomatica: pondera aninhamento (3 `if`s aninhados pesam mais que 3 soltos) "
+              "e nao penaliza `when`/`switch` por braco — reflete melhor \"quao dificil e ler\", nao \"quantos testes preciso\".", ""]
+        L += md_table(["Funcao", "Cognitiva", "CC", "Local"],
+                      [[code_cell(S[i]['fqn'] + S[i]['sig']), cog, S[i]["cc"], loc_(S[i])] for cog, i in A["cognitive_complex"][:20]], "lrrl") + [""]
     if A["long_funs"]:
         L += ["## Funcoes longas", ""] + [f"- `{S[i]['fqn']}` — {n} linhas — {loc_(S[i])}" for n, i in A["long_funs"][:10]] + [""]
     if A["many_params"]:
@@ -4286,15 +4426,18 @@ def gen_root_block(G: "Graph", A: dict, man: dict, D: dict | None = None) -> str
           "Nao varra o repositorio com `ls`/`cat`. O indice ja tem assinatura, parametros, local e",
           "relacoes de cada simbolo (publico e privado). Consulte primeiro, leia o arquivo depois:", "",
           "```bash",
-          f"python {sc} query find <termo>            # localiza simbolo/arquivo",
+          f"python {sc} query find <termo>            # localiza simbolo, arquivo ou texto/log no corpo",
           f"python {sc} query show <FQN|Nome>         # assinatura, membros, herdeiros, quem usa",
           f"python {sc} query file <caminho>          # tudo que um arquivo declara",
           f"python {sc} query callers <FQN>           # quem chama",
           f"python {sc} query callees <FQN>           # o que chama",
           f"python {sc} query impact <FQN>            # o que quebra se eu mudar isto (recursivo)",
           f"python {sc} query path <A> <B>            # como A chega em B",
+          f"python {sc} query branches <FQN>          # grafo de fluxo dentro da funcao (if/when/loop/try)",
           f"python {sc} query plan <FQN|endpoint>     # roteiro completo da alteracao",
           "```", "",
+          "Nunca leia `build/`/`target/`/`.gradle/` procurando dependencia ou versao de lib:",
+          f"`query deps [modulo]` ja lista libs de producao e teste por modulo.", "",
           "Para comecar uma tarefa, `query plan` entrega de uma vez: fatia afetada, fluxo abaixo,",
           "quem depende, implementacoes a ajustar, tabelas e topicos tocados, testes e comandos.", "",
           "Descoberta ja pronta (nao precisa investigar de novo):", "",
@@ -4378,7 +4521,7 @@ def gen_root_block(G: "Graph", A: dict, man: dict, D: dict | None = None) -> str
 
 
 def gen_module_block(G: "Graph", d: str) -> str:
-    P, cfg, S = G.P, G.cfg, G.syms
+    P, cfg = G.P, G.cfg
     m = P["mods"][d]
     st = module_stats(G, d)
     L = [f"## Modulo `{m['id']}` (auto)", "",
@@ -4391,7 +4534,7 @@ def gen_module_block(G: "Graph", d: str) -> str:
     libs = sorted(m["ext"])[:8]
     if libs:
         L.append("- Bibliotecas: " + ", ".join(libs))
-    key = [s for s in S if s["module"] == d and s["is_type"] and not s["test"] and s["owner"] < 0
+    key = [s for s in G.syms_by_module.get(d, ()) if s["is_type"] and not s["test"] and s["owner"] < 0
            and s["layer"] not in ("other", "dto", "util", "exception")]
     key.sort(key=lambda s: (-len(G.tfin_get(s["id"])), s["fqn"]))
     if key:
@@ -4399,7 +4542,7 @@ def gen_module_block(G: "Graph", d: str) -> str:
         for s in key[:12]:
             doc = f" — {s['doc']}" if s["doc"] else ""
             L.append(f"- `{s['name']}` ({s['layer']}) — {loc_(s)}{doc}")
-    ents = [e for e in G.entries if S[e["sym"]]["module"] == d]
+    ents = G.entries_by_module.get(d, ())
     if ents:
         L += ["", "Entrypoints: " + ", ".join(f"`{e['label']}`" for e in ents[:8]) + (f" (+{len(ents) - 8})" if len(ents) > 8 else "")]
     L += ["", f"- API completa: `{cfg['docs_dir']}/api/{slug(m['id'])}.md`",
@@ -4593,6 +4736,25 @@ def emit_agent_files(G: "Graph", A: dict, man: dict, w: "Writer", cfg: dict, D: 
 # Consulta do indice (le os JSONL; nao reparseia o projeto)
 # =========================================================================== #
 class Store:
+    # Carregados sob demanda por store_extras()/store_deep() (nao no __init__, pra nao ler
+    # arquivos que a consulta atual nao precisa) -- declarados aqui so pra tipagem/IDE, o valor
+    # real so existe depois da primeira chamada de store_extras()/store_deep() (idempotentes).
+    _extras: bool
+    facts: list
+    features: list
+    tables: dict[str, dict]
+    config: dict[str, dict]
+    coverage: dict[int, dict]
+    conventions: dict
+    _deep: bool
+    risk: list
+    clones: list
+    surface: dict[str, dict]
+    unreachable: list
+    coupling: dict[str, list]
+    changes: dict
+    glossary: list
+
     def __init__(self, root: Path, cfg: dict):
         self.root, self.cfg = root, cfg
         sd = root / cfg["state_dir"]
@@ -4728,24 +4890,37 @@ def call_site(st: Store, direction: str, cur: int, nxt: int, ln: int) -> str:
 
 
 def cmd_find(st: Store, a) -> None:
+    """Busca por simbolo (nome/assinatura/annotation/doc/arquivo) e, se nada bater ali, por
+    string literal do corpo (log, mensagem de excecao, texto solto) -- pra nao empurrar quem
+    esta procurando um texto de log pra grep no codigo-fonte bruto. Inclui simbolos de teste
+    por padrao (use --no-tests pra restringir a producao): 'onde isso e usado/testado' e
+    exatamente o tipo de pergunta que esse comando deveria responder sem precisar de grep."""
     term = " ".join(a.terms).lower()
     rx = re.compile(a.terms[0], re.I) if a.regex and a.terms else None
     hits = []
+    str_match: dict[int, tuple] = {}
     for i, s in st.syms.items():
         if a.kind and s["kind"] != a.kind:
             continue
         if a.layer and s["layer"] != a.layer:
             continue
-        if not a.tests and s.get("test"):
+        if a.no_tests and s.get("test"):
             continue
         hay = " ".join([s["fqn"], s.get("sig", ""), " ".join(s.get("annots", [])), s.get("doc", ""), s["file"]])
-        ok = rx.search(hay) if rx else (term in hay.lower())
+        ok = bool(rx.search(hay)) if rx else (term in hay.lower())
+        if not ok:
+            for txt, ln in s.get("strs") or ():
+                if rx.search(txt) if rx else term in txt.lower():
+                    ok = True
+                    str_match[i] = (txt, ln)
+                    break
         if ok:
             score = (0 if s["name"].lower() == term else (1 if s["name"].lower().startswith(term) else 2), not s["is_type"] if "is_type" in s else 1, len(s["fqn"]))
             hits.append((score, i))
     hits.sort()
     if a.json:
-        out_json([{**st.syms[i], "at": st.at(i)} for _, i in hits[:a.limit]])
+        out_json([{**st.syms[i], "at": st.at(i), **({"match": {"str": str_match[i][0], "line": str_match[i][1]}} if i in str_match else {})}
+                  for _, i in hits[:a.limit]])
         return
     if not hits:
         fh = [p for p in list(st.files) + list(st.assets) if term in p.lower()]
@@ -4758,7 +4933,8 @@ def cmd_find(st: Store, a) -> None:
         return
     print(f"{len(hits)} resultado(s) para '{term}':\n")
     for _, i in hits[:a.limit]:
-        print(st.line(i) + "\n")
+        extra = f"\n    match: \"{str_match[i][0][:120]}\"  (linha {str_match[i][1]})" if i in str_match else ""
+        print(st.line(i) + extra + "\n")
     if len(hits) > a.limit:
         print(f"... +{len(hits) - a.limit} (use --limit)")
 
@@ -4816,7 +4992,7 @@ def cmd_show(st: Store, a) -> None:
         print(f"\n  Membros ({len(pub)} publicos, {len(oth)} nao publicos):")
         for c in (d["children"] if a.all else pub + oth)[:a.limit]:
             cs = st.syms[c]
-            cc = f"  cc={cs['cc']}" if cs.get("cc", 0) > 1 else ""
+            cc = f"  cc={cs['cc']}" + (f"/cog={cs['cog_cc']}" if cs.get("cog_cc", 0) > 1 else "") if cs.get("cc", 0) > 1 else ""
             print(f"    {sig_of(cs)}{cc}   (L{cs['line']})")
         if len(d["children"]) > a.limit:
             print(f"    ... +{len(d['children']) - a.limit}")
@@ -4844,7 +5020,8 @@ def cmd_members(st: Store, a) -> None:
     for c in ordered[:a.limit]:
         s = st.syms[c]
         print(f"  {sig_of(s)}")
-        print(f"      L{s['line']}-{s.get('end', s['line'])}" + (f"  cc={s['cc']}" if s.get("cc", 0) > 1 else "")
+        print(f"      L{s['line']}-{s.get('end', s['line'])}"
+              + (f"  cc={s['cc']}" + (f"/cog={s['cog_cc']}" if s.get("cog_cc", 0) > 1 else "") if s.get("cc", 0) > 1 else "")
               + (f"  {s['doc']}" if s["doc"] else ""))
     if len(ordered) > a.limit:
         print(f"  ... +{len(ordered) - a.limit} (use --limit)")
@@ -4920,7 +5097,7 @@ def cmd_impact(st: Store, a) -> None:
 
 def cmd_path(st: Store, a) -> None:
     src, dst = st.need(a.terms[0]), st.need(a.terms[1])
-    prev: dict[int, tuple] = {src: None}
+    prev: dict[int, tuple | None] = {src: None}
     q = deque([src])
     found = False
     while q:
@@ -5097,7 +5274,7 @@ def cmd_hotspots(st: Store, a) -> None:
         if e["k"] in DEP_KINDS:
             fan[e["d"]] += 1
     data = {
-        "complexidade": [(s["cc"], s["fqn"], st.at(s["id"])) for s in sorted(funs, key=lambda x: -x.get("cc", 0))[:a.limit] if s.get("cc", 0) > 1],
+        "complexidade": [(s["cc"], s.get("cog_cc", 0), s["fqn"], st.at(s["id"])) for s in sorted(funs, key=lambda x: -x.get("cc", 0))[:a.limit] if s.get("cc", 0) > 1],
         "tamanho (linhas)": [(s.get("loc", 0), s["fqn"], st.at(s["id"])) for s in sorted(types, key=lambda x: -x.get("loc", 0))[:a.limit]],
         "mais referenciados": [(n, S[i]["fqn"], st.at(i)) for i, n in fan.most_common(a.limit * 3) if S[i].get("is_type")][:a.limit],
     }
@@ -5445,7 +5622,7 @@ def jpa_edges(G: "Graph", jpa: list[dict]) -> None:
 _XML_TAG = re.compile(r"<(\w+)([^>]*)>", re.S)
 
 
-def scan_xml_resources(P: dict, res: dict, G: "Graph" = None) -> dict:
+def scan_xml_resources(P: dict, res: dict, G: "Graph | None" = None) -> dict:
     """MyBatis (namespace e SQL) e Liquibase (changelogs XML)."""
     root = P["root"]
     mappers, changes = [], []
@@ -5467,6 +5644,7 @@ def scan_xml_resources(P: dict, res: dict, G: "Graph" = None) -> dict:
                 owner = G.types.get(ns_fqn) if (G and ns_fqn) else None
                 target = None
                 if owner and sid:
+                    assert G is not None  # owner só fica truthy quando G tambem esta (linha acima)
                     hits = [h for h in G.members.get(ns_fqn, {}).get(sid.group(1), [])]
                     target = G.syms[hits[0]] if hits else owner
                 elif owner:
@@ -5677,7 +5855,7 @@ def scan_code_facts(G: "Graph", res: dict) -> dict:
     """Extrai fatos do codigo: tabelas usadas, topicos, URLs, chaves de config, env."""
     S = G.syms
     facts: list[dict] = []
-    tables, cfg = res["tables"], res["config"]
+    cfg = res["config"]
 
     def fact(kind: str, value: str, sym: dict, role: str = "", line: int = 0, **extra) -> None:
         d = {"kind": kind, "value": value[:160], "role": role, "sym": sym["id"], "fqn": sym["fqn"],
@@ -5780,7 +5958,7 @@ def build_coverage(G: "Graph") -> dict:
     S = G.syms
     adj: dict[int, list] = defaultdict(list)
     impl: dict[int, list] = defaultdict(list)
-    for (a, b, k), (ln, c) in G.edges.items():
+    for (a, b, k), (_ln, c) in G.edges.items():
         if k in ("calls", "instantiates") and c >= 0.5:
             adj[a].append(b)
         elif k == "overrides":
@@ -5809,7 +5987,7 @@ def build_coverage(G: "Graph") -> dict:
 
 
 def detect_conventions(G: "Graph", res: dict) -> dict:
-    S, P = G.syms, G.P
+    S = G.syms
     imports = Counter()
     for f in G.files.values():
         for fq, _, _ in f["raw_imports"]:
@@ -5902,7 +6080,7 @@ def build_features(G: "Graph", facts: list, cov: dict) -> list[dict]:
     """Fatia vertical por entrypoint: arquivos, camadas, tabelas, topicos, config e testes."""
     S = G.syms
     adj: dict[int, list] = defaultdict(list)
-    for (a, b, k), (ln, c) in G.edges.items():
+    for (a, b, k), (_ln, c) in G.edges.items():
         if k in ("calls", "instantiates") and c >= 0.5:
             adj[a].append(b)
         elif k == "overrides":
@@ -5952,7 +6130,7 @@ def build_features(G: "Graph", facts: list, cov: dict) -> list[dict]:
 # Docs do discovery avancado
 # =========================================================================== #
 def emit_data(G: "Graph", D: dict, w: "Writer") -> None:  # noqa: D401
-    cfg, S = G.cfg, G.syms
+    cfg = G.cfg
     tables = D["res"]["tables"]
     L = ["# Mapa de dados", "", GEN_MARK, "",
          "Tabelas encontradas em DDL, anotacoes e SQL embutido no codigo, com quem as acessa.", ""]
@@ -6053,7 +6231,7 @@ def emit_config(G: "Graph", D: dict, w: "Writer") -> None:
 
 
 def emit_features(G: "Graph", D: dict, w: "Writer") -> None:
-    cfg, S = G.cfg, G.syms
+    cfg = G.cfg
     feats = D["features"]
     L = ["# Funcionalidades (fatias verticais)", "", GEN_MARK, "",
          "Cada fatia parte de um entrypoint e percorre o codigo alcancavel: arquivos, camadas, "
@@ -6089,7 +6267,7 @@ def emit_features(G: "Graph", D: dict, w: "Writer") -> None:
 
 
 def emit_conventions(G: "Graph", D: dict, w: "Writer") -> None:
-    cfg, P = G.cfg, G.P
+    cfg = G.cfg
     c = D["conv"]
     L = ["# Convencoes do projeto", "", GEN_MARK, "",
          "Detectadas a partir do codigo existente. Siga-as ao escrever codigo novo.", "",
@@ -6519,7 +6697,7 @@ def cmd_plan(st: "Store", a) -> None:
     print(f"   python {script_rel(st.root)}   # reindexar ao terminar")
     if models:
         head("Modelos analogos (mesmo padrao da casa)")
-        for sc, j in models:
+        for _sc, j in models:
             cov = st.coverage.get(j)
             print(f"   {st.label(j)}  {st.at(j)}" + (f"  · {len(cov['tests'])} teste(s)" if cov else ""))
     print(bar)
@@ -6571,7 +6749,7 @@ def cmd_why(st: "Store", a) -> None:
     paths = []
     entries = {e["sym"] for e in st.entries}
     seeds = [i] + st.children.get(i, [])
-    prev: dict[int, tuple] = {x: None for x in seeds}
+    prev: dict[int, tuple | None] = {x: None for x in seeds}
     q = deque(seeds)
     reached = []
     while q and len(reached) < 6:
@@ -6651,7 +6829,7 @@ def reachability(G: "Graph") -> dict:
     """Distancia de cada simbolo ate o entrypoint mais proximo."""
     S = G.syms
     adj: dict[int, list] = defaultdict(list)
-    for (a, b, k), (ln, c) in G.edges.items():
+    for (a, b, k), (_ln, c) in G.edges.items():
         if k in REACH_KINDS and c >= 0.5:
             adj[a].append(b)
         elif k == "overrides":
@@ -6783,18 +6961,25 @@ def api_surface(G: "Graph") -> dict:
     S = G.syms
     entry_types = {S[e["sym"]]["owner"] if S[e["sym"]]["owner"] >= 0 else e["sym"] for e in G.entries}
     used_outside: dict[int, set] = defaultdict(set)
-    for (a, b, k), (ln, c) in G.edges.items():
+    for (a, b, k), (_ln, _c) in G.edges.items():
         if k in DEP_KINDS and S[a]["module"] != S[b]["module"] and not S[a]["test"]:
             used_outside[b].add(S[a]["module"])
+    # indice owner -> filhos, montado uma vez: sem isso, o "unused" abaixo reescaneava TODO o S
+    # pra cada simbolo exportado (O(exportados * |S|) -- explode em projetos grandes de milhares
+    # de arquivos, virando o gargalo real da indexacao).
+    children_of: dict[int, list] = defaultdict(list)
+    for s in S:
+        if s["owner"] >= 0:
+            children_of[s["owner"]].append(s["id"])
     out: dict[str, dict] = {}
     for d, m in G.P["mods"].items():
-        exported = [s for s in S if s["module"] == d and not s["test"] and s["vis"] == "public"
+        exported = [s for s in G.syms_by_module.get(d, ()) if not s["test"] and s["vis"] == "public"
                     and s["is_type"] and s["owner"] < 0]
         if not exported:
             continue
         used = [s for s in exported if used_outside.get(s["id"])]
         unused = [s for s in exported if not used_outside.get(s["id"]) and s["id"] not in entry_types
-                  and not any(used_outside.get(c["id"]) for c in S if c["owner"] == s["id"])]
+                  and not any(used_outside.get(cid) for cid in children_of.get(s["id"], ()))]
         out[m["id"]] = {
             "exported": len(exported), "consumed": len(used),
             "consumers": sorted({x for s in used for x in used_outside[s["id"]]}),
@@ -6872,7 +7057,7 @@ def changed_impact(G: "Graph", diff: dict, limit: int = 40) -> list[dict]:
         key = s["fqn"] + ("#" + s["sig"] if s["kind"] in ("fun", "constructor") else "")
         by_key[key] = s
     inc: dict[int, list] = defaultdict(list)
-    for (a, b, k), (ln, c) in G.edges.items():
+    for (a, b, k), (_ln, _c) in G.edges.items():
         if k in DEP_KINDS:
             inc[b].append(a)
     out = []
@@ -7022,7 +7207,6 @@ def deep_analysis(G: "Graph", A: dict, D: dict, root: Path, cfg: dict, write: bo
 
 def emit_deep(G: "Graph", A: dict, D: dict, w: "Writer") -> None:
     sd = G.cfg["state_dir"]
-    S = G.syms
     write_jsonl(w, f"{sd}/risk.jsonl", D["risk"][:400])
     write_jsonl(w, f"{sd}/clones.jsonl", D["clones"])
     write_jsonl(w, f"{sd}/surface.jsonl", ({"module": k, **v} for k, v in sorted(D["surface"].items())))
@@ -7710,7 +7894,12 @@ def run_query(root: Path, args) -> int:
     if args.cmd_name == "path" and len(args.terms) < 2:
         raise SystemExit("'path' precisa de dois argumentos: query path <origem> <destino>")
     st = Store(root, cfg)
-    QUERIES[args.cmd_name](st, args)
+    try:
+        QUERIES[args.cmd_name](st, args)
+    except re.error as e:
+        raise SystemExit(f"Regex invalida em '{' '.join(args.terms)}': {e}")
+    except Exception as e:  # noqa: BLE001 - consulta nunca pode derrubar com traceback cru
+        raise SystemExit(f"Consulta '{args.cmd_name}' falhou ({type(e).__name__}: {e}).")
     return 0
 
 
@@ -7771,7 +7960,7 @@ def build_parser() -> argparse.ArgumentParser:
     q.add_argument("--kind", help="filtra por tipo de simbolo (find)")
     q.add_argument("--layer", help="filtra por camada (find)")
     q.add_argument("--regex", action="store_true", help="trata o termo como regex (find)")
-    q.add_argument("--tests", action="store_true", help="inclui simbolos de teste (find)")
+    q.add_argument("--no-tests", action="store_true", help="exclui simbolos de teste (find; por padrao inclui)")
     q.add_argument("--all", action="store_true", help="mostra todos os membros (show)")
     return ap
 
