@@ -93,6 +93,33 @@ COROUTINE_TYPES = {"Flow", "StateFlow", "SharedFlow", "Deferred"}  # kotlinx.cor
                                                                     # como Mono/Flux em reactive_wrappers)
 COROUTINE_BUILDERS = {"launch", "async", "withContext", "runBlocking", "coroutineScope", "supervisorScope"}
 COROUTINE_TYPE_SIGNALS = {"Dispatchers", "CoroutineScope", "CoroutineContext"}
+# Classes de request do AWS SDK v2 (nomes publicos e estaveis do SDK, mesmo espirito de
+# SECRET_PATTERNS -- baixo falso positivo) -> (servico, operacao). Deteccao por s["types"]
+# (mesma mecanica de COROUTINE_TYPE_SIGNALS): so confirma QUE a operacao acontece, nao onde
+# o recurso (bucket/fila/tabela) esta definido quando o valor vem de variavel -- pra isso
+# precisaria data-flow/def-use de verdade, fora de escopo (ver scan_code_facts). Lista fechada,
+# ampliar sob demanda: cobre os servicos ja confirmados na integration-lib (S3/SQS/SNS/
+# DynamoDB/Athena) mais os mais comuns em apps Spring Boot na AWS.
+AWS_REQUEST_TYPES = {
+    "PutObjectRequest": ("s3", "put_object"), "GetObjectRequest": ("s3", "get_object"),
+    "DeleteObjectRequest": ("s3", "delete_object"), "ListObjectsV2Request": ("s3", "list_objects"),
+    "SendMessageRequest": ("sqs", "send_message"), "ReceiveMessageRequest": ("sqs", "receive_message"),
+    "DeleteMessageRequest": ("sqs", "delete_message"),
+    "PublishRequest": ("sns", "publish"), "SubscribeRequest": ("sns", "subscribe"),
+    "PutItemRequest": ("dynamodb", "put_item"), "PutItemEnhancedRequest": ("dynamodb", "put_item"),
+    "GetItemRequest": ("dynamodb", "get_item"), "GetItemEnhancedRequest": ("dynamodb", "get_item"),
+    "QueryRequest": ("dynamodb", "query"), "QueryEnhancedRequest": ("dynamodb", "query"),
+    "DeleteItemRequest": ("dynamodb", "delete_item"), "DeleteItemEnhancedRequest": ("dynamodb", "delete_item"),
+    "StartQueryExecutionRequest": ("athena", "start_query_execution"),
+    "GetQueryExecutionRequest": ("athena", "get_query_execution"),
+    "GetQueryResultsRequest": ("athena", "get_query_results"),
+    "GetSecretValueRequest": ("secretsmanager", "get_secret_value"),
+    "GetParameterRequest": ("ssm", "get_parameter"), "GetParametersRequest": ("ssm", "get_parameters"),
+    "InvokeRequest": ("lambda", "invoke"), "SendEmailRequest": ("ses", "send_email"),
+}
+# setter do builder -> so pra correlacionar com string literal adjacente quando o valor do
+# recurso NAO vem de variavel (ver scan_code_facts)
+AWS_RESOURCE_SETTERS = {"bucket", "queueUrl", "topicArn", "tableName", "secretId", "functionName"}
 # Operadores que so existem em Flow/Reactor, nunca em List/Sequence/Iterable do Kotlin -- usados
 # como "gatilho" pra reconhecer uma cadeia como pipeline reativa (ver _reconstruct_pipeline).
 REACTIVE_OPS_EXCLUSIVE = {
@@ -167,7 +194,8 @@ DEFAULT_CONFIG = {
     "flow_fanout": 10, "forbid": DEFAULT_FORBID, "layers": [], "entry_annotations": [], "entry_interfaces": [],
     "reactive_wrappers": [],
     "dead_ignore_annotations": [], "max_dead": 80, "min_call_conf": 0.4, "module_claude_md": True,
-    "write_settings": True, "write_skill": True, "workers": 0,
+    "write_settings": True, "write_skill": True, "workers": 0, "external_roots": [],
+    "external_deps": [], "maven_local_repo": "~/.m2/repository", "vendor_cache_dir": "~/.claude-indexer/vendor-cache",
 }
 
 
@@ -2333,14 +2361,27 @@ def generated_paths(cfg: dict) -> tuple:
 
 
 def list_files(root: Path, cfg: dict) -> list[tuple[str, int]]:
-    """Todos os arquivos (relativos, posix) com tamanho, respeitando .gitignore e config."""
+    """Todos os arquivos (relativos, posix) com tamanho, respeitando .gitignore e config.
+
+    Sem pathspec, 'git ls-files' varre tudo a partir de -C (comportamento de hoje). No momento
+    em que qualquer pathspec e passado, o git PARA de significar "tudo" e restringe exatamente
+    aos pathspecs dados -- por isso so mexemos nos argumentos quando external_roots (projetos
+    irmaos como a integration-lib, ver DEFAULT_CONFIG) nao estiver vazio, e nesse caso incluimos
+    '.' explicitamente junto, senao perderiamos os arquivos do proprio projeto."""
     cand: list[str] = []
+    ext_roots: list[str] = cfg.get("external_roots") or []
     try:
-        out = subprocess.run(["git", "-C", str(root), "ls-files", "-z", "-c", "-o", "--exclude-standard"],
-                             capture_output=True, check=True, timeout=180).stdout.decode("utf-8", "replace")
+        cmd = ["git", "-C", str(root), "ls-files", "-z", "-c", "-o", "--exclude-standard"]
+        if ext_roots:
+            cmd += ["--", "."] + ext_roots
+        out = subprocess.run(cmd, capture_output=True, check=True, timeout=180).stdout.decode("utf-8", "replace")
         cand = [p for p in out.split("\0") if p]
     except Exception:  # noqa: BLE001 - sem git: percorre a arvore
         cand = []
+    for er in ext_roots:
+        prefix = er.strip("/") + "/"
+        if not any(p == er or p.startswith(prefix) for p in cand):
+            warn(f"external_roots: '{er}' nao encontrou nenhum arquivo rastreado (path errado?)")
     if not cand:
         seen_dirs: set = set()
         for dp, dn, fn in os.walk(root, followlinks=False, onerror=lambda e: None):
@@ -2455,23 +2496,145 @@ def parse_gradle_build(text: str, catalog: dict) -> dict:
 
 def parse_pom(text: str) -> dict:
     import xml.etree.ElementTree as ET
-    res = {"artifact": "", "modules": [], "ext": set(), "ext_t": set(), "packaging": "jar", "parent": ""}
+    res = {"artifact": "", "modules": [], "ext": set(), "ext_t": set(), "packaging": "jar", "parent": "",
+           "properties": {}, "dep_versions": {}}
     try:
-        text = re.sub(r'\sxmlns(:\w+)?="[^"]+"', "", text, count=3)
+        # remove declaracoes xmlns E qualquer atributo com prefixo de namespace (ex.:
+        # xsi:schemaLocation="..."), senao sobra um prefixo sem declaracao apos remover o
+        # xmlns:xsi correspondente e o ElementTree falha com "unbound prefix" -- isso fazia
+        # parse_pom falhar silenciosamente (cai no except abaixo) pra qualquer pom.xml real com
+        # o boilerplate xsi:schemaLocation padrao do Maven (a maioria).
+        text = re.sub(r'\s(?:xmlns(?::\w+)?|[\w.\-]+:[\w.\-]+)="[^"]*"', "", text)
         r = ET.fromstring(text)
     except ET.ParseError:
         return res
     res["artifact"] = (r.findtext("artifactId") or "").strip()
     res["packaging"] = (r.findtext("packaging") or "jar").strip()
     res["modules"] = [m.text.strip() for m in r.findall("./modules/module") if m.text]
+    props_el = r.find("properties")
+    if props_el is not None:
+        res["properties"] = {c.tag: (c.text or "").strip() for c in props_el}
     for d in r.findall("./dependencies/dependency"):
         g, a = (d.findtext("groupId") or "").strip(), (d.findtext("artifactId") or "").strip()
         (res["ext_t"] if (d.findtext("scope") or "") == "test" else res["ext"]).add(f"{g}:{a}")
+        # versao pode vir como ${prop} referenciando <properties> da MESMA pom (sem heranca de
+        # parent/BOM -- fora de escopo, quem usa isto trata "" como "nao resolvivel, pula").
+        v = (d.findtext("version") or "").strip()
+        pm = re.fullmatch(r"\$\{([\w.\-]+)\}", v)
+        res["dep_versions"][f"{g}:{a}"] = res["properties"].get(pm.group(1), "") if pm else v
     return res
 
 
 def norm_id(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def _extract_sources_jar(jar_path: Path, pom_path: Path, dest: Path) -> None:
+    """Reconstroi um -sources.jar (layout flat, ex.: br/com/.../Foo.kt) no layout Maven
+    convencional (src/main/kotlin|java|resources/...) em `dest`, com a .pom real copiada ao
+    lado -- fica indistinguivel de um checkout normal pro resto do pipeline (find_modules(),
+    module_of(), etc.), sem precisar de nenhuma mudanca ali. Escreve num diretorio temporario
+    IRMAO de `dest` e substitui atomicamente no final (mesmo padrao de Writer.write()/
+    save_cache()), pra nunca deixar um modulo pela metade se a extracao cair no meio.
+    Protecao manual contra zip-slip: como reescrevemos o layout (nao chamamos extractall() no
+    layout ORIGINAL do jar), a sanitizacao built-in do zipfile pra esse caso nao se aplica --
+    cada entrada e validada (sem '..'/'.'/segmento vazio/path absoluto) antes de escrever."""
+    import shutil
+    import zipfile
+    tmp = dest.with_name(dest.name + ".tmp")
+    if tmp.exists():
+        shutil.rmtree(tmp, ignore_errors=True)
+    tmp.mkdir(parents=True)
+    try:
+        with zipfile.ZipFile(jar_path) as z:
+            for info in z.infolist():
+                name = info.filename
+                if name.endswith("/") or name == "META-INF/MANIFEST.MF" or name.startswith("META-INF/maven/"):
+                    continue
+                raw_parts = name.split("/")
+                if not name or name.startswith("/") or any(p in ("", ".", "..") for p in raw_parts):
+                    warn(f"entrada suspeita ignorada em {jar_path.name}: {name!r}")
+                    continue
+                bucket = "kotlin" if name.endswith(".kt") else "java" if name.endswith(".java") else "resources"
+                out = tmp / "src" / "main" / bucket / Path(*raw_parts)
+                out.parent.mkdir(parents=True, exist_ok=True)
+                out.write_bytes(z.read(info))
+        (tmp / "pom.xml").write_bytes(pom_path.read_bytes())
+        if dest.exists():
+            shutil.rmtree(dest, ignore_errors=True)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        os.replace(tmp, dest)
+    except Exception:
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise
+
+
+def resolve_external_deps(root: Path, cfg: dict, files: list[tuple[str, int]]) -> tuple[list[tuple[str, int]], list[dict]]:
+    """Resolve external_deps (coordenadas Maven declaradas em pom.xml que NAO tem source num
+    external_roots) via cache local do Maven -- pra dependencias que so existem compiladas
+    (sem checkout de source), caso comum na maioria dos projetos que usam a mesma lib interna.
+
+    Tier A (.m2 tem -sources.jar + .pom): reconstroi um modulo Maven de verdade num cache
+    PERSISTENTE (nunca efemero -- o cache de collect() e por path de arquivo, reextrair a cada
+    run mataria o incremental) e devolve (path, size) extras pra mesclar em `files` ANTES de
+    find_modules() -- fica indistinguivel de um checkout normal, find_modules() nao muda nada.
+
+    Tier B (so .jar, ou so target/classes de um sibling sem src/): devolve so um "alvo" pra
+    build_vendor_bytecode_index() processar depois, SEPARADO do parser principal -- nunca
+    inventa aresta de chamada resolvida sobre bytecode que nao foi de fato linkado."""
+    deps = cfg.get("external_deps") or []
+    if not deps:
+        return [], []
+    extra_files: list[tuple[str, int]] = []
+    vendor_targets: list[dict] = []
+    file_set = {p for p, _ in files}
+    dep_versions: dict[str, str] = {}
+    roots_by_artifact: dict[str, str] = {}
+    for p, _ in files:
+        if p.rsplit("/", 1)[-1] == "pom.xml":
+            info = parse_pom(read_text(root / p))
+            dep_versions.update({k: v for k, v in info["dep_versions"].items() if v})
+            d = p.rsplit("/", 1)[0] if "/" in p else "."
+            if info["artifact"]:
+                roots_by_artifact[info["artifact"]] = d
+    repo = Path(os.path.expanduser(cfg["maven_local_repo"]))
+    vendor_cache = Path(os.path.expanduser(cfg["vendor_cache_dir"]))
+    for coord in deps:
+        if ":" not in coord:
+            warn(f"external_deps: coordenada invalida '{coord}' (esperado groupId:artifactId)")
+            continue
+        g, a = coord.split(":", 1)
+        er_dir = roots_by_artifact.get(a)
+        if er_dir and er_dir != ".":
+            if any(p.startswith(er_dir.rstrip("/") + "/src/") for p in file_set):
+                continue  # ja coberto por external_roots com source de verdade
+            class_root = root / er_dir / "target" / "classes"
+            if class_root.is_dir():
+                vendor_targets.append({"coord": coord, "kind": "dir", "path": str(class_root),
+                                        "origin": f"{er_dir}/target/classes"})
+                continue
+        v = dep_versions.get(coord, "")
+        if not v:
+            warn(f"external_deps: versao de '{coord}' nao encontrada (declare em <properties>/<version> na pom)")
+            continue
+        mdir = repo / Path(*g.split(".")) / a / v
+        sources_jar, plain_jar, pom_file = (mdir / f"{a}-{v}-sources.jar", mdir / f"{a}-{v}.jar", mdir / f"{a}-{v}.pom")
+        if sources_jar.is_file() and pom_file.is_file():
+            dest = vendor_cache / Path(*g.split(".")) / a / v
+            if not (dest / "pom.xml").is_file():
+                try:
+                    _extract_sources_jar(sources_jar, pom_file, dest)
+                except Exception as e:  # noqa: BLE001 - jar corrompido nao pode derrubar a indexacao
+                    warn(f"external_deps: falha extraindo {sources_jar}: {e}")
+                    continue
+            for p in dest.rglob("*"):
+                if p.is_file():
+                    extra_files.append((os.path.relpath(p, root), p.stat().st_size))
+        elif plain_jar.is_file():
+            vendor_targets.append({"coord": coord, "kind": "jar", "path": str(plain_jar), "origin": ".m2 jar (sem sources)"})
+        else:
+            warn(f"external_deps: '{coord}' (versao {v}) nao encontrado em .m2 ({mdir})")
+    return extra_files, vendor_targets
 
 
 def find_modules(root: Path, files: list[tuple[str, int]]) -> tuple[dict, dict]:
@@ -2590,6 +2753,8 @@ def find_modules(root: Path, files: list[tuple[str, int]]) -> tuple[dict, dict]:
                 m["deps"].add(mods[by_artifact[a]]["id"])
         m["deps"].discard(m["id"])
         m["deps_t"].discard(m["id"])
+    for d, m in mods.items():
+        m["external"] = d != "." and d.startswith("../")
     return mods, proj
 
 
@@ -2649,6 +2814,8 @@ def is_build_script(path: str) -> bool:
 def collect(root: Path, cfg: dict, full: bool = False, use_cache: bool = True, quiet: bool = False) -> dict:
     t0 = time.time()
     files = list_files(root, cfg)
+    extra_files, vendor_targets = resolve_external_deps(root, cfg, files)
+    files = sorted(files + extra_files)  # ordem deterministica (index --check idempotente)
     mods, proj = find_modules(root, files)
     cache = {} if (full or not use_cache) else load_cache(root, cfg)
     new_cache: dict = {}
@@ -2704,7 +2871,7 @@ def collect(root: Path, cfg: dict, full: bool = False, use_cache: bool = True, q
     changed_cache = bool(todo) or set(new_cache) != set(cache)
     return {"root": root, "cfg": cfg, "files": recs, "mods": mods, "proj": proj, "parsed": parsed,
             "cached": sum(1 for r in recs if r["data"] is not None) - parsed, "cache_out": new_cache if changed_cache else None,
-            "secs": time.time() - t0}
+            "secs": time.time() - t0, "vendor_targets": vendor_targets}
 
 
 # =========================================================================== #
@@ -3488,6 +3655,93 @@ def type_of(G: Graph, i: int) -> int:
     return i
 
 
+def _class_cohesion_map(G: "Graph", S: list, god_ids: set[int]) -> dict[int, dict]:
+    """LCOM-like: pra cada classe ja flagrada como god (A['god'], nao roda em toda classe pra
+    nao gerar ruido sem sinal adicional), agrupa seus metodos por componente conexo -- dois
+    metodos ficam juntos se tocam o MESMO campo proprio ou se um chama o outro. So diz SE a
+    classe e uma violacao real de responsabilidade unica (varios grupos desconexos, candidata a
+    split) ou so grande porem coesa (1 grupo). Construtor fica de fora de proposito (toca quase
+    todo campo na inicializacao, inflaria a coesao artificialmente).
+
+    Toque de campo: NAO usa as arestas reads/writes de G.edges -- validado diretamente que elas
+    so disparam pra acesso QUALIFICADO ('this.campo', ver _edges()/extract_refs: 'elif pdot and
+    not up ...'), o estilo idiomatico Kotlin de acessar propriedade sem 'this.' fica de fora
+    (confirmado contra uma propriedade real do projeto: 'query accessors' retornava 0/0 mesmo
+    com uso claro no corpo). Em vez disso, varre o texto de cada metodo (linha..end, ja
+    extraido) procurando o NOME de cada campo proprio como palavra inteira -- heuristica textual
+    (pode casar variavel local com o mesmo nome, sombreando o campo; aceitavel no mesmo nivel
+    dos outros scanners deste arquivo, que ja tratam heuristica como normal). 'calls' entre
+    metodos irmaos continua vindo de G.edges (esse sim confiavel, confirmado no resto do
+    arquivo)."""
+    if not god_ids:
+        return {}
+    owner_of: dict[int, int] = {}
+    methods_by_class: dict[int, list[int]] = defaultdict(list)
+    fields_by_class: dict[int, set[int]] = defaultdict(set)
+    for s in S:
+        o = s["owner"]
+        if o in god_ids:
+            owner_of[s["id"]] = o
+            if s["kind"] == "fun":
+                methods_by_class[o].append(s["id"])
+            elif s["kind"] == "property":
+                fields_by_class[o].add(s["id"])
+    parent = {m: m for lst in methods_by_class.values() for m in lst}
+
+    def find(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: int, b: int) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+
+    for (src, dst, kind), _ in G.edges.items():
+        co = owner_of.get(src)
+        if co is not None and kind == "calls" and dst in parent and owner_of.get(dst) == co and dst != src:
+            union(src, dst)
+
+    root = G.P.get("root")
+    src_cache: dict[str, list[str]] = {}
+    field_accessors: dict[int, list[int]] = defaultdict(list)
+    for cid, methods in methods_by_class.items():
+        field_names = {S[f]["name"]: f for f in fields_by_class.get(cid, ()) if S[f]["name"]}
+        if not field_names or root is None:
+            continue
+        name_re = re.compile(r'\b(?:' + '|'.join(re.escape(n) for n in field_names) + r')\b')
+        for m in methods:
+            sm = S[m]
+            path = sm["file"]
+            if path not in src_cache:
+                try:
+                    src_cache[path] = read_text(root / path).splitlines()
+                except OSError:
+                    src_cache[path] = []
+            lines = src_cache[path]
+            lo, hi = sm["line"], sm.get("end", sm["line"])
+            body = "\n".join(lines[lo - 1:hi]) if lines else ""
+            for fname in dict.fromkeys(name_re.findall(body)):
+                field_accessors[field_names[fname]].append(m)
+    for accessors in field_accessors.values():
+        for b in accessors[1:]:
+            union(accessors[0], b)
+    out: dict[int, dict] = {}
+    for cid, methods in methods_by_class.items():
+        if len(methods) < 3:  # poucos metodos: nao vale a pena julgar coesao
+            continue
+        groups: dict[int, list[int]] = defaultdict(list)
+        for m in methods:
+            groups[find(m)].append(m)
+        clusters = sorted(groups.values(), key=len, reverse=True)
+        if len(clusters) > 1:  # so o caso ACIONAVEL (>1 grupo = candidato real a split)
+            out[cid] = {"methods": len(methods), "components": len(clusters),
+                        "clusters": [sorted(S[m]["name"] for m in c) for c in clusters]}
+    return out
+
+
 def analyze(G: Graph) -> dict:
     cfg, S = G.cfg, G.syms
     A: dict = {}
@@ -3557,6 +3811,7 @@ def analyze(G: Graph) -> dict:
     A["god"] = sorted(((type_loc[i], members_n[i], i) for i in type_loc
                        if not S[i]["test"] and S[i]["kind"] not in ("typealias", "enum", "interface", "annotation")
                        and (type_loc[i] >= cfg["god_class_loc"] or members_n[i] >= cfg["god_class_members"])), reverse=True)[:20]
+    A["god_cohesion"] = _class_cohesion_map(G, S, {i for _, _, i in A["god"]})
     funs = [s for s in S if s["kind"] in ("fun", "constructor") and not s["test"]]
     A["complex"] = sorted(((s["cc"], s["id"]) for s in funs if s["cc"] >= cfg["cc_threshold"]), reverse=True)[:25]
     A["cognitive_complex"] = sorted(((s.get("cog_cc", 0), s["id"]) for s in funs if s.get("cog_cc", 0) >= cfg["cognitive_threshold"]), reverse=True)[:25]
@@ -3740,6 +3995,8 @@ def emit_store(G: "Graph", A: dict, w: "Writer", D: dict | None = None) -> dict:
          **({"params": e["params"]} if e.get("params") else {}),
          **({"status": e["status"]} if e.get("status") else {}),
          **({"auth": e["auth"]} if e.get("auth") else {})} for e in G.entries))
+    write_jsonl(w, f"{sd}/cohesion.jsonl", (
+        {"sym": cid, "fqn": S[cid]["fqn"], **info} for cid, info in sorted(A.get("god_cohesion", {}).items())))
     man = manifest(G, A, mods, D)
     w.write(f"{sd}/manifest.json", json.dumps(man, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
     return man
@@ -4215,11 +4472,20 @@ def emit_index(G: "Graph", A: dict, man: dict, w: "Writer") -> None:
     w.write(f"{dd}/INDEX.md", "\n".join(L))
 
 
-def emit_analysis(G: "Graph", A: dict, w: "Writer") -> None:
+def emit_analysis(G: "Graph", A: dict, D: dict, w: "Writer") -> None:
     cfg, S = G.cfg, G.syms
     dd = cfg["docs_dir"]
     L = ["# Analise do codigo", "", GEN_MARK, "",
          "Heuristicas do indexador: pontos para revisar, nao vereditos.", ""]
+    secrets = [f for f in D.get("facts", ()) if f["kind"] == "secret"]
+    if secrets:
+        L += ["## Possiveis segredos expostos", "",
+              "Heuristica por padrao estrutural (AWS/GitHub/Slack/Google/chave privada/JWT) — "
+              "pode ter falso positivo E falso negativo, nao e uma varredura completa. "
+              "Valor ja vem redigido (so 4 primeiros + 4 ultimos caracteres); confirme e "
+              "revogue a credencial se for real.", ""]
+        L += md_table(["Padrao", "Valor (redigido)", "Local"],
+                      [[f["role"], f"`{f['value']}`", f"`{f['file']}:{f['line']}`"] for f in secrets[:30]]) + [""]
     if A["cycles_modules"]:
         L += ["## Ciclos entre modulos", ""] + [f"- {' -> '.join('`' + x + '`' for x in c)} -> `{c[0]}`" for c in A["cycles_modules"]] + [""]
     if A["undeclared"]:
@@ -4237,9 +4503,16 @@ def emit_analysis(G: "Graph", A: dict, w: "Writer") -> None:
         L += md_table(["Origem", "Alvo", "Regra", "Tipo", "Local"],
                       [[f"`{a}`", f"`{b}`", f"{p[0]} → {p[1]}", ", ".join(k), f"`{f}:{ln}`"] for a, b, p, k, f, ln in A["violations"][:30]]) + [""]
     if A["god"]:
-        L += ["## Classes grandes (candidatas a dividir)", ""]
-        L += md_table(["Tipo", "Linhas", "Membros", "Camada", "Local"],
-                      [[f"`{S[i]['fqn']}`", loc, n, S[i]["layer"], loc_(S[i])] for loc, n, i in A["god"][:15]], "lrrll") + [""]
+        god_coh = A.get("god_cohesion", {})
+        L += ["## Classes grandes (candidatas a dividir)", "",
+              "Coesao: grupos de metodos que nao se relacionam entre si (nao leem/escrevem o "
+              "mesmo campo nem se chamam) — heuristica tipo LCOM, nao veredito. \"coesa\" so "
+              "significa que os metodos formam 1 grupo so; nao decide se a classe deveria ser "
+              "menor.", ""]
+        L += md_table(["Tipo", "Linhas", "Membros", "Coesao", "Camada", "Local"],
+                      [[f"`{S[i]['fqn']}`", loc, n,
+                        (f"{god_coh[i]['components']} grupos — ver `query show`" if i in god_coh else "coesa"),
+                        S[i]["layer"], loc_(S[i])] for loc, n, i in A["god"][:15]], "lrrlll") + [""]
     if A["complex"]:
         L += ["## Funcoes complexas (complexidade ciclomatica)", ""]
         L += md_table(["Funcao", "CC", "Linhas", "Local"],
@@ -4705,7 +4978,11 @@ def emit_agent_files(G: "Graph", A: dict, man: dict, w: "Writer", cfg: dict, D: 
     w.write_block("AGENTS.md", gen_agents_block(G, man, D), AGENTS_HEADER.format(name=name))
     if cfg["module_claude_md"]:
         for d, m in sorted(P["mods"].items()):
-            if d != "." and module_stats(G, d)["files"]:
+            # modulo externo (external_roots, ex.: integration-lib irma) tem dir fora de root --
+            # Writer.write() ja bloqueia escrita fora da raiz (defesa em profundidade), mas
+            # pular aqui evita o warning de "escrita bloqueada" em toda rodada pra um caso
+            # esperado, nao uma misconfiguracao de verdade.
+            if d != "." and not m.get("external") and module_stats(G, d)["files"]:
                 w.write_block(f"{d}/CLAUDE.md", gen_module_block(G, d), MODULE_HEADER.format(mid=m["id"]))
     if cfg["write_skill"]:
         w.write(".claude/skills/code-index/SKILL.md",
@@ -4745,6 +5022,7 @@ class Store:
     tables: dict[str, dict]
     config: dict[str, dict]
     coverage: dict[int, dict]
+    cohesion: dict[int, dict]
     conventions: dict
     _deep: bool
     risk: list
@@ -4754,6 +5032,7 @@ class Store:
     coupling: dict[str, list]
     changes: dict
     glossary: list
+    vendor: list
 
     def __init__(self, root: Path, cfg: dict):
         self.root, self.cfg = root, cfg
@@ -4953,6 +5232,7 @@ def describe(st: Store, i: int, a) -> dict:
 
 def cmd_show(st: Store, a) -> None:
     i = st.need(a.terms[0])
+    store_extras(st)
     d = describe(st, i, a)
     s = d["sym"]
     if a.json:
@@ -4961,7 +5241,8 @@ def cmd_show(st: Store, a) -> None:
                   "supers": s.get("supers_fq", []) + s.get("ext_supers", []),
                   "subtypes": [st.label(x) for x in d["subs"]],
                   "used_by": sorted({st.label(e["s"]) for e in d["callers"]}),
-                  "calls": sorted({st.label(e["d"]) for e in d["callees"]})})
+                  "calls": sorted({st.label(e["d"]) for e in d["callees"]}),
+                  "cohesion": st.cohesion.get(i)})
         return
     print("=" * 70)
     print(st.sig(i) + ("  ⟳ async/reativo" if s.get("async") else ""))
@@ -4996,6 +5277,12 @@ def cmd_show(st: Store, a) -> None:
             print(f"    {sig_of(cs)}{cc}   (L{cs['line']})")
         if len(d["children"]) > a.limit:
             print(f"    ... +{len(d['children']) - a.limit}")
+    coh = st.cohesion.get(i)
+    if coh:
+        print(f"\n  Coesao: {coh['components']} grupos de metodos que nao se relacionam entre "
+              f"si (heuristica tipo LCOM -- talvez separavel):")
+        for grp in coh["clusters"]:
+            print(f"    - {', '.join(grp[:6])}" + (f" (+{len(grp) - 6})" if len(grp) > 6 else ""))
     if d["callers"]:
         agg = Counter(st.label(e["s"]) for e in d["callers"])
         print(f"\n  Usado por ({len(agg)}):")
@@ -5506,17 +5793,23 @@ def spring_wiring(G: "Graph") -> dict:
             beans.append({"fqn": s["fqn"], "at": f"{s['file']}:{s['line']}", "tipo": ret or "?",
                           "implementacao": impls[:3], "modulo": s["module"],
                           "config": owner["fqn"] if owner else "", "sym": s["id"]})
-        for an in COND_ANN & set(annots):
+        # sorted() nos 3 loops abaixo: iterar a intersecao de set direto (ex.: 'for an in
+        # COND_ANN & set(annots)') tem ordem dependente de hash de string, que o CPython
+        # randomiza por processo (PYTHONHASHSEED) -- um simbolo com 2+ anotacoes do mesmo
+        # grupo (ex.: @ConditionalOnMissingBean + @ConditionalOnExpression na mesma funcao,
+        # comum na integration-lib) fazia a ordem de saida mudar a cada rodada, quebrando
+        # idempotencia (index --check "desatualizado" sem nada ter mudado de verdade).
+        for an in sorted(COND_ANN & set(annots)):
             keys = re.findall(r'"([\w.\-]+)"', annots[an])
             conds.append({"fqn": s["fqn"], "at": f"{s['file']}:{s['line']}", "anotacao": an,
                           "valores": keys[:4], "sym": s["id"]})
         if TX_ANN & set(annots):
             tx.append({"fqn": s["fqn"], "at": f"{s['file']}:{s['line']}", "args": annots.get("Transactional", "")[:80],
                        "escopo": "classe" if s["is_type"] else "metodo", "sym": s["id"]})
-        for an in CACHE_ANN & set(annots):
+        for an in sorted(CACHE_ANN & set(annots)):
             names = re.findall(r'"([^"]+)"', annots[an])
             caches.append({"fqn": s["fqn"], "at": f"{s['file']}:{s['line']}", "anotacao": an, "caches": names[:4]})
-        for an in RESILIENCE_ANN & set(annots):
+        for an in sorted(RESILIENCE_ANN & set(annots)):
             resil.append({"fqn": s["fqn"], "at": f"{s['file']}:{s['line']}", "anotacao": an,
                           "args": annots[an][:60]})
     return {"beans": beans, "conditions": conds, "transactions": tx, "caches": caches, "resilience": resil}
@@ -5706,6 +5999,32 @@ PATH_RE = re.compile(r"^/[a-zA-Z0-9_{}\-./:]{2,}$")
 ENV_CALLS = {"getenv", "getEnv", "env"}
 CFG_CALLS = {"getProperty", "getString", "getInt", "getBoolean", "property", "config"}
 SPEL = re.compile(r"\$\{([\w.\-]+)(?::[^}]*)?\}")
+# Padroes de segredo/credencial hardcoded (mesmo espirito de secret scanning de
+# Gitleaks/TruffleHog/GitHub Advanced Security): so formatos ESTRUTURAIS de alta
+# especificidade, documentados publicamente pelos proprios provedores (prefixo/tamanho
+# estavel) -- baixissimo falso positivo. Deliberadamente FORA de escopo: heuristica generica
+# de "variavel chamada password/secret/apiKey recebendo uma string qualquer" (precisaria
+# correlacionar a string com a declaracao, s["strs"] hoje nao carrega isso; maior chance de
+# falso positivo, fica pra uma rodada futura dedicada).
+SECRET_PATTERNS = {
+    "aws_access_key": re.compile(r"AKIA[0-9A-Z]{16}"),
+    "github_token": re.compile(r"gh[pousr]_[A-Za-z0-9]{36,}"),
+    "slack_token": re.compile(r"xox[baprs]-[0-9A-Za-z-]{10,}"),
+    "google_api_key": re.compile(r"AIza[0-9A-Za-z_-]{35}"),
+    "private_key": re.compile(r"-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----"),
+    "jwt": re.compile(r"eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}"),
+}
+
+
+def _redact_secret(value: str) -> str:
+    """Nunca deixa o valor bruto sair daqui: so os 4 primeiros + 4 ultimos caracteres, resto
+    vira '*' -- o bastante pra alguem reconhecer "essa e minha chave de verdade" sem o
+    indexador reproduzir o segredo inteiro em nenhum artefato gerado (docs/ANALYSIS.md,
+    facts.jsonl) — persistir o valor cru so criaria uma SEGUNDA superficie de exposicao."""
+    v = value.strip()
+    if len(v) <= 8:
+        return "*" * len(v)
+    return v[:4] + "*" * (len(v) - 8) + v[-4:]
 TOPIC_ANN = {"KafkaListener": "consome", "RabbitListener": "consome", "JmsListener": "consome",
              "SqsListener": "consome", "StreamListener": "consome", "TransactionalEventListener": "consome"}
 SEND_CALLS = {"send", "publish", "convertAndSend", "sendDefault", "emit", "produce"}
@@ -5865,6 +6184,21 @@ def scan_code_facts(G: "Graph", res: dict) -> dict:
 
     for s in S:
         annots = {ann_name(a): ann_args(a) for a in s["annots"]}
+        # --- operacoes AWS SDK v2 (por classe de Request referenciada, ver AWS_REQUEST_TYPES) ---
+        aws_types = set(s.get("types", ())) & set(AWS_REQUEST_TYPES)
+        for t in sorted(aws_types):
+            service, op = AWS_REQUEST_TYPES[t]
+            resource = ""
+            for name, _recv, ln in s["calls"]:
+                if name not in AWS_RESOURCE_SETTERS:
+                    continue
+                for raw, sl in s["strs"]:
+                    if abs(sl - ln) <= 1 and " " not in raw and len(raw) < 100:
+                        resource = raw
+                        break
+                if resource:
+                    break
+            fact("aws", f"{service}:{op}", s, t, resource=resource)
         # --- persistencia por anotacao ---
         for an in ("Table", "Entity", "Document"):
             if an in annots:
@@ -5892,6 +6226,11 @@ def scan_code_facts(G: "Graph", res: dict) -> dict:
             for k in SPEL.findall(raw):
                 if k in cfg or "." in k:
                     fact("config", k, s, "uso", ln)
+            for pat_name, pat in SECRET_PATTERNS.items():
+                m = pat.search(raw)
+                if m:
+                    fact("secret", _redact_secret(m.group()), s, pat_name, ln)
+                    break  # um achado por string, nao itera os outros padroes
         # --- mensageria ---
         for an, role in TOPIC_ANN.items():
             if an in annots:
@@ -6165,6 +6504,7 @@ def emit_integrations(G: "Graph", D: dict, w: "Writer") -> None:
     topics: dict[str, list] = defaultdict(list)
     urls: dict[str, list] = defaultdict(list)
     svcs: dict[str, list] = defaultdict(list)
+    aws: dict[str, list] = defaultdict(list)
     for f in facts:
         if f["kind"] == "topic":
             topics[f["value"]].append(f)
@@ -6172,8 +6512,18 @@ def emit_integrations(G: "Graph", D: dict, w: "Writer") -> None:
             urls[f["value"]].append(f)
         elif f["kind"] == "service":
             svcs[f["value"]].append(f)
+        elif f["kind"] == "aws":
+            aws[f["value"]].append(f)
     L = ["# Integracoes", "", GEN_MARK, "",
          "Mensageria, servicos externos e URLs encontradas no codigo.", ""]
+    if aws:
+        L += ["## Operacoes AWS", "",
+              "Deteccao estrutural pelas classes de Request do AWS SDK v2 (`query cloud` pra "
+              "consulta interativa) — 'Recurso' so aparece quando o valor e literal no codigo, "
+              "vazio quando vem de variavel/config (nao tentamos resolver data-flow).", ""]
+        rows = [[op_key, r.get("resource") or "-", f"`{r['fqn']}`", f"`{r['file']}:{r['line']}`"]
+                for op_key, group in sorted(aws.items()) for r in group[:8]]
+        L += md_table(["Operacao", "Recurso", "Usado em", "Local"], rows) + [""]
     if topics:
         L += ["## Topicos e filas", ""]
         rows = []
@@ -6193,7 +6543,7 @@ def emit_integrations(G: "Graph", D: dict, w: "Writer") -> None:
         rows = [[f"`{u}`", ", ".join(f"`{f['fqn']}`" for f in v[:2]), f"`{v[0]['file']}:{v[0]['line']}`"]
                 for u, v in sorted(urls.items())[:60]]
         L += md_table(["URL", "Usado em", "Local"], rows) + [""]
-    if not (topics or urls or svcs):
+    if not (topics or urls or svcs or aws):
         L.append("Nenhuma integracao externa detectada.")
     w.write(f"{cfg['docs_dir']}/INTEGRATIONS.md", "\n".join(L))
 
@@ -6432,6 +6782,7 @@ def store_extras(st: "Store") -> None:
     st.tables = {r["name"]: r for r in _load_rows(st, "tables.jsonl")}
     st.config = {r["key"]: r for r in _load_rows(st, "config.jsonl")}
     st.coverage = {r["sym"]: r for r in _load_rows(st, "coverage.jsonl")}
+    st.cohesion = {r["sym"]: r for r in _load_rows(st, "cohesion.jsonl")}
     try:
         st.conventions = json.loads((st.dir / "conventions.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -6506,6 +6857,98 @@ def cmd_topic(st: "Store", a) -> None:
                   (f"  (payload: {f['payload']})" if f.get("payload") else ""))
     if not rows:
         print("Nenhuma integracao encontrada.")
+
+
+def cmd_secrets(st: "Store", a) -> None:
+    """Possiveis segredos hardcoded (AWS/GitHub/Slack/Google/chave privada/JWT), heuristica
+    por padrao estrutural -- pode ter falso positivo e falso negativo, nao e uma varredura
+    completa. Valor sempre ja vem redigido (ver _redact_secret): so 4 primeiros + 4 ultimos
+    caracteres, o indexador nunca persiste o segredo inteiro em nenhum artefato."""
+    store_extras(st)
+    items = [f for f in st.facts if f["kind"] == "secret"]
+    if a.terms:
+        t = a.terms[0].lower()
+        items = [f for f in items if t in f["role"].lower() or t in f["file"].lower()]
+    if a.json:
+        out_json(items)
+        return
+    if not items:
+        print("Nenhum padrao de segredo encontrado (heuristica, nao garante ausencia).")
+        return
+    print(f"{len(items)} possivel(is) segredo(s) (valor redigido) — confirme e revogue se for real:\n")
+    for f in items[:a.limit]:
+        print(f"  [{f['role']}] {f['value']}  {f['file']}:{f['line']}  ({f['fqn']})")
+
+
+def cmd_cloud(st: "Store", a) -> None:
+    """Operacoes AWS SDK v2 detectadas por classe de Request (ver AWS_REQUEST_TYPES) --
+    confirma QUE a operacao acontece e onde, nao resolve o recurso quando o valor vem de
+    variavel (precisaria data-flow, fora de escopo). Sem termo: contagem por servico:operacao.
+    Com termo: filtra por servico/operacao/recurso/fqn."""
+    store_extras(st)
+    items = [f for f in st.facts if f["kind"] == "aws"]
+    if a.terms:
+        t = a.terms[0].lower()
+        items = [f for f in items if t in f["value"].lower() or t in f.get("resource", "").lower() or t in f["fqn"].lower()]
+    if a.json:
+        out_json(items[:a.limit])
+        return
+    if not items:
+        print("Nenhuma operacao AWS detectada (configure external_roots/external_deps se a "
+              "integracao esta numa lib separada, ou a lista de tipos em AWS_REQUEST_TYPES "
+              "pode nao cobrir o SDK usado).")
+        return
+    by_op: dict[str, list] = defaultdict(list)
+    for f in items:
+        by_op[f["value"]].append(f)
+    print(f"{len(items)} operacao(oes) AWS em {len(by_op)} tipo(s):\n")
+    for op, group in sorted(by_op.items()):
+        print(f"  {op}  ({len(group)}x)")
+        for f in group[:a.limit]:
+            print(f"    {f['fqn']}  {f['file']}:{f['line']}" + (f"  recurso={f['resource']}" if f.get("resource") else ""))
+
+
+def cmd_vendor(st: "Store", a) -> None:
+    """Dependencias so-compiladas (external_deps sem source disponivel): assinatura publica
+    via bytecode (javap), FORA do grafo principal de simbolos/chamadas -- nao e uma chamada
+    resolvida de verdade, so confirma que a classe/metodo existe e mostra a assinatura real.
+    Dependencia com source completo (sources.jar do .m2, ou sibling com src/) fica no grafo
+    normal via external_roots (query show/callers/impact), nao aqui."""
+    store_deep(st)
+    rows = st.vendor
+    if not a.terms:
+        if a.json:
+            out_json(rows)
+            return
+        if not rows:
+            print("Nenhuma dependencia so-compilada indexada (configure external_deps).")
+            return
+        by_coord: dict[str, int] = defaultdict(int)
+        for r in rows:
+            by_coord[r["coord"]] += 1
+        print(f"{len(rows)} classe(s) de {len(by_coord)} dependencia(s) (so assinatura, fora do grafo de chamadas):\n")
+        for coord, n in sorted(by_coord.items()):
+            print(f"  {coord}  ({n} classe(s))")
+        return
+    term = a.terms[0].lower()
+    hits = [r for r in rows if term in r["class"].lower() or any(term in m["name"].lower() for m in r["methods"])]
+    if a.json:
+        out_json(hits[:a.limit])
+        return
+    if not hits:
+        print(f"Nenhuma classe/metodo bate com '{a.terms[0]}' nas dependencias so-compiladas.")
+        return
+    for r in hits[:a.limit]:
+        print(f"\n=== {r['kind']} {r['class']} ===  ({r['coord']} {r['version']}, {r['origin']})")
+        if r["extends"]:
+            print(f"  extends {r['extends']}")
+        if r["implements"]:
+            print(f"  implements {', '.join(r['implements'])}")
+        for me in r["methods"]:
+            if term not in me["name"].lower() and term not in r["class"].lower():
+                continue
+            sig = f"{me['name']}({', '.join(me['params'])})" + (f": {me['returns']}" if me["returns"] else "")
+            print(f"  {'ctor ' if me['ctor'] else ''}{sig}")
 
 
 def cmd_tests(st: "Store", a) -> None:
@@ -7192,6 +7635,178 @@ def emit_coupling(G: "Graph", D: dict, w: "Writer") -> None:
     w.write(f"{cfg['docs_dir']}/COUPLING.md", "\n".join(L))
 
 
+# =========================================================================== #
+# Dependencias so-compiladas (external_deps Tier B): API surface via javap
+# =========================================================================== #
+_JAVAP_CLASS_HDR = re.compile(
+    r'^(?P<mods>(?:public|protected|private|final|abstract|static|\s)*)'
+    r'(?P<kind>class|interface|enum|@interface)\s+'
+    r'(?P<fqn>[\w.$]+)'
+    r'(?:<[^{]*?>)?\s*'
+    r'(?:extends\s+(?P<ext>[^{]+?))?'
+    r'(?:\s*implements\s+(?P<impl>[^{]+?))?'
+    r'\s*\{?\s*$'
+)
+_JAVAP_MEMBER = re.compile(
+    r'^\s*(?P<mods>(?:public|protected|private|static|final|abstract|synchronized|native|default|transient|volatile|\s)*)'
+    r'(?:(?P<ret>[\w.$\[\]<>,?\s]+?)\s+)?'
+    r'(?P<name>[\w$.]+)'
+    r'\((?P<params>.*)\)'
+    r'(?:\s+throws\s+[^;]+)?;\s*$'
+)
+_JAVAP_FIELD = re.compile(
+    r'^\s*(?P<mods>(?:public|protected|private|static|final|volatile|transient|\s)*)'
+    r'(?P<type>[\w.$\[\]<>,?\s]+?)\s+(?P<name>[\w$]+);\s*$'
+)
+_JAVAP_NOISE_METHOD = re.compile(r'\$default$|\$annotations$|\$lambda(\$\d+)*$')
+
+
+def _split_top_level(s: str, sep: str = ",") -> list[str]:
+    """Divide `s` por `sep` so no nivel 0 de <>/()/[] -- usado pros parametros de metodo e pra
+    lista de interfaces de 'implements', que podem ter generics com virgula dentro."""
+    parts: list[str] = []
+    depth = 0
+    cur: list[str] = []
+    for ch in s:
+        if ch in "<([":
+            depth += 1
+        elif ch in ">)]":
+            depth -= 1
+        if ch == sep and depth == 0:
+            parts.append("".join(cur))
+            cur = []
+        else:
+            cur.append(ch)
+    if cur or parts:
+        parts.append("".join(cur))
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _parse_javap_text(text: str, coord: str, version: str, origin: str) -> list[dict]:
+    """Texto de 'javap -p' (varias classes concatenadas) -> lista de linhas vendor.jsonl. So
+    assinatura publica (classe/metodo/campo), sem corpo -- nao tenta virar simbolo de verdade
+    no grafo principal (bytecode sem link real seria enganoso como aresta de chamada)."""
+    blocks = re.split(r'(?=^Compiled from )', text, flags=re.M)
+    out: list[dict] = []
+    for b in blocks:
+        b = b.strip()
+        if not b:
+            continue
+        lines = b.splitlines()
+        if not lines or not lines[0].startswith("Compiled from"):
+            continue
+        hdr_lines: list[str] = []
+        body_start = 1
+        for i in range(1, len(lines)):
+            hdr_lines.append(lines[i])
+            if lines[i].rstrip().endswith("{"):
+                body_start = i + 1
+                break
+        m = _JAVAP_CLASS_HDR.match(" ".join(hdr_lines).strip())
+        if not m:
+            continue
+        fqn = m.group("fqn")
+        if fqn.endswith("$WhenMappings"):
+            continue  # tabela de lookup do compilador Kotlin pra 'when' sobre enum, nunca API
+        methods: list[dict] = []
+        fields: list[dict] = []
+        for line in lines[body_start:]:
+            line = line.strip()
+            if not line or line == "}" or line == "static {};":
+                continue
+            mm = _JAVAP_MEMBER.match(line)
+            if mm:
+                name = mm.group("name").rsplit(".", 1)[-1]
+                if _JAVAP_NOISE_METHOD.search(name):
+                    continue
+                methods.append({"name": name, "mods": mm.group("mods").split(),
+                                 "ctor": not mm.group("ret"), "returns": (mm.group("ret") or "").strip() or None,
+                                 "params": _split_top_level(mm.group("params"))})
+                continue
+            mf = _JAVAP_FIELD.match(line)
+            if mf:
+                fields.append({"name": mf.group("name"), "type": mf.group("type").strip(), "mods": mf.group("mods").split()})
+        out.append({"coord": coord, "version": version, "class": fqn, "kind": m.group("kind"),
+                     "extends": (m.group("ext") or "").strip().rstrip(",") or None,
+                     "implements": _split_top_level(m.group("impl")) if m.group("impl") else [],
+                     "methods": methods, "fields": fields, "origin": origin})
+    return out
+
+
+def _run_javap(class_files: list[str], cwd: Path) -> str:
+    """Roda 'javap -p' em lotes (start de JVM por chamada seria caro em libs com milhares de
+    classes). stdout e stderr sao capturados SEPARADOS: erro de uma classe especifica (ex.:
+    module-info.class, classe corrompida) vai so pro stderr, o stdout continua com os blocos
+    validos completos mesmo com exit!=0 -- nunca descarta o lote inteiro por causa de 1 classe
+    ruim."""
+    out_parts: list[str] = []
+    batch = 150
+    for i in range(0, len(class_files), batch):
+        chunk = class_files[i:i + batch]
+        try:
+            r = subprocess.run(["javap", "-p", *chunk], cwd=str(cwd), capture_output=True, text=True, timeout=120)
+        except (OSError, subprocess.TimeoutExpired) as e:
+            warn(f"javap falhou num lote de {len(chunk)} classe(s): {e}")
+            continue
+        if r.stderr.strip():
+            bad = [ln for ln in r.stderr.splitlines() if ln.strip()]
+            if bad:
+                warn(f"javap: {len(bad)} classe(s) com erro num lote (ex.: {bad[0]})")
+        out_parts.append(r.stdout)
+    return "\n".join(out_parts)
+
+
+def build_vendor_bytecode_index(P: dict) -> list[dict]:
+    """Tier B de external_deps: dependencia so tem bytecode disponivel (target/classes de um
+    sibling sem src/, ou .jar do .m2 sem -sources.jar). Extrai so ASSINATURA publica
+    (classe/metodo/campo) via javap -- deliberadamente FORA do grafo principal de simbolos/
+    chamadas (fundir isto como aresta resolvida seria enganoso: bytecode sem link real nao e a
+    mesma garantia de uma chamada resolvida contra source de verdade parseado, isso e' o Tier A/
+    external_roots)."""
+    import tempfile
+    import zipfile
+    targets = P.get("vendor_targets") or []
+    if not targets:
+        return []
+    rows: list[dict] = []
+    for t in targets:
+        coord, kind, path, origin = t["coord"], t["kind"], t["path"], t["origin"]
+        if kind == "dir":
+            class_root = Path(path)
+            class_files = [str(p.relative_to(class_root)) for p in class_root.rglob("*.class")
+                            if p.name not in ("module-info.class", "package-info.class")]
+            if not class_files:
+                continue
+            text = _run_javap(class_files, class_root)
+            rows.extend(_parse_javap_text(text, coord, "", origin))
+        elif kind == "jar":
+            jar_path = Path(path)
+            # nome do jar e sempre '<artifact>-<versao>.jar' (formato .m2 padrao) -- extrai a
+            # versao dali em vez de recalcular (resolve_external_deps ja sabe qual .jar achou)
+            ver_m = re.search(r'-(\d[\w.\-]*)\.jar$', jar_path.name)
+            version = ver_m.group(1) if ver_m else ""
+            with tempfile.TemporaryDirectory(prefix="claude-indexer-vendorb-") as tmp_s:
+                tmp = Path(tmp_s)
+                written: list[str] = []
+                with zipfile.ZipFile(jar_path) as z:
+                    for n in z.namelist():
+                        if not n.endswith(".class") or n.endswith(("module-info.class", "package-info.class")):
+                            continue
+                        # mesma validacao de entrada de _extract_sources_jar -- jar de .m2 e
+                        # confiavel, mas nao custa nada continuar validando por consistencia
+                        raw_parts = n.split("/")
+                        if any(p in ("", ".", "..") for p in raw_parts):
+                            continue
+                        dest = tmp / Path(*raw_parts)
+                        dest.parent.mkdir(parents=True, exist_ok=True)
+                        dest.write_bytes(z.read(n))
+                        written.append(n)
+                text = _run_javap(written, tmp)
+                rows.extend(_parse_javap_text(text, coord, version, origin))
+    rows.sort(key=lambda r: (r["coord"], r["class"]))  # ordem deterministica (index --check)
+    return rows
+
+
 def deep_analysis(G: "Graph", A: dict, D: dict, root: Path, cfg: dict, write: bool, quiet: bool = False) -> None:
     D["reach"] = safe("alcancabilidade", lambda: reachability(G), {"depth": {}, "unreachable": [], "reached": 0, "total": 0})
     D["clones"] = safe("clones", lambda: find_clones(G), [])
@@ -7203,12 +7818,14 @@ def deep_analysis(G: "Graph", A: dict, D: dict, root: Path, cfg: dict, write: bo
     D["diff"] = safe("diferencas", lambda: diff_snapshot(G, root, cfg, write),
                      {"first_run": True, "added": [], "removed": [], "changed": [], "moved": [], "resigned": [], "cur": {}})
     D["changed_impact"] = safe("impacto das mudancas", lambda: changed_impact(G, D["diff"]), [])
+    D["vendor"] = safe("dependencias externas (bytecode)", lambda: build_vendor_bytecode_index(G.P), [])
 
 
 def emit_deep(G: "Graph", A: dict, D: dict, w: "Writer") -> None:
     sd = G.cfg["state_dir"]
     write_jsonl(w, f"{sd}/risk.jsonl", D["risk"][:400])
     write_jsonl(w, f"{sd}/clones.jsonl", D["clones"])
+    write_jsonl(w, f"{sd}/vendor.jsonl", D["vendor"])
     write_jsonl(w, f"{sd}/surface.jsonl", ({"module": k, **v} for k, v in sorted(D["surface"].items())))
     write_jsonl(w, f"{sd}/reach.jsonl", (
         {"sym": s["id"], "fqn": s["fqn"], "file": s["file"], "line": s["line"], "kind": s["kind"],
@@ -7244,6 +7861,7 @@ def store_deep(st: "Store") -> None:
     st._deep = True
     st.risk = _load_rows(st, "risk.jsonl")
     st.clones = _load_rows(st, "clones.jsonl")
+    st.vendor = _load_rows(st, "vendor.jsonl")
     st.surface = {r["module"]: r for r in _load_rows(st, "surface.jsonl")}
     st.unreachable = _load_rows(st, "reach.jsonl")
     st.coupling = {r["file"]: r["partners"] for r in _load_rows(st, "coupling.jsonl")}
@@ -7703,7 +8321,7 @@ QUERIES = {
     "hotspots": cmd_hotspots, "dead": cmd_dead, "cycles": cmd_cycles, "tree": cmd_tree, "stats": cmd_stats,
     "runtime": cmd_runtime, "entity": cmd_entity, "doctor": cmd_doctor, "changed": cmd_changed, "risk": cmd_risk, "clones": cmd_clones, "unreachable": cmd_unreachable,
     "surface": cmd_surface, "coupled": cmd_coupled, "glossary": cmd_glossary, "accessors": cmd_accessors,
-    "table": cmd_table, "config": cmd_config, "topic": cmd_topic, "tests": cmd_tests, "feature": cmd_feature,
+    "table": cmd_table, "config": cmd_config, "topic": cmd_topic, "secrets": cmd_secrets, "vendor": cmd_vendor, "cloud": cmd_cloud, "tests": cmd_tests, "feature": cmd_feature,
     "similar": cmd_similar, "plan": cmd_plan, "churn": cmd_churn, "why": cmd_why, "conventions": cmd_conventions,
     "callers": lambda st, a: cmd_graph(st, a, "in", CALL_KINDS + ("overrides",), "Quem chama"),
     "callees": lambda st, a: cmd_graph(st, a, "out", FOLLOW_KINDS, "O que chama"),
@@ -7741,7 +8359,7 @@ def run_index(root: Path, args) -> int:
                       ("runtime", lambda: emit_runtime_store(G, D, w)),
                       ("indice", lambda: emit_index(G, A, man, w)),
                       ("arvore", lambda: emit_tree(G, w)),
-                      ("analise", lambda: emit_analysis(G, A, w)),
+                      ("analise", lambda: emit_analysis(G, A, D, w)),
                       ("endpoints", lambda: emit_endpoints(G, w)),
                       ("fluxos", lambda: emit_flows(G, A, w)),
                       ("grafos", lambda: emit_graphs(G, A, w)),
